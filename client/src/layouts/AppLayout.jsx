@@ -1,12 +1,13 @@
 import Sidebar from "../components/layout/Sidebar";
+import { Outlet } from "react-router-dom";
 
 function AppLayout() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex">
         <Sidebar />
 
-        <main>
-            
+        <main className="flex-1">
+            <Outlet />
         </main>
     </div>
   )
