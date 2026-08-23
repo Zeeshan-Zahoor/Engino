@@ -1,10 +1,12 @@
+import Sidebar from "../components/layout/Sidebar";
+
 function AppLayout() {
   return (
     <div className="min-h-screen bg-background">
-        <aside>Sidebar</aside>
+        <Sidebar />
 
         <main>
-            <h1>Engino</h1>
+            
         </main>
     </div>
   )
