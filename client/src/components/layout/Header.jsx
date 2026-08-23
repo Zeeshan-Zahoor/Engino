@@ -1,16 +1,19 @@
 import { Bell, Search } from "lucide-react";
 
-function Header() {
+function Header({
+  title,
+  description,
+}) {
   return (
     <header className="flex h-20 items-center justify-between bg-white">
       {/* Page Title */}
       <div>
         <h1 className="text-xl font-semibold text-text-primary">
-          Dashboard
+          {title}
         </h1>
 
         <p className="mt-1 text-sm text-text-secondary">
-          Welcome back, Zeeshan. Here's what's happening with your workspace.
+          {description}
         </p>
       </div>
 
