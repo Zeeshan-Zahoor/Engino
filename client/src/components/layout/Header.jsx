@@ -1,20 +1,30 @@
 import { Bell, Search } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+
 
 function Header({
   title,
   description,
+  showBack = false,
 }) {
   return (
-    <header className="flex h-20 items-center justify-between bg-white">
+    <header className="flex h-20 items-center justify-between bg-white m-0">
       {/* Page Title */}
-      <div>
-        <h1 className="text-xl font-semibold text-text-primary">
-          {title}
-        </h1>
+      <div className="flex gap-3">
+        <div>
+          {showBack && (
+            <ArrowLeft size={20} strokeWidth={2.5} className="mt-1"/>
+          )}
+        </div>
+        <div >
+          <h1 className="text-xl font-semibold text-text-primary">
+            {title}
+          </h1>
 
-        <p className="mt-1 text-sm text-text-secondary">
-          {description}
-        </p>
+          <p className="mt-1 text-sm text-text-secondary">
+            {description}
+          </p>
+        </div>
       </div>
 
       {/* Right Side */}

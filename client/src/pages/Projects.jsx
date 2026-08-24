@@ -7,6 +7,8 @@ import {
     SquareStop, 
     CircleCheck
 } from "lucide-react"
+import ProjectFilters from "../components/projects/ProjectFilters"
+import ProjectsList from "../components/projects/ProjectsList"
 
 function Projects() {
   return (
@@ -61,9 +63,9 @@ function Projects() {
             </button>
         </div>
 
-        {/* Searchbar and filters */}
+        <ProjectFilters />
 
-        {/* Projects */}
+        <ProjectsList />
 
         {/* Result count */}
     </div>
