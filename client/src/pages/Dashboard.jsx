@@ -20,7 +20,10 @@ import RepositoryStatus from "../components/dashboard/RepositoryStatus";
 function Dashboard() {
   return (
     <div className="space-y-6 px-8">
-        <Header />
+        <Header 
+            title="Dashboard"
+            description="Welcome back, Zeeshan. Here's what's happening with your workspace."
+        />
         
         <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(320px,0.9fr)]">
             <AIWorkspace />
