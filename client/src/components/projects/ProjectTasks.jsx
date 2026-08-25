@@ -62,13 +62,13 @@ function ProjectTasks() {
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
-        <h2 className="text-sm font-semibold text-text-primary">
+        <h2 className="text-base font-semibold text-text-primary">
           Tasks
         </h2>
 
         <button
           type="button"
-          className="flex items-center gap-1 text-[10px] font-semibold text-primary transition hover:text-primary-dark"
+          className="flex items-center gap-1 text-sm font-semibold text-primary transition hover:text-primary-dark"
         >
           View all
           <ArrowRight size={13} />
@@ -98,24 +98,24 @@ function ProjectTasks() {
             </div>
 
             {/* Task name */}
-            <p className="min-w-0 truncate text-[11px] font-medium text-text-primary">
+            <p className="min-w-0 truncate text-sm font-medium text-text-primary">
               {task.name}
             </p>
 
             {/* Assignee */}
             <div className="hidden items-center gap-2 sm:flex">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-[8px] font-semibold text-primary">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
                 {task.initials}
               </div>
 
-              <span className="truncate text-[10px] text-text-secondary">
+              <span className="truncate text-xs text-text-secondary">
                 {task.assignee}
               </span>
             </div>
 
             {/* Priority */}
             <span
-              className={`hidden w-fit rounded-md px-2 py-1 text-[9px] font-medium sm:inline-flex ${
+              className={`hidden w-fit rounded-md px-2 py-1 text-xs font-medium sm:inline-flex ${
                 priorityStyles[task.priority]
               }`}
             >
@@ -123,25 +123,25 @@ function ProjectTasks() {
             </span>
 
             {/* Due date */}
-            <span className="hidden text-right text-[9px] text-text-secondary sm:block">
+            <span className="hidden text-right text-xs text-text-secondary sm:block">
               {task.dueDate}
             </span>
 
             {/* Mobile metadata */}
             <div className="col-start-2 flex items-center gap-3 sm:hidden">
-              <span className="text-[9px] text-text-secondary">
+              <span className="text-xs text-text-secondary">
                 {task.assignee}
               </span>
 
               <span
-                className={`rounded-md px-2 py-1 text-[9px] font-medium ${
+                className={`rounded-md px-2 py-1 text-xs font-medium ${
                   priorityStyles[task.priority]
                 }`}
               >
                 {task.priority}
               </span>
 
-              <span className="text-[9px] text-text-secondary">
+              <span className="text-xs text-text-secondary">
                 {task.dueDate}
               </span>
             </div>

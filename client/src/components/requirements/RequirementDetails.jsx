@@ -25,20 +25,20 @@ function RequirementDetails() {
             </div>
 
             <div className="min-w-0">
-              <h2 className="text-sm font-bold leading-5 text-text-primary">
+              <h2 className="text-base font-bold leading-5 text-text-primary">
                 Student Attendance
                 <br />
                 Tracking System
               </h2>
 
-              <p className="mt-1 text-[9px] text-text-secondary">
+              <p className="mt-1 text-xs text-text-secondary">
                 REQ-001 · Student Portal
               </p>
             </div>
           </div>
 
           <div className="flex shrink-0 items-start gap-2">
-            <span className="rounded-md bg-green-50 px-2 py-1 text-[9px] font-semibold text-success">
+            <span className="rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-success">
               Plan Generated
             </span>
 
@@ -64,7 +64,7 @@ function RequirementDetails() {
             <button
               key={tab}
               type="button"
-              className={`relative shrink-0 px-2 pb-3 text-[9px] font-medium ${
+              className={`relative shrink-0 px-2 pb-3 text-xs font-medium ${
                 index === 0
                   ? "text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                   : "text-text-secondary hover:text-text-primary"
@@ -80,11 +80,11 @@ function RequirementDetails() {
       <div className="px-4 py-4">
         {/* Requirement Description */}
         <div>
-          <h3 className="text-[10px] font-bold text-text-primary">
+          <h3 className="text-sm font-bold text-text-primary">
             Requirement Description
           </h3>
 
-          <p className="mt-2 text-[10px] leading-5 text-text-secondary">
+          <p className="mt-2 text-sm leading-5 text-text-secondary">
             Allow admins to create classes, mark attendance for students,
             generate attendance reports, and notify students about their
             attendance.
@@ -93,7 +93,7 @@ function RequirementDetails() {
 
         {/* Acceptance Criteria */}
         <div className="mt-5">
-          <h3 className="text-[10px] font-bold text-text-primary">
+          <h3 className="text-sm font-bold text-text-primary">
             Acceptance Criteria
           </h3>
 
@@ -107,7 +107,7 @@ function RequirementDetails() {
                   <Check size={9} strokeWidth={3} />
                 </div>
 
-                <span className="text-[9px] leading-4 text-text-secondary">
+                <span className="text-xs leading-4 text-text-secondary">
                   {criteria}
                 </span>
               </div>
@@ -139,17 +139,17 @@ function RequirementDetails() {
         {/* Metadata */}
         <div className="mt-1.5 grid grid-cols-3 gap-1.5">
           <div className="min-h-[72px] rounded-lg border border-border p-2.5">
-            <p className="text-[8px] font-medium text-text-secondary">
+            <p className="text-xs font-medium text-text-secondary">
               Project
             </p>
 
-            <span className="mt-2 inline-flex rounded-md bg-primary-light px-2 py-1 text-[8px] font-semibold text-primary">
+            <span className="mt-2 inline-flex rounded-md bg-primary-light px-2 py-1 text-xs font-semibold text-primary">
               Student Portal
             </span>
           </div>
 
           <div className="min-h-[72px] rounded-lg border border-border p-2.5">
-            <p className="text-[8px] font-medium text-text-secondary">
+            <p className="text-xs font-medium text-text-secondary">
               Created By
             </p>
 
@@ -157,11 +157,11 @@ function RequirementDetails() {
               <Avatar initials="ZZ" />
 
               <div>
-                <p className="text-[8px] font-semibold text-text-primary">
+                <p className="text-xs font-semibold text-text-primary">
                   Zeeshan
                 </p>
 
-                <p className="mt-0.5 text-[7px] text-text-secondary">
+                <p className="mt-0.5 text-xs text-text-secondary">
                   May 20, 2025
                 </p>
               </div>
@@ -169,7 +169,7 @@ function RequirementDetails() {
           </div>
 
           <div className="min-h-[72px] rounded-lg border border-border p-2.5">
-            <p className="text-[8px] font-medium text-text-secondary">
+            <p className="text-xs font-medium text-text-secondary">
               Last Updated
             </p>
 
@@ -177,11 +177,11 @@ function RequirementDetails() {
               <Avatar initials="ZZ" />
 
               <div>
-                <p className="text-[8px] font-semibold text-text-primary">
+                <p className="text-xs font-semibold text-text-primary">
                   May 24, 2025
                 </p>
 
-                <p className="mt-0.5 text-[7px] text-text-secondary">
+                <p className="mt-0.5 text-xs text-text-secondary">
                   2h ago
                 </p>
               </div>
@@ -192,18 +192,18 @@ function RequirementDetails() {
 
       {/* Next Action */}
       <div className="border-t border-border px-4 py-4">
-        <h3 className="text-[10px] font-bold text-text-primary">
+        <h3 className="text-sm font-bold text-text-primary">
           Next Action
         </h3>
 
-        <p className="mt-2 text-[9px] leading-4 text-text-secondary">
+        <p className="mt-2 text-xs leading-4 text-text-secondary">
           Review the generated engineering plan and publish tasks.
         </p>
 
         <div className="mt-3 grid grid-cols-2 gap-2">
           <button
             type="button"
-            className="flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border text-[9px] font-semibold text-text-primary transition hover:bg-surface"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border text-xs font-semibold text-text-primary transition hover:bg-surface"
           >
             <Eye size={12} />
             View Plan
@@ -211,7 +211,7 @@ function RequirementDetails() {
 
           <button
             type="button"
-            className="flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary text-[9px] font-semibold text-white transition hover:bg-primary-dark"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary text-xs font-semibold text-white transition hover:bg-primary-dark"
           >
             <Rocket size={12} />
             Review & Publish
@@ -230,7 +230,7 @@ function MetricCard({
 }) {
   return (
     <div className="min-h-[58px] rounded-lg border border-border p-2.5">
-      <p className="text-[8px] font-medium text-text-secondary">
+      <p className="text-xs font-medium text-text-secondary">
         {title}
       </p>
 
@@ -245,7 +245,7 @@ function MetricCard({
       )}
 
       <p
-        className={`mt-1 text-[10px] font-semibold ${valueClassName}`}
+        className={`mt-1 text-sm font-semibold ${valueClassName}`}
       >
         {value}
       </p>
@@ -255,7 +255,7 @@ function MetricCard({
 
 function Avatar({ initials }) {
   return (
-    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-100 text-[7px] font-bold text-primary">
+    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-bold text-primary">
       {initials}
     </div>
   );

@@ -59,7 +59,7 @@ function MyTasks() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
-          <h2 className="text-sm font-semibold text-text-primary">
+          <h2 className="text-base font-semibold text-text-primary">
             My Tasks
           </h2>
 
@@ -117,18 +117,18 @@ function MyTasks() {
             <div className="flex w-20 items-center gap-2">
               {task.assignee ? (
                 <>
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-[10px] font-semibold text-primary">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-semibold text-primary">
                     {task.assignee}
                   </div>
 
-                  <span className="hidden text-[10px] text-text-secondary xl:block">
+                  <span className="hidden text-xs text-text-secondary xl:block">
                     Assigned
                   </span>
                 </>
               ) : (
                 <div className="flex items-center gap-1.5 text-text-secondary">
                   <UserRound size={14} />
-                  <span className="text-[10px]">Unassigned</span>
+                  <span className="text-xs">Unassigned</span>
                 </div>
               )}
             </div>
@@ -136,7 +136,7 @@ function MyTasks() {
             {/* Priority */}
             <div className="w-16">
               <span
-                className={`inline-flex rounded-full px-2 py-1 text-[10px] font-medium ${task.priorityClass}`}
+                className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${task.priorityClass}`}
               >
                 {task.priority}
               </span>
@@ -145,7 +145,7 @@ function MyTasks() {
             {/* Status */}
             <div className="w-24">
               <span
-                className={`inline-flex rounded-full px-2 py-1 text-[10px] font-medium ${task.statusClass}`}
+                className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${task.statusClass}`}
               >
                 {task.status}
               </span>
@@ -154,7 +154,7 @@ function MyTasks() {
             {/* Due Date */}
             <div className={`flex w-24 items-center gap-1 ${task.dueClass}`}>
               <CalendarDays size={13} />
-              <span className="text-[10px] font-medium">
+              <span className="text-xs font-medium">
                 {task.due}
               </span>
             </div>

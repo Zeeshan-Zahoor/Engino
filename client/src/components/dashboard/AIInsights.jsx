@@ -41,7 +41,7 @@ function AIInsights() {
         <div className="flex items-center gap-2">
           <Sparkles size={18} className="text-primary" />
 
-          <h2 className="text-sm font-semibold text-text-primary">
+          <h2 className="text-base font-semibold text-text-primary">
             AI Insights
           </h2>
         </div>
@@ -76,7 +76,7 @@ function AIInsights() {
                   {insight.title}
                 </p>
 
-                <p className="mt-0.5 text-[11px] text-text-secondary">
+                <p className="mt-0.5 text-xs text-text-secondary">
                   {insight.description}
                 </p>
               </div>

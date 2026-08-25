@@ -48,7 +48,7 @@ function RequirementsOverview() {
           <div className="flex items-center gap-2">
             <Sparkles size={17} className="text-primary" />
 
-            <h2 className="text-sm font-semibold text-text-primary">
+            <h2 className="text-base font-semibold text-text-primary">
               Recent Requirements
             </h2>
           </div>
@@ -89,7 +89,7 @@ function RequirementsOverview() {
             {/* Status */}
             <div className="w-36">
               <span
-                className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium ${requirement.statusClass}`}
+                className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${requirement.statusClass}`}
               >
                 {requirement.status}
               </span>
@@ -101,7 +101,7 @@ function RequirementsOverview() {
                 {requirement.complexity}
               </p>
 
-              <p className="mt-0.5 text-[10px] text-text-secondary">
+              <p className="mt-0.5 text-xs text-text-secondary">
                 Complexity
               </p>
             </div>
@@ -112,7 +112,7 @@ function RequirementsOverview() {
                 {requirement.tasks}
               </p>
 
-              <p className="mt-0.5 text-[10px] text-text-secondary">
+              <p className="mt-0.5 text-xs text-text-secondary">
                 Generated
               </p>
             </div>

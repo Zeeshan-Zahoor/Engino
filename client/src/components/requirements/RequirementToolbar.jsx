@@ -21,7 +21,7 @@ function RequirementToolbar() {
           <input
             type="text"
             placeholder="Search by title or keyword..."
-            className="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-3 text-xs text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+            className="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
           />
         </div>
 
@@ -34,7 +34,7 @@ function RequirementToolbar() {
 
           <button
             type="button"
-            className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-medium text-text-secondary transition hover:bg-surface hover:text-text-primary"
+            className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-text-secondary transition hover:bg-surface hover:text-text-primary"
           >
             <X size={14} />
             Clear
@@ -45,7 +45,7 @@ function RequirementToolbar() {
         <div className="flex items-center gap-2 xl:ml-auto">
           <button
             type="button"
-            className="flex h-10 items-center gap-2 rounded-lg border border-border px-3 text-xs font-medium text-text-primary transition hover:border-primary/40"
+            className="flex h-10 items-center gap-2 rounded-lg border border-border px-3 text-sm font-medium text-text-primary transition hover:border-primary/40"
           >
             <SlidersHorizontal
               size={14}
@@ -84,7 +84,7 @@ function FilterButton({ label }) {
   return (
     <button
       type="button"
-      className="flex h-10 items-center gap-3 rounded-lg border border-border px-3 text-xs font-medium text-text-primary transition hover:border-primary/40"
+      className="flex h-10 items-center gap-3 rounded-lg border border-border px-3 text-sm font-medium text-text-primary transition hover:border-primary/40"
     >
       {label}
 

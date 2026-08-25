@@ -20,11 +20,11 @@ function ProjectDescription() {
     <section className="rounded-2xl border border-border bg-white p-5 sm:p-6">
       {/* Description */}
       <div>
-        <h2 className="text-sm font-semibold text-text-primary">
+        <h2 className="text-base font-semibold text-text-primary">
           Project Description
         </h2>
 
-        <p className="mt-3 max-w-4xl text-xs leading-6 text-text-secondary">
+        <p className="mt-3 max-w-4xl text-sm leading-6 text-text-secondary">
           Student Portal is a centralized platform designed to help students
           manage their academic activities, including attendance, assignments,
           notifications, and profile information.
@@ -33,7 +33,7 @@ function ProjectDescription() {
 
       {/* Goals */}
       <div className="mt-6">
-        <h3 className="text-xs font-semibold text-text-primary">
+        <h3 className="text-sm font-semibold text-text-primary">
           Project Goals
         </h3>
 
@@ -48,7 +48,7 @@ function ProjectDescription() {
                 className="mt-0.5 shrink-0 text-success"
               />
 
-              <span className="text-[11px] leading-4 text-text-secondary">
+              <span className="text-sm leading-4 text-text-secondary">
                 {goal}
               </span>
             </div>
@@ -58,7 +58,7 @@ function ProjectDescription() {
 
       {/* Technology Stack */}
       <div className="mt-6">
-        <h3 className="text-xs font-semibold text-text-primary">
+        <h3 className="text-sm font-semibold text-text-primary">
           Technology Stack
         </h3>
 
@@ -66,7 +66,7 @@ function ProjectDescription() {
           {technologies.map((technology) => (
             <span
               key={technology}
-              className="rounded-lg border border-border bg-surface px-3 py-1.5 text-[10px] font-medium text-text-secondary"
+              className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text-secondary"
             >
               {technology}
             </span>

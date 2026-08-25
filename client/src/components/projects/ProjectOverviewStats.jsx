@@ -34,7 +34,7 @@ function ProjectOverviewStats() {
 
           {/* Legend */}
           <div className="space-y-2.5">
-            <div className="flex items-center justify-between gap-8 text-[10px]">
+            <div className="flex items-center justify-between gap-8 text-sm">
               <span className="flex items-center gap-2 text-text-secondary">
                 <span className="h-2 w-2 rounded-full bg-success" />
                 Done
@@ -42,7 +42,7 @@ function ProjectOverviewStats() {
               <span className="font-semibold text-text-primary">24</span>
             </div>
 
-            <div className="flex items-center justify-between gap-8 text-[10px]">
+            <div className="flex items-center justify-between gap-8 text-sm">
               <span className="flex items-center gap-2 text-text-secondary">
                 <span className="h-2 w-2 rounded-full bg-info" />
                 In Progress
@@ -50,7 +50,7 @@ function ProjectOverviewStats() {
               <span className="font-semibold text-text-primary">8</span>
             </div>
 
-            <div className="flex items-center justify-between gap-8 text-[10px]">
+            <div className="flex items-center justify-between gap-8 text-sm">
               <span className="flex items-center gap-2 text-text-secondary">
                 <span className="h-2 w-2 rounded-full bg-gray-400" />
                 To Do
@@ -58,7 +58,7 @@ function ProjectOverviewStats() {
               <span className="font-semibold text-text-primary">6</span>
             </div>
 
-            <div className="flex items-center justify-between gap-8 text-[10px]">
+            <div className="flex items-center justify-between gap-8 text-sm">
               <span className="flex items-center gap-2 text-text-secondary">
                 <span className="h-2 w-2 rounded-full bg-orange-500" />
                 Review
@@ -87,7 +87,7 @@ function ProjectOverviewStats() {
               </span>
             </div>
 
-            <p className="mt-1 text-[10px] text-text-secondary">
+            <p className="mt-1 text-xs text-text-secondary">
               Total Tasks
             </p>
           </div>
@@ -117,7 +117,7 @@ function ProjectOverviewStats() {
               5
             </p>
 
-            <p className="mt-1 text-[10px] text-text-secondary">
+            <p className="mt-1 text-xs text-text-secondary">
               Members
             </p>
           </div>
@@ -131,7 +131,7 @@ function ProjectOverviewStats() {
           {["ZZ", "GA", "AR"].map((member, index) => (
             <div
               key={member}
-              className={`-ml-2 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-[8px] font-semibold first:ml-0 ${
+              className={`-ml-2 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-xs font-semibold first:ml-0 ${
                 index === 0
                   ? "bg-purple-100 text-primary"
                   : index === 1
@@ -143,7 +143,7 @@ function ProjectOverviewStats() {
             </div>
           ))}
 
-          <span className="ml-1 flex h-7 min-w-7 items-center justify-center rounded-full bg-surface px-2 text-[9px] font-semibold text-text-secondary">
+          <span className="ml-1 flex h-7 min-w-7 items-center justify-center rounded-full bg-surface px-2 text-xs font-semibold text-text-secondary">
             +2
           </span>
         </div>
@@ -158,7 +158,7 @@ function ProjectOverviewStats() {
             </p>
 
             <div className="mt-4">
-              <p className="text-[10px] text-text-secondary">
+              <p className="text-xs text-text-secondary">
                 Start Date
               </p>
 
@@ -168,7 +168,7 @@ function ProjectOverviewStats() {
             </div>
 
             <div className="mt-4">
-              <p className="text-[10px] text-text-secondary">
+              <p className="text-xs text-text-secondary">
                 Target Date
               </p>
 

@@ -7,7 +7,9 @@ function AppLayout() {
         <Sidebar />
 
         <main className="flex-1 h-full overflow-y-auto pb-4">
-            <Outlet />
+            <div className="mx-auto w-full max-w-[1800px]">
+                <Outlet />
+            </div>
         </main>
     </div>
   )

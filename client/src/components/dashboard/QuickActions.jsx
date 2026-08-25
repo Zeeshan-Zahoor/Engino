@@ -38,7 +38,7 @@ function QuickActions() {
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
       <div className="px-5 py-4">
-        <h2 className="text-sm font-semibold text-text-primary">
+        <h2 className="text-base font-semibold text-text-primary">
           Quick Actions
         </h2>
 
@@ -71,7 +71,7 @@ function QuickActions() {
                   {action.title}
                 </p>
 
-                <p className="mt-0.5 text-[11px] text-text-secondary">
+                <p className="mt-0.5 text-xs text-text-secondary">
                   {action.description}
                 </p>
               </div>

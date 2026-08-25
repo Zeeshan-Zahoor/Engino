@@ -30,7 +30,7 @@ function StatsCard({
             </p>
 
             {description && (
-            <p className="mt-1 text-[11px] text-text-secondary">
+            <p className="mt-1 text-xs text-text-secondary">
                 {description}
             </p>
             )}
@@ -39,7 +39,7 @@ function StatsCard({
         <div>
             {trend && (
             <div
-                className={`flex items-center gap-0.5 text-[11px] font-medium ${
+                className={`flex items-center gap-0.5 text-xs font-medium ${
                 trendType === "negative"
                     ? "text-danger"
                     : "text-success"

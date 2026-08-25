@@ -21,7 +21,7 @@ function AIWorkspace() {
               AI Workspace
             </h2>
 
-            <span className="rounded-md bg-white/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+            <span className="rounded-md bg-white/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
               Beta
             </span>
           </div>
