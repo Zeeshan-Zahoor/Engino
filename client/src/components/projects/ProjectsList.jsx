@@ -119,7 +119,7 @@ function ProjectsList() {
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-white">
       {/* Desktop Header */}
-      <div className="hidden grid-cols-[2.2fr_1.8fr_0.8fr_0.9fr_1fr_0.3fr] gap-4 border-b border-border bg-surface px-5 py-3 text-[10px] font-semibold uppercase tracking-wide text-text-secondary lg:grid">
+      <div className="hidden grid-cols-[2.2fr_1.8fr_0.8fr_0.9fr_1fr_0.3fr] gap-4 border-b border-border bg-surface px-5 py-3 text-xs font-semibold uppercase tracking-wide text-text-secondary lg:grid">
         <span>Project</span>
         <span>Progress</span>
         <span>Status</span>
@@ -151,11 +151,11 @@ function ProjectsList() {
                     )}
                   </div>
 
-                  <p className="mt-0.5 text-[10px] font-medium text-text-secondary">
+                  <p className="mt-0.5 text-xs font-medium text-text-secondary">
                     {project.id}
                   </p>
 
-                  <p className="mt-1 max-w-xs text-[10px] leading-4 text-text-secondary">
+                  <p className="mt-1 max-w-xs text-xs leading-4 text-text-secondary">
                     {project.description}
                   </p>
                 </div>
@@ -176,7 +176,7 @@ function ProjectsList() {
                   />
                 </div>
 
-                <div className="mt-2 grid grid-cols-4 gap-2 text-[9px]">
+                <div className="mt-2 grid grid-cols-4 gap-2 text-xs">
                   <div>
                     <span className="block font-semibold text-success">
                       {project.done}
@@ -210,7 +210,7 @@ function ProjectsList() {
               {/* Status */}
               <div>
                 <span
-                  className={`inline-flex rounded-md px-2.5 py-1 text-[10px] font-medium ${project.statusClass}`}
+                  className={`inline-flex rounded-md px-2.5 py-1 text-xs font-medium ${project.statusClass}`}
                 >
                   {project.status}
                 </span>
@@ -221,14 +221,14 @@ function ProjectsList() {
                 {project.team.map((member, index) => (
                   <div
                     key={member}
-                    className={`-ml-1.5 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[8px] font-semibold ${avatarClasses[index]}`}
+                    className={`-ml-1.5 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-xs font-semibold ${avatarClasses[index]}`}
                   >
                     {member}
                   </div>
                 ))}
 
                 {project.extraMembers > 0 && (
-                  <span className="ml-1 rounded-full bg-surface px-2 py-1 text-[9px] font-medium text-text-secondary">
+                  <span className="ml-1 rounded-full bg-surface px-2 py-1 text-xs font-medium text-text-secondary">
                     +{project.extraMembers}
                   </span>
                 )}
@@ -236,11 +236,11 @@ function ProjectsList() {
 
               {/* Updated */}
               <div>
-                <p className="text-[10px] font-medium text-text-primary">
+                <p className="text-sm font-medium text-text-primary">
                   {project.updatedDate}
                 </p>
 
-                <p className="mt-1 text-[10px] text-text-secondary">
+                <p className="mt-1 text-xs text-text-secondary">
                   {project.updated}
                 </p>
               </div>
@@ -268,7 +268,7 @@ function ProjectsList() {
                         {project.name}
                       </p>
 
-                      <p className="mt-0.5 text-[10px] text-text-secondary">
+                      <p className="mt-0.5 text-xs text-text-secondary">
                         {project.id}
                       </p>
                     </div>
@@ -281,7 +281,7 @@ function ProjectsList() {
                     </button>
                   </div>
 
-                  <p className="mt-2 text-[11px] leading-4 text-text-secondary">
+                  <p className="mt-2 text-sm leading-4 text-text-secondary">
                     {project.description}
                   </p>
                 </div>
@@ -291,7 +291,7 @@ function ProjectsList() {
               <div className="mt-4">
                 <div className="flex items-center justify-between">
                   <span
-                    className={`rounded-md px-2 py-1 text-[10px] font-medium ${project.statusClass}`}
+                    className={`rounded-md px-2 py-1 text-xs font-medium ${project.statusClass}`}
                   >
                     {project.status}
                   </span>
@@ -315,7 +315,7 @@ function ProjectsList() {
                   <p className="text-xs font-semibold text-success">
                     {project.done}
                   </p>
-                  <p className="mt-0.5 text-[9px] text-text-secondary">
+                  <p className="mt-0.5 text-xs text-text-secondary">
                     Done
                   </p>
                 </div>
@@ -324,7 +324,7 @@ function ProjectsList() {
                   <p className="text-xs font-semibold text-info">
                     {project.inProgress}
                   </p>
-                  <p className="mt-0.5 text-[9px] text-text-secondary">
+                  <p className="mt-0.5 text-xs text-text-secondary">
                     In Progress
                   </p>
                 </div>
@@ -333,7 +333,7 @@ function ProjectsList() {
                   <p className="text-xs font-semibold text-text-secondary">
                     {project.todo}
                   </p>
-                  <p className="mt-0.5 text-[9px] text-text-secondary">
+                  <p className="mt-0.5 text-xs text-text-secondary">
                     To Do
                   </p>
                 </div>
@@ -342,7 +342,7 @@ function ProjectsList() {
                   <p className="text-xs font-semibold text-warning">
                     {project.review}
                   </p>
-                  <p className="mt-0.5 text-[9px] text-text-secondary">
+                  <p className="mt-0.5 text-xs text-text-secondary">
                     Review
                   </p>
                 </div>
@@ -354,20 +354,20 @@ function ProjectsList() {
                   {project.team.map((member, index) => (
                     <div
                       key={member}
-                      className={`-ml-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[8px] font-semibold first:ml-0 ${avatarClasses[index]}`}
+                      className={`-ml-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-xs font-semibold first:ml-0 ${avatarClasses[index]}`}
                     >
                       {member}
                     </div>
                   ))}
 
                   {project.extraMembers > 0 && (
-                    <span className="ml-1 text-[10px] text-text-secondary">
+                    <span className="ml-1 text-xs text-text-secondary">
                       +{project.extraMembers}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-1 text-[10px] text-text-secondary">
+                <div className="flex items-center gap-1 text-xs text-text-secondary">
                   <CalendarDays size={12} />
                   {project.updated}
                 </div>
@@ -379,7 +379,7 @@ function ProjectsList() {
 
       {/* Footer */}
       <div className="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[11px] text-text-secondary">
+        <p className="text-xs text-text-secondary">
         <span>Showing </span>
           <span className="font-semibold text-text-primary">
             {projects.length}
@@ -413,7 +413,7 @@ function ProjectsList() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2 text-[11px] text-text-secondary">
+        <div className="flex items-center gap-2 text-xs text-text-secondary">
           <span>Show</span>
 
           <select className="h-8 rounded-lg border border-border bg-white px-2 text-xs text-text-primary outline-none focus:border-primary">

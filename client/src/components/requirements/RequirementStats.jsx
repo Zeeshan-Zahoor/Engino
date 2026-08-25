@@ -67,11 +67,11 @@ function RequirementStats() {
                   {stat.value}
                 </p>
 
-                <p className="mt-2 text-[11px] font-semibold text-text-primary">
+                <p className="mt-2 text-sm font-semibold text-text-primary">
                   {stat.title}
                 </p>
 
-                <p className="mt-1 text-[10px] leading-4 text-text-secondary">
+                <p className="mt-1 text-xs leading-4 text-text-secondary">
                   {stat.description}
                 </p>
               </div>

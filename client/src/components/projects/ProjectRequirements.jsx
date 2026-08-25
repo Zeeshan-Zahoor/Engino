@@ -39,13 +39,13 @@ function ProjectRequirements() {
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
-        <h2 className="text-sm font-semibold text-text-primary">
+        <h2 className="text-base font-semibold text-text-primary">
           AI Requirements
         </h2>
 
         <button
           type="button"
-          className="flex items-center gap-1 text-[10px] font-semibold text-primary transition hover:text-primary-dark"
+          className="flex items-center gap-1 text-sm font-semibold text-primary transition hover:text-primary-dark"
         >
           View all
           <ArrowRight size={13} />
@@ -67,21 +67,21 @@ function ProjectRequirements() {
             />
 
             {/* Name */}
-            <p className="min-w-0 flex-1 truncate text-[11px] font-medium text-text-primary">
+            <p className="min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
               {requirement.name}
             </p>
 
             {/* Status + Date */}
             <div className="flex shrink-0 flex-col items-end gap-1">
               <span
-                className={`rounded-md px-2 py-1 text-[9px] font-medium ${
+                className={`rounded-md px-2 py-1 text-xs font-medium ${
                   statusStyles[requirement.status]
                 }`}
               >
                 {requirement.status}
               </span>
 
-              <span className="text-[9px] text-text-secondary">
+              <span className="text-xs text-text-secondary">
                 {requirement.date}
               </span>
             </div>

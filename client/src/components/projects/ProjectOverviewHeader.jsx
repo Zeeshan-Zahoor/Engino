@@ -22,7 +22,7 @@ function ProjectOverviewHeader() {
                 Student Portal
               </h1>
 
-              <span className="rounded-full bg-primary-light px-2.5 py-1 text-[10px] font-semibold text-primary">
+              <span className="rounded-full bg-primary-light px-2.5 py-1 text-xs font-semibold text-primary">
                 In Progress
               </span>
             </div>
@@ -33,7 +33,7 @@ function ProjectOverviewHeader() {
             </p>
 
             {/* Metadata */}
-            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[10px] text-text-secondary">
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-text-secondary">
               <span className="flex items-center gap-1.5">
                 <span className="font-medium text-text-primary">
                   Project ID:

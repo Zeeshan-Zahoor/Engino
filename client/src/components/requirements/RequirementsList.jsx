@@ -87,23 +87,23 @@ function RequirementsList() {
       <div className="border-b border-border px-5 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-text-primary">
+            <h2 className="text-base font-semibold text-text-primary">
               Requirements
             </h2>
 
-            <p className="mt-1 text-[10px] text-text-secondary">
+            <p className="mt-1 text-xs text-text-secondary">
               Select a requirement to view its details
             </p>
           </div>
 
-          <span className="text-[10px] font-medium text-text-secondary">
+          <span className="text-xs font-medium text-text-secondary">
             12 requirements
           </span>
         </div>
       </div>
 
       {/* Desktop header */}
-      <div className="hidden grid-cols-[minmax(220px,2fr)_1fr_1fr_0.8fr_0.8fr] gap-4 border-b border-border bg-surface px-5 py-3 text-[9px] font-semibold uppercase tracking-wide text-text-secondary xl:grid">
+      <div className="hidden grid-cols-[minmax(220px,2fr)_1fr_1fr_0.8fr_0.8fr] gap-4 border-b border-border bg-surface px-5 py-3 text-xs font-semibold uppercase tracking-wide text-text-secondary xl:grid">
         <span>Requirement</span>
         <span>Project</span>
         <span>Status</span>
@@ -138,11 +138,11 @@ function RequirementsList() {
                 </div>
 
                 <div className="min-w-0">
-                  <p className="truncate text-[11px] font-semibold text-text-primary">
+                  <p className="truncate text-sm font-semibold text-text-primary">
                     {requirement.title}
                   </p>
 
-                  <p className="mt-1 flex items-center gap-1 text-[9px] text-text-secondary">
+                  <p className="mt-1 flex items-center gap-1 text-xs text-text-secondary">
                     <Clock3 size={10} />
                     Updated {requirement.updated}
                   </p>
@@ -150,13 +150,13 @@ function RequirementsList() {
               </div>
 
               {/* Project */}
-              <span className="truncate text-[10px] text-text-secondary">
+              <span className="truncate text-xs text-text-secondary">
                 {requirement.project}
               </span>
 
               {/* Status */}
               <span
-                className={`w-fit rounded-md px-2 py-1 text-[9px] font-medium ${
+                className={`w-fit rounded-md px-2 py-1 text-xs font-medium ${
                   statusStyles[requirement.status]
                 }`}
               >
@@ -165,7 +165,7 @@ function RequirementsList() {
 
               {/* Complexity */}
               <span
-                className={`w-fit rounded-md px-2 py-1 text-[9px] font-medium ${
+                className={`w-fit rounded-md px-2 py-1 text-xs font-medium ${
                   complexityStyles[requirement.complexity]
                 }`}
               >
@@ -174,11 +174,11 @@ function RequirementsList() {
 
               {/* Owner */}
               <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-[8px] font-semibold text-primary">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
                   {requirement.initials}
                 </div>
 
-                <span className="truncate text-[10px] text-text-secondary">
+                <span className="truncate text-xs text-text-secondary">
                   {requirement.owner}
                 </span>
               </div>
@@ -198,22 +198,22 @@ function RequirementsList() {
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-3">
-                  <p className="text-[11px] font-semibold text-text-primary">
+                  <p className="text-sm font-semibold text-text-primary">
                     {requirement.title}
                   </p>
 
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-[8px] font-semibold text-primary">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
                     {requirement.initials}
                   </div>
                 </div>
 
-                <p className="mt-1 text-[9px] text-text-secondary">
+                <p className="mt-1 text-xs text-text-secondary">
                   {requirement.project}
                 </p>
 
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span
-                    className={`rounded-md px-2 py-1 text-[9px] font-medium ${
+                    className={`rounded-md px-2 py-1 text-xs font-medium ${
                       statusStyles[requirement.status]
                     }`}
                   >
@@ -221,14 +221,14 @@ function RequirementsList() {
                   </span>
 
                   <span
-                    className={`rounded-md px-2 py-1 text-[9px] font-medium ${
+                    className={`rounded-md px-2 py-1 text-xs font-medium ${
                       complexityStyles[requirement.complexity]
                     }`}
                   >
                     {requirement.complexity}
                   </span>
 
-                  <span className="text-[9px] text-text-secondary">
+                  <span className="text-xs text-text-secondary">
                     Updated {requirement.updated}
                   </span>
                 </div>
@@ -239,7 +239,7 @@ function RequirementsList() {
       </div>
 
       <div className="flex flex-col gap-3 border-t border-border px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-[10px] text-text-secondary">
+            <span className="text-xs text-text-secondary">
                 Showing 1 to 7 of 12 requirements
             </span>
 
@@ -254,14 +254,14 @@ function RequirementsList() {
 
                 <button
                 type="button"
-                className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-[10px] font-semibold text-white"
+                className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-semibold text-white"
                 >
                 1
                 </button>
 
                 <button
                 type="button"
-                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-[10px] font-medium text-text-primary transition hover:bg-surface"
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-xs font-medium text-text-primary transition hover:bg-surface"
                 >
                 2
                 </button>

@@ -37,7 +37,7 @@ function ProjectProgress() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
-          <h2 className="text-sm font-semibold text-text-primary">
+          <h2 className="text-base font-semibold text-text-primary">
             Project Progress
           </h2>
 
@@ -79,14 +79,14 @@ function ProjectProgress() {
                     {project.name}
                   </p>
 
-                  <p className="mt-0.5 text-[11px] text-text-secondary">
+                  <p className="mt-0.5 text-xs text-text-secondary">
                     {project.description}
                   </p>
                 </div>
               </div>
 
               <span
-                className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-medium ${project.statusClass}`}
+                className={`shrink-0 rounded-full px-2 py-1 text-xs font-medium ${project.statusClass}`}
               >
                 {project.status}
               </span>
@@ -95,7 +95,7 @@ function ProjectProgress() {
             {/* Progress */}
             <div className="mt-5">
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-[11px] font-medium text-text-secondary">
+                <span className="text-xs font-medium text-text-secondary">
                   Progress
                 </span>
 

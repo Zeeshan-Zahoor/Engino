@@ -60,7 +60,7 @@ function TeamActivity() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
-          <h2 className="text-sm font-semibold text-text-primary">
+          <h2 className="text-base font-semibold text-text-primary">
             Team Activity
           </h2>
 
@@ -113,7 +113,7 @@ function TeamActivity() {
                   </span>
                 </p>
 
-                <p className="mt-0.5 text-[10px] text-text-secondary">
+                <p className="mt-0.5 text-xs text-text-secondary">
                   {activity.time}
                 </p>
               </div>

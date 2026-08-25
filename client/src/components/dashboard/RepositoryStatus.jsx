@@ -16,11 +16,11 @@ function RepositoryStatus() {
 
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-semibold text-text-primary">
+                <h2 className="text-base font-semibold text-text-primary">
                   Repository Status
                 </h2>
 
-                <span className="rounded-full bg-orange-50 px-2 py-1 text-[9px] font-semibold uppercase tracking-wide text-warning">
+                <span className="rounded-full bg-orange-50 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-warning">
                   Coming Soon
                 </span>
               </div>
@@ -44,7 +44,7 @@ function RepositoryStatus() {
                 Connect your repository
               </p>
 
-              <p className="mt-1 max-w-2xl text-[11px] leading-5 text-text-secondary">
+              <p className="mt-1 max-w-2xl text-sm leading-5 text-text-secondary">
                 Engino will soon understand your codebase, dependencies,
                 architecture, and repository structure to provide deeper
                 engineering insights.
@@ -55,7 +55,7 @@ function RepositoryStatus() {
 
         {/* Footer */}
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-[10px] text-text-secondary">
+          <p className="text-xs text-text-secondary">
             GitHub integration
           </p>
 

@@ -54,13 +54,13 @@ function ProjectActivity() {
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
-        <h2 className="text-sm font-semibold text-text-primary">
+        <h2 className="text-base font-semibold text-text-primary">
           Activity
         </h2>
 
         <button
           type="button"
-          className="text-[10px] font-semibold text-primary transition hover:text-primary-dark"
+          className="text-sm font-semibold text-primary transition hover:text-primary-dark"
         >
           View all
         </button>
@@ -91,16 +91,16 @@ function ProjectActivity() {
 
               {/* Content */}
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-medium leading-4 text-text-primary">
+                <p className="text-sm font-medium leading-4 text-text-primary">
                   {activity.title}
                 </p>
 
                 <div className="mt-1 flex items-center justify-between gap-2">
-                  <p className="truncate text-[9px] text-text-secondary">
+                  <p className="truncate text-xs text-text-secondary">
                     {activity.user}
                   </p>
 
-                  <span className="shrink-0 text-[9px] text-text-secondary">
+                  <span className="shrink-0 text-xs text-text-secondary">
                     {activity.time}
                   </span>
                 </div>

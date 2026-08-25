@@ -17,7 +17,7 @@ function Header({
           )}
         </div>
         <div >
-          <h1 className="text-xl font-semibold text-text-primary">
+          <h1 className="text-2xl font-semibold text-text-primary">
             {title}
           </h1>
 
