@@ -3,6 +3,7 @@ import AppLayout from "../layouts/AppLayout";
 import Dashboard from "../pages/Dashboard";
 import Projects from "../pages/Projects";
 import ProjectDetails from "../pages/ProjectDetails";
+import AIRequirements from "../pages/AIRequirements";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
                 path: 'projects/:projectId',
                 element: <ProjectDetails />
             },
+            {
+                path: 'requirements',
+                element: <AIRequirements />
+            }
         ],
     },
 ]);
