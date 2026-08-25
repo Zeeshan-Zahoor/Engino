@@ -4,6 +4,7 @@ import Dashboard from "../pages/Dashboard";
 import Projects from "../pages/Projects";
 import ProjectDetails from "../pages/ProjectDetails";
 import AIRequirements from "../pages/AIRequirements";
+import Tasks from "../pages/Tasks";
 
 const router = createBrowserRouter([
     {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
             {
                 path: 'requirements',
                 element: <AIRequirements />
+            },
+            {
+                path: 'tasks',
+                element: <Tasks />
             }
         ],
     },
