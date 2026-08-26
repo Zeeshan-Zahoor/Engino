@@ -1,6 +1,20 @@
-import { ChevronDown, Filter, Search, X } from "lucide-react";
+import { Filter, Search, X } from "lucide-react";
 
-function ProjectFilters() {
+function ProjectFilters({
+  searchInput,
+  selectedStatus,
+  sortBy,
+  setSearchInput,
+  setSelectedStatus,
+  setSortBy
+}) {
+
+  const resetFilters = () => {
+    setSearchInput("");
+    setSelectedStatus("All");
+    setSortBy("Recently Updated");
+  }
+
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-4 lg:flex-row lg:items-center">
       {/* Search */}
@@ -12,6 +26,10 @@ function ProjectFilters() {
 
         <input
           type="text"
+          value={searchInput}
+          onChange={(e) => {
+            setSearchInput(e.target.value)
+          }}
           placeholder="Search projects..."
           className="h-10 w-full rounded-lg border border-border bg-white pl-10 pr-4 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
         />
@@ -24,10 +42,23 @@ function ProjectFilters() {
       >
         <span className="flex items-center gap-2 font-medium">
           <Filter size={15} className="text-text-secondary" />
-          Status: All
-        </span>
+          Status:
+          <select 
+            className="h-8 rounded-lg bg-white text-sm text-text-primary outline-none"
+            value={selectedStatus}
+            onChange={(e) => (
+              setSelectedStatus(e.target.value)
+            )}
+          >
+            <option value="All">All</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Planning">Planning</option>
+            <option value="Not Started">Not Started</option>
 
-        <ChevronDown size={15} className="text-text-secondary" />
+          </select>
+        </span>
       </button>
 
       {/* Sort */}
@@ -35,15 +66,31 @@ function ProjectFilters() {
         type="button"
         className="flex h-10 items-center justify-between gap-8 rounded-lg border border-border bg-white px-3 text-sm text-text-primary transition hover:border-primary/40"
       >
-        <span className="font-medium">Sort: Recently Updated</span>
-
-        <ChevronDown size={15} className="text-text-secondary" />
+        <span className="font-medium">
+          Sort: 
+           <select 
+              className="h-8 rounded-lg bg-white text-sm text-text-primary outline-none"
+              value={sortBy}
+              onChange={(e) => (
+                setSortBy(e.target.value)
+              )}
+              >
+              <option value="Recently Updated">Recently Updated</option>
+              <option value="Oldest Updated">Oldest Updated</option>
+              <option value="Progress: High to Low">Progress: High to Low</option>
+              <option value="Progress: Low to High">Progress: Low to High</option>
+              <option value="Name: A-Z">Name: A-Z</option>
+              <option value="Name: Z-A">Name: Z-A</option>
+            </select>
+        </span>
       </button>
 
       {/* Clear */}
       <button
         type="button"
-        className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-text-secondary transition hover:bg-surface hover:text-text-primary"
+        onClick={resetFilters}
+        className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-white cursor-pointer bg-primary transition disabled:text-text-secondary disabled:bg-surface disabled:cursor-not-allowed"
+        disabled={searchInput === "" && selectedStatus === "All" && sortBy === "Recently Updated"}
       >
         <X size={15} />
         Clear
