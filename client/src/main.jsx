@@ -9,9 +9,11 @@ import { RouterProvider } from "react-router-dom";
 
 import './index.css'
 import router from "./routes/index.jsx";
+import Toast from "./components/common/Toast.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Toast />
     <RouterProvider router={router}/>
   </StrictMode>,
 )

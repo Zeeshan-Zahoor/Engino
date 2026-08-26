@@ -13,9 +13,27 @@ const useProjectStore = create((set) => ({
         selectedProjectId: null,
     }),
 
-    addProject: (project) => set((state) => ({
-        projects: [...state.projects, project],
-    })),
+    addProject: (projectData) => {
+        const newProject = {
+            ...projectData,
+            id: crypto.randomUUID(),
+            progress: 0,
+            stats: {
+                totalTasks: 0,
+                completedTasks: 0,
+                inProgressTasks: 0,
+                todoTasks: 0,
+                reviewTasks: 0,
+            },
+
+            updatedDate: (new Date()).toDateString(),
+            updated: "Just now",
+        };
+
+        set((state) => ({
+            projects: [...state.projects, newProject],
+        }))
+    },
 
     updateProject: (projectId, updates) => set((state) => ({
         projects: state.projects.map((project) => (

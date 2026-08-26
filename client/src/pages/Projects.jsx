@@ -10,14 +10,15 @@ import {
 } from "lucide-react"
 import ProjectFilters from "../components/projects/ProjectFilters"
 import ProjectsList from "../components/projects/ProjectsList"
+import CreateProjectModal from "../components/projects/CreateProjectModal"
 
 import useProjectStore from "../stores/projectStore"
 
 function Projects() {
-    
     const [searchInput, setSearchInput] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("All")
     const [sortBy, setSortBy] = useState("Recently Updated");
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const projects = useProjectStore((state) => state.projects);
 
@@ -29,8 +30,8 @@ function Projects() {
     })
 
     const filteredProjects = statusFilteredProjects.filter((project) => {
-        const nameMatches = project.name.toLowerCase().includes(searchInput.toLowerCase());
-        const projectCodeMatches = project.code.toLowerCase().includes(searchInput.toLowerCase());
+        const nameMatches = project.name?.toLowerCase().includes(searchInput.toLowerCase());
+        const projectCodeMatches = project?.code.toLowerCase().includes(searchInput.toLowerCase());
 
         return nameMatches || projectCodeMatches;
      })
@@ -124,6 +125,7 @@ function Projects() {
             </div>
             <button
                 type="button"
+                onClick={() => setIsCreateModalOpen(true)}
                 className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark"
             >
                 <Plus size={17} strokeWidth={2.8} />
@@ -142,6 +144,13 @@ function Projects() {
 
         <ProjectsList 
             filteredProjects={sortedProjects}
+        />
+
+
+        {/* Render Modal */}
+        <CreateProjectModal 
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
         />
     </div>
   )
