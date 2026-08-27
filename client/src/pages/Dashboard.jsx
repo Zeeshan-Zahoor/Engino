@@ -15,9 +15,34 @@ import ProjectProgress from "../components/dashboard/ProjectProgress";
 import TeamActivity from "../components/dashboard/TeamActivity";
 import QuickActions from "../components/dashboard/QuickActions";
 import RepositoryStatus from "../components/dashboard/RepositoryStatus";
+import useProjectStore from "../stores/projectStore";
+import { tasks } from "../data/tasks";
 
 
 function Dashboard() {
+    const projects = useProjectStore(state => state.projects);
+    const activeProjects = projects.filter((project) => project.status === "In Progress");
+    
+    const inProgressTasks = () =>
+        tasks.filter((task) => task.status === "In Progress").length;
+
+    const completedTasks = () =>
+        tasks.filter((task) => task.status === "Completed").length;
+
+    const dueTodayTasks = () => {
+        const today = new Date();
+
+        return tasks.filter((task) => {
+            const dueDate = new Date(task.dueDate);
+
+            return (
+                dueDate.getFullYear() === today.getFullYear() &&
+                dueDate.getMonth() === today.getMonth() &&
+                dueDate.getDate() === today.getDate()
+            );
+        }).length;
+    };
+
   return (
     <div className="space-y-6 px-8">
         <Header 
@@ -36,15 +61,15 @@ function Dashboard() {
                 icon={FolderKanban}
                 iconClassName="bg-purple-50 text-primary"
                 title="Projects"
-                value="6"
-                description="2 active"
+                value={projects.length}
+                description={`${activeProjects.length} active`}
             />
 
             <StatsCard
                 icon={Sparkles}
                 iconClassName="bg-orange-50 text-warning"
                 title="AI Plans"
-                value="12"
+                value="12"  // keep it static for now
                 description="3 pending review"
             />
 
@@ -52,8 +77,8 @@ function Dashboard() {
                 icon={ListChecks}
                 iconClassName="bg-blue-50 text-info"
                 title="Tasks In Progress"
-                value="28"
-                description="8 more than yesterday"
+                value={inProgressTasks()}
+                description="8 more than yesterday" // keep it static for now
                 trend="8"
             />
 
@@ -61,8 +86,8 @@ function Dashboard() {
                 icon={CircleCheck}
                 iconClassName="bg-green-50 text-success"
                 title="Tasks Completed"
-                value="45"
-                description="12 more than yesterday"
+                value={completedTasks()}
+                description="12 more than yesterday" // keep it static for now
                 trend="12"
             />
 
@@ -70,8 +95,8 @@ function Dashboard() {
                 icon={Clock3}
                 iconClassName="bg-red-50 text-danger"
                 title="Tasks Due Today"
-                value="5"
-                description="2 high priority"
+                value={dueTodayTasks()}
+                description="2 high priority" // keep it static for now
                 trend="2"
                 trendType="negative"
             />

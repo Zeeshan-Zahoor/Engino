@@ -1,45 +1,18 @@
 import { ArrowRight, Sparkles } from "lucide-react";
+import { requirements } from "../../data/requirements";
+import useProjectStore from "../../stores/projectStore";
 
-const requirements = [
-  {
-    title: "Student Portal",
-    project: "Student Portal",
-    status: "AI Plan Ready",
-    statusClass: "bg-primary-light text-primary",
-    complexity: "Medium",
-    tasks: "12 tasks",
-    updated: "2h ago",
-  },
-  {
-    title: "Attendance Module",
-    project: "Student Portal",
-    status: "Needs Clarification",
-    statusClass: "bg-orange-50 text-warning",
-    complexity: "Easy",
-    tasks: "—",
-    updated: "4h ago",
-  },
-  {
-    title: "Payment Gateway",
-    project: "E-Commerce",
-    status: "Plan Generated",
-    statusClass: "bg-blue-50 text-info",
-    complexity: "Hard",
-    tasks: "18 tasks",
-    updated: "Yesterday",
-  },
-  {
-    title: "Notification System",
-    project: "Student Portal",
-    status: "Approved",
-    statusClass: "bg-green-50 text-success",
-    complexity: "Medium",
-    tasks: "8 tasks",
-    updated: "Yesterday",
-  },
-];
+const statusStyles = {
+  "AI Plan Ready": "bg-primary-light text-primary",
+  "Needs Clarification": "bg-orange-50 text-warning",
+  "Plan Generated": "bg-blue-50 text-info",
+  Approved: "bg-green-50 text-success",
+  Pending: "bg-surface text-text-secondary",
+};
 
 function RequirementsOverview() {
+
+  const projects = useProjectStore(state => state.projects);
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
@@ -69,29 +42,30 @@ function RequirementsOverview() {
 
       {/* Requirements */}
       <div className="divide-y divide-border">
-        {requirements.map((requirement) => (
+        {/* temporary until we get exact timestamps from mongodb */}
+        {(requirements.slice(0, 5)).map((requirement) => (
           <button
-            key={requirement.title}
+            key={requirement.id}
             type="button"
             className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-surface"
           >
             {/* Requirement */}
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-text-primary">
-                {requirement.title}
+                {requirement.name}
               </p>
 
               <p className="mt-1 text-xs text-text-secondary">
-                {requirement.project}
+                {projects.find(project => (project.id === requirement.projectId))?.name}
               </p>
             </div>
 
-            {/* Status */}
+            {/*AI Status */}
             <div className="w-36">
               <span
-                className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${requirement.statusClass}`}
+                className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[requirement.aiStatus]}`}
               >
-                {requirement.status}
+                {requirement.aiStatus}
               </span>
             </div>
 
@@ -109,7 +83,7 @@ function RequirementsOverview() {
             {/* Tasks */}
             <div className="w-20">
               <p className="text-xs font-medium text-text-primary">
-                {requirement.tasks}
+                {requirement.generatedTasks}
               </p>
 
               <p className="mt-0.5 text-xs text-text-secondary">

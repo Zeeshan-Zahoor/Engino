@@ -1,37 +1,17 @@
 import { ArrowRight, CheckCircle2, FolderKanban } from "lucide-react";
+import useProjectStore from "../../stores/projectStore";
 
-const projects = [
-  {
-    name: "Student Portal",
-    description: "12 of 20 tasks completed",
-    progress: 60,
-    status: "In Progress",
-    statusClass: "bg-blue-50 text-info",
-  },
-  {
-    name: "E-Commerce Platform",
-    description: "18 of 24 tasks completed",
-    progress: 75,
-    status: "In Progress",
-    statusClass: "bg-blue-50 text-info",
-  },
-  {
-    name: "Attendance System",
-    description: "8 of 8 tasks completed",
-    progress: 100,
-    status: "Completed",
-    statusClass: "bg-green-50 text-success",
-  },
-  {
-    name: "Notification System",
-    description: "5 of 12 tasks completed",
-    progress: 42,
-    status: "In Progress",
-    statusClass: "bg-blue-50 text-info",
-  },
-];
+const statusStyles = {
+  "Not Started": "bg-gray-50 text-gray-600",
+  Planning: "bg-yellow-50 text-warning",
+  "In Progress": "bg-blue-50 text-info",
+  "On Hold": "bg-orange-50 text-orange-600",
+  Completed: "bg-green-50 text-success",
+};
 
 function ProjectProgress() {
+  const projects = useProjectStore(state => state.projects);
+
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
@@ -57,9 +37,9 @@ function ProjectProgress() {
 
       {/* Projects */}
       <div className="grid gap-4 p-5 sm:grid-cols-2">
-        {projects.map((project) => (
+        {(projects.slice(0, 4)).map((project) => (
           <button
-            key={project.name}
+            key={project.id}
             type="button"
             className="rounded-xl border border-border p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
           >
@@ -86,7 +66,7 @@ function ProjectProgress() {
               </div>
 
               <span
-                className={`shrink-0 rounded-full px-2 py-1 text-xs font-medium ${project.statusClass}`}
+                className={`shrink-0 rounded-full px-2 py-1 text-xs font-medium ${statusStyles[project.status]}`}
               >
                 {project.status}
               </span>

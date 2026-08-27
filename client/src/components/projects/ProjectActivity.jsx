@@ -7,49 +7,6 @@ import {
 } from "lucide-react";
 import { activities } from "../../data/activities";
 
-// const activities = [
-//   {
-//     type: "update",
-//     icon: Pencil,
-//     iconClass: "bg-blue-50 text-info",
-//     title: "Project updated",
-//     user: "Zeeshan Zahoor",
-//     time: "2h ago",
-//   },
-//   {
-//     type: "task",
-//     icon: CheckCircle2,
-//     iconClass: "bg-green-50 text-success",
-//     title: "Task completed",
-//     user: "Ganga",
-//     time: "5h ago",
-//   },
-//   {
-//     type: "requirement",
-//     icon: FilePlus2,
-//     iconClass: "bg-purple-50 text-primary",
-//     title: "AI Requirement added",
-//     user: "Areeb",
-//     time: "1d ago",
-//   },
-//   {
-//     type: "member",
-//     icon: UserPlus,
-//     iconClass: "bg-orange-50 text-warning",
-//     title: "Team member added",
-//     user: "Zeeshan Zahoor",
-//     time: "2d ago",
-//   },
-//   {
-//     type: "ai",
-//     icon: Bot,
-//     iconClass: "bg-primary-light text-primary",
-//     title: "Task status changed",
-//     user: "Ganga",
-//     time: "3d ago",
-//   },
-// ];
-
 const activityConfig = {
   update: {
     icon: Pencil,
@@ -120,9 +77,9 @@ function ProjectActivity({ projectId }) {
               </div>
 
               {/* Content */}
-              <div className="min-w-0 flex-1">
+              {/* <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium leading-4 text-text-primary">
-                  {activity.title}
+                  {activity.target}
                 </p>
 
                 <div className="mt-1 flex items-center justify-between gap-2">
@@ -134,6 +91,21 @@ function ProjectActivity({ projectId }) {
                     {activity.time}
                   </span>
                 </div>
+              </div> */}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs leading-5 text-text-secondary">
+                  <span className="font-semibold text-text-primary">
+                    {activity.user.name}
+                  </span>{" "}
+                  {activity.action}{" "}
+                  <span className="font-medium text-text-primary">
+                    {activity.target}
+                  </span>
+                </p>
+
+                <p className="mt-0.5 text-xs text-text-secondary">
+                  {activity.time}
+                </p>
               </div>
             </div>
           );

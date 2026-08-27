@@ -4,55 +4,41 @@ import {
   CheckCircle2,
   CircleDot,
   UserPlus,
+  FilePlus2
 } from "lucide-react";
+import { activities } from "../../data/activities";
 
-const activities = [
-  {
-    type: "user",
+const activityConfig = {
+  task: {
     icon: CheckCircle2,
     iconClass: "bg-green-50 text-success",
-    name: "Zeeshan",
-    action: "completed",
-    target: "Attendance API Integration",
-    time: "2 minutes ago",
   },
-  {
-    type: "user",
+
+  member: {
     icon: UserPlus,
     iconClass: "bg-purple-50 text-primary",
-    name: "Ganga",
-    action: "claimed",
-    target: "Student Login UI",
-    time: "18 minutes ago",
   },
-  {
-    type: "user",
-    icon: CheckCircle2,
-    iconClass: "bg-blue-50 text-info",
-    name: "Admin",
-    action: "approved",
-    target: "Student Portal",
-    time: "1 hour ago",
+
+  requirement: {
+    icon: FilePlus2,
+    iconClass: "bg-purple-50 text-primary",
   },
-  {
-    type: "user",
+
+  update: {
     icon: CircleDot,
     iconClass: "bg-orange-50 text-warning",
-    name: "Arjun",
-    action: "updated",
-    target: "Notification API",
-    time: "2 hours ago",
   },
-  {
-    type: "ai",
+
+  approval: {
+    icon: CheckCircle2,
+    iconClass: "bg-blue-50 text-info",
+  },
+
+  ai: {
     icon: Bot,
     iconClass: "bg-primary-light text-primary",
-    name: "AI",
-    action: "generated a plan for",
-    target: "Payment Gateway",
-    time: "3 hours ago",
   },
-];
+};
 
 function TeamActivity() {
   return (
@@ -80,18 +66,19 @@ function TeamActivity() {
 
       {/* Activity list */}
       <div className="px-5 py-2">
-        {activities.map((activity, index) => {
-          const Icon = activity.icon;
+        {(activities.slice(0, 5)).map((activity, index) => {
+          const config = activityConfig[activity.type];
+          const Icon = config.icon;
 
           return (
             <div
-              key={`${activity.name}-${activity.target}`}
+              key={activity.id}
               className="flex gap-3 py-3.5"
             >
               {/* Timeline */}
               <div className="relative">
                 <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full ${activity.iconClass}`}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full ${config.iconClass}`}
                 >
                   <Icon size={15} strokeWidth={1.8} />
                 </div>
@@ -105,7 +92,7 @@ function TeamActivity() {
               <div className="min-w-0 flex-1">
                 <p className="text-xs leading-5 text-text-secondary">
                   <span className="font-semibold text-text-primary">
-                    {activity.name}
+                    {activity.user.name}
                   </span>{" "}
                   {activity.action}{" "}
                   <span className="font-medium text-text-primary">

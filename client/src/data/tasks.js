@@ -10,7 +10,7 @@ export const tasks = [
       name: "Zeeshan Zahoor",
       initials: "ZZ",
     },
-    dueDate: "May 12, 2025",
+    dueDate: "Sept 12, 2026",
   },
   {
     id: "task-002",

@@ -16,7 +16,7 @@ function ProjectDetails() {
   const { projectId } = useParams();
   const { projects } = useProjectStore();
   const activeProject = projects.find((project) => project.id === projectId);
-  
+
 
   return (
     <div className="space-y-6 px-8">
