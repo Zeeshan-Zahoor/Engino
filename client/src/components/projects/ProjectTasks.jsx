@@ -1,55 +1,5 @@
 import { ArrowRight, Check, Circle } from "lucide-react";
-
-const tasks = [
-  {
-    name: "Setup project architecture",
-    assignee: "Zeeshan",
-    initials: "ZZ",
-    priority: "High",
-    dueDate: "May 12, 2025",
-    completed: true,
-  },
-  {
-    name: "Implement authentication",
-    assignee: "Ganga",
-    initials: "GA",
-    priority: "High",
-    dueDate: "May 14, 2025",
-    completed: true,
-  },
-  {
-    name: "Design student dashboard",
-    assignee: "Areeb",
-    initials: "AR",
-    priority: "Medium",
-    dueDate: "May 16, 2025",
-    completed: true,
-  },
-  {
-    name: "Attendance module",
-    assignee: "Zeeshan",
-    initials: "ZZ",
-    priority: "Medium",
-    dueDate: "May 26, 2025",
-    completed: false,
-  },
-  {
-    name: "Assignment submission",
-    assignee: "Ganga",
-    initials: "GA",
-    priority: "Medium",
-    dueDate: "May 28, 2025",
-    completed: false,
-  },
-  {
-    name: "Notification system",
-    assignee: "Areeb",
-    initials: "AR",
-    priority: "Low",
-    dueDate: "Jun 02, 2025",
-    completed: false,
-  },
-];
+import { tasks } from "../../data/tasks";
 
 const priorityStyles = {
   High: "bg-red-50 text-danger",
@@ -57,7 +7,9 @@ const priorityStyles = {
   Low: "bg-green-50 text-success",
 };
 
-function ProjectTasks() {
+function ProjectTasks({ projectId }) {
+  const projectTasks = tasks.filter((task) => task.projectId === projectId);
+
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
@@ -77,20 +29,20 @@ function ProjectTasks() {
 
       {/* Task list */}
       <div className="divide-y divide-border">
-        {tasks.map((task) => (
+        {projectTasks.map((task) => (
           <div
-            key={task.name}
+            key={task.id}
             className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 px-5 py-3.5 sm:grid-cols-[auto_minmax(0,1fr)_90px_75px_90px] sm:items-center"
           >
             {/* Completion */}
             <div
               className={`flex h-5 w-5 items-center justify-center rounded-full ${
-                task.completed
+                task.status === "Completed"
                   ? "bg-success text-white"
                   : "border-2 border-info text-transparent"
               }`}
             >
-              {task.completed ? (
+              {task.status === "Completed" ? (
                 <Check size={11} strokeWidth={3} />
               ) : (
                 <Circle size={7} fill="currentColor" />
@@ -99,17 +51,17 @@ function ProjectTasks() {
 
             {/* Task name */}
             <p className="min-w-0 truncate text-sm font-medium text-text-primary">
-              {task.name}
+              {task.title}
             </p>
 
             {/* Assignee */}
             <div className="hidden items-center gap-2 sm:flex">
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                {task.initials}
+                {task.assignee.initials}
               </div>
 
               <span className="truncate text-xs text-text-secondary">
-                {task.assignee}
+                {task.assignee.name}
               </span>
             </div>
 
@@ -130,7 +82,7 @@ function ProjectTasks() {
             {/* Mobile metadata */}
             <div className="col-start-2 flex items-center gap-3 sm:hidden">
               <span className="text-xs text-text-secondary">
-                {task.assignee}
+                {task.assignee.name}
               </span>
 
               <span

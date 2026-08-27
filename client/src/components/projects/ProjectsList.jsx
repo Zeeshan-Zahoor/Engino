@@ -4,6 +4,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const avatarClasses = [
   "bg-purple-100 text-primary",
@@ -14,8 +15,12 @@ const avatarClasses = [
 function ProjectsList({
   filteredProjects,
 }) {
+
+  const navigate = useNavigate();
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+
 
   const totalPages = Math.ceil(filteredProjects.length / pageSize);
 
@@ -25,6 +30,9 @@ function ProjectsList({
 
   const paginatedProjects = filteredProjects.slice(startIndex, endIndex);
 
+  const handleProjectClick = (projectId) => {
+    navigate(`${projectId}`);
+  }
 
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-white">
@@ -48,7 +56,12 @@ function ProjectsList({
 
           const extraMembers = project.team.length - team.length;
         return (
-          <div key={project.id}>
+          <div 
+            key={project.id}
+            role="button"
+            className="transition hover:bg-surface cursor-default active:scale-[1.005]"
+            onClick={() => handleProjectClick(project.id)}
+          >
             {/* Desktop Row */}
             <div className="hidden grid-cols-[2.2fr_1.8fr_0.8fr_0.9fr_1fr_0.3fr] items-center gap-4 px-5 py-4 lg:grid">
               {/* Project */}

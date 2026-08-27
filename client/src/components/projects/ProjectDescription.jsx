@@ -1,21 +1,8 @@
 import { CheckCircle2 } from "lucide-react";
 
-const goals = [
-  "Simplify student academic management",
-  "Provide real-time attendance information",
-  "Centralize assignments and notifications",
-  "Improve communication between students and administrators",
-];
-
-const technologies = [
-  "React",
-  "Node.js",
-  "Express",
-  "MongoDB",
-  "Tailwind CSS",
-];
-
-function ProjectDescription() {
+function ProjectDescription({ project }) {
+  const goals = project.goals;
+  const technologies = project.technologies;
   return (
     <section className="rounded-2xl border border-border bg-white p-5 sm:p-6">
       {/* Description */}
@@ -25,9 +12,7 @@ function ProjectDescription() {
         </h2>
 
         <p className="mt-3 max-w-4xl text-sm leading-6 text-text-secondary">
-          Student Portal is a centralized platform designed to help students
-          manage their academic activities, including attendance, assignments,
-          notifications, and profile information.
+          {project.description}
         </p>
       </div>
 

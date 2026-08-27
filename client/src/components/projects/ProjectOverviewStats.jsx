@@ -4,7 +4,32 @@ import {
   Users,
 } from "lucide-react";
 
-function ProjectOverviewStats() {
+function ProjectOverviewStats({ project }) {
+
+  // for progress ring
+  const tasks = project.stats;
+  const total = tasks.totalTasks || 0;
+
+  const completed = total ? (tasks.completedTasks / total) * 100 : 0;
+  const inProgress = total ? (tasks.inProgressTasks / total) * 100 : 0;
+  const review = total ? (tasks.reviewTasks / total) * 100 : 0;
+  const todo = total ? (tasks.todoTasks / total) * 100 : 0;
+  
+  const completedEnd = completed;
+  const inProgressEnd = completed + inProgress;
+  const reviewEnd = inProgressEnd + review;
+  const todoEnd = reviewEnd + todo;
+
+  // team members display
+  let team = project.team;
+  let extraMembers = 0;
+  if(project.team.length > 3) {
+    team = team.slice(0, 3);
+    extraMembers = project.team.length - 3;
+  }
+
+
+
   return (
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
@@ -21,13 +46,18 @@ function ProjectOverviewStats() {
           <div
             className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full"
             style={{
-              background:
-                "conic-gradient(#10b981 0% 60%, #3b82f6 60% 75%, #f97316 75% 88%, #d1d5db 88% 100%)",
+               background: `conic-gradient(
+                #10b981 0% ${completedEnd}%,
+                #3b82f6 ${completedEnd}% ${inProgressEnd}%,
+                #f97316 ${inProgressEnd}% ${reviewEnd}%,
+                #d1d5db ${reviewEnd}% ${todoEnd}%,
+                #f2f2f6 ${todoEnd}% 100%
+              )`,
             }}
           >
             <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-white">
               <span className="text-lg font-bold text-text-primary">
-                75%
+                {project.progress}%
               </span>
             </div>
           </div>
@@ -39,7 +69,7 @@ function ProjectOverviewStats() {
                 <span className="h-2 w-2 rounded-full bg-success" />
                 Done
               </span>
-              <span className="font-semibold text-text-primary">24</span>
+              <span className="font-semibold text-text-primary">{tasks.completedTasks}</span>
             </div>
 
             <div className="flex items-center justify-between gap-8 text-sm">
@@ -47,7 +77,7 @@ function ProjectOverviewStats() {
                 <span className="h-2 w-2 rounded-full bg-info" />
                 In Progress
               </span>
-              <span className="font-semibold text-text-primary">8</span>
+              <span className="font-semibold text-text-primary">{tasks.inProgressTasks}</span>
             </div>
 
             <div className="flex items-center justify-between gap-8 text-sm">
@@ -55,7 +85,7 @@ function ProjectOverviewStats() {
                 <span className="h-2 w-2 rounded-full bg-gray-400" />
                 To Do
               </span>
-              <span className="font-semibold text-text-primary">6</span>
+              <span className="font-semibold text-text-primary">{tasks.todoTasks}</span>
             </div>
 
             <div className="flex items-center justify-between gap-8 text-sm">
@@ -63,7 +93,7 @@ function ProjectOverviewStats() {
                 <span className="h-2 w-2 rounded-full bg-orange-500" />
                 Review
               </span>
-              <span className="font-semibold text-text-primary">2</span>
+              <span className="font-semibold text-text-primary">{tasks.reviewTasks}</span>
             </div>
           </div>
         </div>
@@ -79,11 +109,7 @@ function ProjectOverviewStats() {
 
             <div className="mt-3 flex items-baseline gap-1">
               <span className="text-2xl font-bold text-text-primary">
-                40
-              </span>
-
-              <span className="text-lg text-text-secondary">
-                / 50
+                {tasks.totalTasks}
               </span>
             </div>
 
@@ -114,7 +140,7 @@ function ProjectOverviewStats() {
             </p>
 
             <p className="mt-3 text-2xl font-bold text-text-primary">
-              5
+              {project.team.length}
             </p>
 
             <p className="mt-1 text-xs text-text-secondary">
@@ -128,9 +154,9 @@ function ProjectOverviewStats() {
         </div>
 
         <div className="mt-4 flex items-center">
-          {["ZZ", "GA", "AR"].map((member, index) => (
+          {team.map((member, index) => (
             <div
-              key={member}
+              key={member.id}
               className={`-ml-2 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-xs font-semibold first:ml-0 ${
                 index === 0
                   ? "bg-purple-100 text-primary"
@@ -139,13 +165,15 @@ function ProjectOverviewStats() {
                     : "bg-orange-100 text-warning"
               }`}
             >
-              {member}
+              {member.initials}
             </div>
           ))}
 
-          <span className="ml-1 flex h-7 min-w-7 items-center justify-center rounded-full bg-surface px-2 text-xs font-semibold text-text-secondary">
-            +2
-          </span>
+          {extraMembers > 0 && (
+            <span className="ml-1 flex h-7 min-w-7 items-center justify-center rounded-full bg-surface px-2 text-xs font-semibold text-text-secondary">
+               +{extraMembers}
+            </span>
+          )}
         </div>
       </div>
 
@@ -163,7 +191,7 @@ function ProjectOverviewStats() {
               </p>
 
               <p className="mt-1 text-sm font-semibold text-text-primary">
-                May 10, 2025
+                {project.startDate}
               </p>
             </div>
 
@@ -173,7 +201,7 @@ function ProjectOverviewStats() {
               </p>
 
               <p className="mt-1 text-sm font-semibold text-text-primary">
-                Jul 30, 2025
+                {project.targetDate}
               </p>
             </div>
           </div>

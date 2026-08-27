@@ -1,0 +1,118 @@
+export const requirements = [
+  {
+    id: "req-001",
+    projectId: "PRJ-001",
+    name: "User Authentication & Authorization",
+    status: "Completed",
+    date: "May 15, 2025",
+  },
+  {
+    id: "req-002",
+    projectId: "PRJ-001",
+    name: "Student Dashboard & Profile",
+    status: "Completed",
+    date: "May 16, 2025",
+  },
+  {
+    id: "req-003",
+    projectId: "PRJ-001",
+    name: "Attendance Management",
+    status: "In Progress",
+    date: "May 18, 2025",
+  },
+  {
+    id: "req-004",
+    projectId: "PRJ-001",
+    name: "Assignment Management",
+    status: "In Progress",
+    date: "May 20, 2025",
+  },
+  {
+    id: "req-005",
+    projectId: "PRJ-001",
+    name: "Notification System",
+    status: "Planned",
+    date: "May 22, 2025",
+  },
+
+  {
+    id: "req-006",
+    projectId: "PRJ-002",
+    name: "Book Catalog Management",
+    status: "Completed",
+    date: "May 18, 2025",
+  },
+  {
+    id: "req-007",
+    projectId: "PRJ-002",
+    name: "Member Management",
+    status: "In Progress",
+    date: "May 21, 2025",
+  },
+  {
+    id: "req-008",
+    projectId: "PRJ-002",
+    name: "Borrow & Return Management",
+    status: "Planned",
+    date: "May 25, 2025",
+  },
+
+  {
+    id: "req-009",
+    projectId: "PRJ-003",
+    name: "Customer Management",
+    status: "Completed",
+    date: "May 10, 2025",
+  },
+  {
+    id: "req-010",
+    projectId: "PRJ-003",
+    name: "Sales Pipeline",
+    status: "In Progress",
+    date: "May 15, 2025",
+  },
+  {
+    id: "req-011",
+    projectId: "PRJ-003",
+    name: "Customer Communication",
+    status: "Planned",
+    date: "May 20, 2025",
+  },
+
+  {
+    id: "req-012",
+    projectId: "PRJ-004",
+    name: "Product Management",
+    status: "Completed",
+    date: "Apr 10, 2025",
+  },
+  {
+    id: "req-013",
+    projectId: "PRJ-004",
+    name: "Shopping Cart",
+    status: "Completed",
+    date: "Apr 20, 2025",
+  },
+  {
+    id: "req-014",
+    projectId: "PRJ-004",
+    name: "Payment Processing",
+    status: "Completed",
+    date: "May 01, 2025",
+  },
+
+  {
+    id: "req-015",
+    projectId: "PRJ-005",
+    name: "Attendance Recording",
+    status: "Planned",
+    date: "Jun 05, 2025",
+  },
+  {
+    id: "req-016",
+    projectId: "PRJ-005",
+    name: "Attendance Reports",
+    status: "Planned",
+    date: "Jun 10, 2025",
+  },
+];

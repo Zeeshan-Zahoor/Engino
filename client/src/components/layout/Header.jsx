@@ -1,19 +1,25 @@
 import { Bell, Search } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 
 function Header({
   title,
   description,
   showBack = false,
 }) {
+  const navigate = useNavigate();
   return (
     <header className="flex h-20 items-center justify-between bg-white m-0">
       {/* Page Title */}
       <div className="flex gap-3">
         <div>
           {showBack && (
-            <ArrowLeft size={20} strokeWidth={2.5} className="mt-1"/>
+            <button
+              onClick={() => navigate(-1)}
+              className="flex justify-center items-center w-8 h-8 rounded hover:bg-surface"
+            >
+               <ArrowLeft size={22} strokeWidth={2.5} />
+            </button>
           )}
         </div>
         <div >

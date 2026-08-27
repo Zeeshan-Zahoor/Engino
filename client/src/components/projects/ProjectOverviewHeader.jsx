@@ -6,49 +6,52 @@ import {
   Share2,
 } from "lucide-react";
 
-function ProjectOverviewHeader() {
+import { getInitials } from "../../utils/getIniitals";
+
+function ProjectOverviewHeader({ project }) {
   return (
     <section className="rounded-2xl border border-border bg-white p-4">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         {/* Project identity */}
         <div className="flex min-w-0 items-start gap-4">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-primary text-white">
-            <span className="text-2xl font-semibold">SP</span>
+            <span className="text-2xl font-semibold">{getInitials(project.name)}</span>
           </div>
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-xl font-semibold text-text-primary">
-                Student Portal
+                {project.name}
               </h1>
 
               <span className="rounded-full bg-primary-light px-2.5 py-1 text-xs font-semibold text-primary">
-                In Progress
+                {project.status}
               </span>
             </div>
 
             <p className="mt-1.5 max-w-2xl text-sm text-text-secondary">
-              Complete student portal with attendance, assignments, and
-              notifications.
+              {project.description}
             </p>
 
             {/* Metadata */}
             <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-text-secondary">
               <span className="flex items-center gap-1.5">
                 <span className="font-medium text-text-primary">
-                  Project ID:
+                  Project Code:
                 </span>
-                STU-001
+                {project.code}
               </span>
 
               <span className="flex items-center gap-1.5">
                 <CalendarDays size={13} />
-                Created: May 10, 2025
+                {/* Temporary until mongodb time stamps are available */}
+                Created: {project.updated}  
               </span>
 
               <span className="flex items-center gap-1.5">
                 <Clock3 size={13} />
-                Last Updated: May 24, 2025 · 2h ago
+                {/* Temporary until mongodb time stamps are available */}
+                Last Updated: {project.updatedDate}
               </span>
             </div>
           </div>
@@ -74,7 +77,7 @@ function ProjectOverviewHeader() {
 
           <button
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white transition hover:bg-primary-dark"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white transition hover:bg-primary-dark"
             aria-label="More project actions"
           >
             <MoreHorizontal size={17} />

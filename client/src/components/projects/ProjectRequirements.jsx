@@ -1,40 +1,14 @@
 import { ArrowRight, FileText } from "lucide-react";
-
-const requirements = [
-  {
-    name: "User Authentication & Authorization",
-    status: "Completed",
-    date: "May 15, 2025",
-  },
-  {
-    name: "Student Dashboard & Profile",
-    status: "Completed",
-    date: "May 16, 2025",
-  },
-  {
-    name: "Attendance Management",
-    status: "In Progress",
-    date: "May 18, 2025",
-  },
-  {
-    name: "Assignment Management",
-    status: "In Progress",
-    date: "May 20, 2025",
-  },
-  {
-    name: "Notification System",
-    status: "Planned",
-    date: "May 22, 2025",
-  },
-];
+import { requirements } from "../../data/requirements";
 
 const statusStyles = {
-  Completed: "bg-green-50 text-success",
+  "Completed": "bg-green-50 text-success",
   "In Progress": "bg-blue-50 text-info",
-  Planned: "bg-surface text-text-secondary",
+  "Planned": "bg-surface text-text-secondary",
 };
 
-function ProjectRequirements() {
+function ProjectRequirements({ projectId }) {
+  const projectRequirements = requirements.filter((requirement) => requirement.projectId === projectId)
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
@@ -54,9 +28,9 @@ function ProjectRequirements() {
 
       {/* Requirements */}
       <div className="divide-y divide-border">
-        {requirements.map((requirement) => (
+        {projectRequirements.map((requirement) => (
           <div
-            key={requirement.name}
+            key={requirement.id}
             className="flex items-center gap-3 px-5 py-3.5"
           >
             {/* Icon */}

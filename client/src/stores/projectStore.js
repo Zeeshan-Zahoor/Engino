@@ -18,6 +18,8 @@ const useProjectStore = create((set) => ({
             ...projectData,
             id: crypto.randomUUID(),
             progress: 0,
+            technologies: [],
+            goals: [],
             stats: {
                 totalTasks: 0,
                 completedTasks: 0,
