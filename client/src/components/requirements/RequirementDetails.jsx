@@ -4,16 +4,25 @@ import {
   Rocket,
   X,
 } from "lucide-react";
+import { getInitials } from '../../utils/getIniitals';
+import useProjectStore from "../../stores/projectStore";
 
-const acceptanceCriteria = [
-  "Admin can create and manage classes",
-  "Admin can mark attendance for each student",
-  "Students can view their attendance percentage",
-  "Admin can generate monthly attendance reports",
-  "Low attendance alerts are sent to students",
-];
+// const acceptanceCriteria = [
+//   "Admin can create and manage classes",
+//   "Admin can mark attendance for each student",
+//   "Students can view their attendance percentage",
+//   "Admin can generate monthly attendance reports",
+//   "Low attendance alerts are sent to students",
+// ];
 
-function RequirementDetails() {
+const complexityStyles = {
+  High: "text-danger",
+  Medium: "text-warning",
+  Low: "text-success",
+};
+
+function RequirementDetails({ requirement }) {
+  const projects = useProjectStore(state => state.projects);
   return (
     <section className="overflow-hidden rounded-xl border border-border bg-white">
       {/* Requirement Header */}
@@ -21,25 +30,23 @@ function RequirementDetails() {
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
-              <span className="text-sm font-semibold">SP</span>
+              <span className="text-sm font-semibold">{getInitials(requirement.name)}</span>
             </div>
 
             <div className="min-w-0">
               <h2 className="text-base font-bold leading-5 text-text-primary">
-                Student Attendance
-                <br />
-                Tracking System
+                {requirement.name}
               </h2>
 
               <p className="mt-1 text-xs text-text-secondary">
-                REQ-001 · Student Portal
+                · {projects.find(project => project.id === requirement.projectId)?.name}
               </p>
             </div>
           </div>
 
           <div className="flex shrink-0 items-start gap-2">
             <span className="rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-success">
-              Plan Generated
+              {requirement.aiStatus}
             </span>
 
             <button
@@ -85,9 +92,7 @@ function RequirementDetails() {
           </h3>
 
           <p className="mt-2 text-sm leading-5 text-text-secondary">
-            Allow admins to create classes, mark attendance for students,
-            generate attendance reports, and notify students about their
-            attendance.
+            {requirement.description}
           </p>
         </div>
 
@@ -98,7 +103,7 @@ function RequirementDetails() {
           </h3>
 
           <div className="mt-3 space-y-2">
-            {acceptanceCriteria.map((criteria) => (
+            {requirement.acceptanceCriteria.map((criteria) => (
               <div
                 key={criteria}
                 className="flex items-start gap-2"
@@ -107,7 +112,7 @@ function RequirementDetails() {
                   <Check size={9} strokeWidth={3} />
                 </div>
 
-                <span className="text-xs leading-4 text-text-secondary">
+                <span className="text-sm leading-4 text-text-secondary">
                   {criteria}
                 </span>
               </div>
@@ -119,19 +124,20 @@ function RequirementDetails() {
         <div className="mt-5 grid grid-cols-3 gap-1.5">
           <MetricCard
             title="Complexity"
-            value="Medium"
-            valueClassName="text-warning"
+            value={`${requirement.complexity}`}
+            valueClassName={`${complexityStyles[requirement.complexity]}`}
             complexity
+            complexityType={requirement.complexity}
           />
 
           <MetricCard
             title="Estimated Effort"
-            value="28h"
+            value={requirement.estimatedEffort}
           />
 
           <MetricCard
             title="AI Confidence"
-            value="92%"
+            value={`${requirement.aiConfidence}%`}
             valueClassName="text-text-primary"
           />
         </div>
@@ -144,7 +150,7 @@ function RequirementDetails() {
             </p>
 
             <span className="mt-2 inline-flex rounded-md bg-primary-light px-2 py-1 text-xs font-semibold text-primary">
-              Student Portal
+              {projects.find(project => project.id === requirement.projectId)?.name}
             </span>
           </div>
 
@@ -154,15 +160,15 @@ function RequirementDetails() {
             </p>
 
             <div className="mt-2 flex items-center gap-2">
-              <Avatar initials="ZZ" />
+              <Avatar initials={getInitials(requirement.owner.name)} />
 
               <div>
                 <p className="text-xs font-semibold text-text-primary">
-                  Zeeshan
+                  {requirement.owner.name}
                 </p>
 
                 <p className="mt-0.5 text-xs text-text-secondary">
-                  May 20, 2025
+                  {requirement.createdAt}
                 </p>
               </div>
             </div>
@@ -174,15 +180,15 @@ function RequirementDetails() {
             </p>
 
             <div className="mt-2 flex items-center gap-2">
-              <Avatar initials="ZZ" />
+              <Avatar initials={getInitials(requirement.updatedBy.name)} />
 
               <div>
                 <p className="text-xs font-semibold text-text-primary">
-                  May 24, 2025
+                  {requirement.updatedAt}
                 </p>
 
                 <p className="mt-0.5 text-xs text-text-secondary">
-                  2h ago
+                  {requirement.updated}
                 </p>
               </div>
             </div>
@@ -227,6 +233,7 @@ function MetricCard({
   value,
   valueClassName = "text-text-primary",
   complexity = false,
+  complexityType,
 }) {
   return (
     <div className="min-h-[58px] rounded-lg border border-border p-2.5">
@@ -234,16 +241,38 @@ function MetricCard({
         {title}
       </p>
 
-      {complexity && (
-        <div className="mt-2 flex gap-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-warning" />
-          <span className="h-1.5 w-1.5 rounded-full bg-warning" />
-          <span className="h-1.5 w-1.5 rounded-full bg-warning" />
-          <span className="h-1.5 w-1.5 rounded-full bg-border" />
-          <span className="h-1.5 w-1.5 rounded-full bg-border" />
-        </div>
-      )}
-
+      {complexity && 
+        ( complexityType === "Medium"
+          ? (
+            <div className="mt-2 flex gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+              <span className="h-1.5 w-1.5 rounded-full bg-border" />
+              <span className="h-1.5 w-1.5 rounded-full bg-border" />
+            </div>
+          )
+          : complexityType === "High"
+                ? (
+                  <div className="mt-2 flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                  </div>
+                )
+                : (
+                  <div className="mt-2 flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                  </div>
+                )
+    
+    )}
       <p
         className={`mt-1 text-sm font-semibold ${valueClassName}`}
       >

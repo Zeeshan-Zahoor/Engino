@@ -5,39 +5,40 @@ import {
   Sparkles,
   WandSparkles,
 } from "lucide-react";
+import { requirements } from '../../data/requirements'
 
 const stats = [
   {
     title: "Total Requirements",
-    value: "12",
+    value: `${requirements.length}`,
     description: "Across all projects",
     icon: ListChecks,
     iconClassName: "bg-purple-50 text-primary",
   },
   {
     title: "Ready to Generate",
-    value: "5",
+    value: `${requirements.filter((requirement) => requirement.aiStatus === "AI Plan Ready")?.length}`,
     description: "Generate engineering plan",
     icon: WandSparkles,
     iconClassName: "bg-green-50 text-success",
   },
   {
     title: "AI Clarification",
-    value: "3",
+    value: `${requirements.filter((requirement) => requirement.aiStatus === "Needs Clarification")?.length}`,
     description: "Awaiting your input",
     icon: Sparkles,
     iconClassName: "bg-orange-50 text-warning",
   },
   {
     title: "Plans Generated",
-    value: "6",
+    value: `${requirements.filter((requirement) => requirement.aiStatus === "Plan Generated")?.length}`,
     description: "Ready for review",
     icon: ClipboardCheck,
     iconClassName: "bg-blue-50 text-info",
   },
   {
     title: "Approved",
-    value: "8",
+    value: `${requirements.filter((requirement) => requirement.aiStatus === "Approved")?.length}`,
     description: "Converted to tasks",
     icon: FileCheck2,
     iconClassName: "bg-purple-50 text-primary",

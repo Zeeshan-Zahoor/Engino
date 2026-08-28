@@ -1,15 +1,16 @@
 import {
   ChevronDown,
-  LayoutDashboard,
-  List,
   Search,
   SlidersHorizontal,
   X,
 } from "lucide-react";
 
-function RequirementToolbar() {
+function RequirementToolbar({
+  searchInput,
+  setSearchInput,
+}) {
   return (
-    <section className="rounded-2xl border border-border bg-white p-4">
+    <section className="rounded-2xl border border-border bg-white p-4 mb-3">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
         {/* Search */}
         <div className="relative min-w-0 flex-1">
@@ -20,6 +21,8 @@ function RequirementToolbar() {
 
           <input
             type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by title or keyword..."
             className="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
           />
@@ -56,24 +59,6 @@ function RequirementToolbar() {
 
             <ChevronDown size={14} className="text-text-secondary" />
           </button>
-
-          <div className="flex h-10 items-center rounded-lg border border-border p-1">
-            <button
-              type="button"
-              aria-label="Grid view"
-              className="flex h-8 w-8 items-center justify-center rounded-md text-text-secondary transition hover:bg-surface"
-            >
-              <LayoutDashboard size={15} />
-            </button>
-
-            <button
-              type="button"
-              aria-label="List view"
-              className="flex h-8 w-8 items-center justify-center rounded-md bg-primary-light text-primary"
-            >
-              <List size={15} />
-            </button>
-          </div>
         </div>
       </div>
     </section>

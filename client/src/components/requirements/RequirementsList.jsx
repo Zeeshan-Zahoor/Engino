@@ -1,77 +1,12 @@
 import { Clock3, FileText } from "lucide-react";
-
-const requirements = [
-  {
-    title: "Student Attendance Tracking",
-    project: "Student Portal",
-    status: "Plan Generated",
-    complexity: "Medium",
-    owner: "Zeeshan",
-    initials: "ZZ",
-    updated: "2h ago",
-    selected: true,
-  },
-  {
-    title: "User Authentication & Authorization",
-    project: "Student Portal",
-    status: "Plan Generated",
-    complexity: "High",
-    owner: "Ganga",
-    initials: "GA",
-    updated: "5h ago",
-  },
-  {
-    title: "Assignment Submission Workflow",
-    project: "Student Portal",
-    status: "AI Clarification",
-    complexity: "High",
-    owner: "Areeb",
-    initials: "AR",
-    updated: "1d ago",
-  },
-  {
-    title: "Notification Preferences",
-    project: "Student Portal",
-    status: "Approved",
-    complexity: "Low",
-    owner: "Zeeshan",
-    initials: "ZZ",
-    updated: "2d ago",
-  },
-  {
-    title: "Student Profile Management",
-    project: "Student Portal",
-    status: "Plan Generated",
-    complexity: "Medium",
-    owner: "Ganga",
-    initials: "GA",
-    updated: "3d ago",
-  },
-  {
-    title: "Assignment Management",
-    project: "Student Portal",
-    status: "AI Clarification",
-    complexity: "Medium",
-    owner: "Areeb",
-    initials: "AR",
-    updated: "4d ago",
-  },
-  {
-    title: "Real-time Notifications",
-    project: "Notification System",
-    status: "Ready to Generate",
-    complexity: "Low",
-    owner: "Zeeshan",
-    initials: "ZZ",
-    updated: "5d ago",
-  },
-];
+import useProjectStore from "../../stores/projectStore";
 
 const statusStyles = {
-  "Ready to Generate": "bg-green-50 text-success",
-  "Plan Generated": "bg-blue-50 text-info",
-  "AI Clarification": "bg-orange-50 text-warning",
-  Approved: "bg-purple-50 text-primary",
+  "Plan Generated": "bg-green-50 text-success",
+  "AI Plan Ready": "bg-purple-50 text-primary",
+  "Needs Clarification": "bg-orange-50 text-warning",
+  "Pending": "bg-gray-50 text-gray-600",
+  "Approved": "bg-green-50 text-success",
 };
 
 const complexityStyles = {
@@ -80,7 +15,12 @@ const complexityStyles = {
   Low: "bg-green-50 text-success",
 };
 
-function RequirementsList() {
+function RequirementsList({ 
+  requirements,
+  selectedRequirement,
+  setSelectedRequirement,
+ }) {
+  const projects = useProjectStore(state => state.projects);
   return (
     <section className="min-w-0 overflow-hidden rounded-2xl border border-border bg-white">
       {/* Header */}
@@ -95,10 +35,6 @@ function RequirementsList() {
               Select a requirement to view its details
             </p>
           </div>
-
-          <span className="text-xs font-medium text-text-secondary">
-            12 requirements
-          </span>
         </div>
       </div>
 
@@ -113,12 +49,14 @@ function RequirementsList() {
 
       {/* List */}
       <div className="divide-y divide-border">
-        {requirements.map((requirement) => (
+        {(requirements.slice(0, 7)).map((requirement) => (
           <button
-            key={requirement.title}
+            key={requirement.id}
+            onClick={() => setSelectedRequirement(requirement)}
             type="button"
+            // no need to worry for selected state right now
             className={`w-full text-left transition ${
-              requirement.selected
+              requirement.id === selectedRequirement?.id
                 ? "bg-primary-light/40"
                 : "hover:bg-surface"
             }`}
@@ -129,7 +67,7 @@ function RequirementsList() {
               <div className="flex min-w-0 items-center gap-3">
                 <div
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                    requirement.selected
+                    requirement.id === selectedRequirement?.id
                       ? "bg-primary text-white"
                       : "bg-surface text-text-secondary"
                   }`}
@@ -139,7 +77,7 @@ function RequirementsList() {
 
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-text-primary">
-                    {requirement.title}
+                    {requirement.name}
                   </p>
 
                   <p className="mt-1 flex items-center gap-1 text-xs text-text-secondary">
@@ -151,16 +89,16 @@ function RequirementsList() {
 
               {/* Project */}
               <span className="truncate text-xs text-text-secondary">
-                {requirement.project}
+                {projects.find(project => project.id === requirement.projectId)?.name}
               </span>
 
               {/* Status */}
               <span
                 className={`w-fit rounded-md px-2 py-1 text-xs font-medium ${
-                  statusStyles[requirement.status]
+                  statusStyles[requirement.aiStatus]
                 }`}
               >
-                {requirement.status}
+                {requirement.aiStatus}
               </span>
 
               {/* Complexity */}
@@ -175,11 +113,11 @@ function RequirementsList() {
               {/* Owner */}
               <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                  {requirement.initials}
+                  {requirement.owner.initials}
                 </div>
 
                 <span className="truncate text-xs text-text-secondary">
-                  {requirement.owner}
+                  {requirement.owner.name}
                 </span>
               </div>
             </div>
@@ -188,7 +126,7 @@ function RequirementsList() {
             <div className="flex items-start gap-3 px-4 py-4 xl:hidden">
               <div
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                  requirement.selected
+                  requirement.id === selectedRequirement?.id
                     ? "bg-primary text-white"
                     : "bg-surface text-text-secondary"
                 }`}
@@ -199,25 +137,25 @@ function RequirementsList() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-3">
                   <p className="text-sm font-semibold text-text-primary">
-                    {requirement.title}
+                    {requirement.name}
                   </p>
 
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                    {requirement.initials}
+                    {requirement.owner.initials}
                   </div>
                 </div>
 
                 <p className="mt-1 text-xs text-text-secondary">
-                  {requirement.project}
+                  {projects.find(project => project.id === requirement.projectId)?.name}
                 </p>
 
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span
                     className={`rounded-md px-2 py-1 text-xs font-medium ${
-                      statusStyles[requirement.status]
+                      statusStyles[requirement.aiStatus]
                     }`}
                   >
-                    {requirement.status}
+                    {requirement.aiStatus}
                   </span>
 
                   <span
