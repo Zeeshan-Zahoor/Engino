@@ -1,11 +1,16 @@
+import { useState } from "react";
+
 import Header from "../components/layout/Header";
 import { Plus, ChevronDown } from "lucide-react";
 import TaskStats from "../components/tasks/TaskStats";
 import TaskToolbar from "../components/tasks/TaskToolbar";
 import TaskList from "../components/tasks/TaskList";
 import TaskDetailsPanel from "../components/tasks/TaskDetailsPanel";
+import { tasks } from "../data/tasks";
 
 function Tasks() {
+  const [selectedTask, setSelectedTask] = useState(tasks[0]);
+
   return (
     <div className="space-y-6 px-8">
       <Header
@@ -30,11 +35,14 @@ function Tasks() {
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_480px]">
         <div className="min-w-0">
             <TaskToolbar />
-            <TaskList />
+            <TaskList 
+              selectedTask={selectedTask}
+              setSelectedTask={setSelectedTask}
+            />
         </div>
 
         <div className="hidden xl:block">
-            <TaskDetailsPanel />
+            <TaskDetailsPanel task={selectedTask}/>
         </div>
         </div>
     </div>

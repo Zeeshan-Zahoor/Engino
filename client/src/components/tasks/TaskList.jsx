@@ -1,133 +1,14 @@
 import { CheckSquare, MoreVertical } from "lucide-react";
-
-const tasks = [
-  {
-    id: "TSK-1024",
-    title: "Build Attendance API",
-    description: "Develop REST API for attendance marking and retrieval.",
-    project: "Student Portal",
-    requirement: "Student Attendance Tracking System",
-    assignee: "Ahmed Khan",
-    initials: "AK",
-    status: "In Progress",
-    priority: "High",
-    dueDate: "May 28, 2025",
-    dueLabel: "2 days left",
-    effort: "8h",
-    progress: 60,
-  },
-  {
-    id: "TSK-1025",
-    title: "Attendance Percentage Calculation",
-    description: "Calculate student attendance percentage and status.",
-    project: "Student Portal",
-    requirement: "Student Attendance Tracking System",
-    assignee: "Ganga",
-    initials: "GA",
-    status: "To Do",
-    priority: "Medium",
-    dueDate: "May 30, 2025",
-    dueLabel: "4 days left",
-    effort: "5h",
-    progress: 0,
-  },
-  {
-    id: "TSK-1026",
-    title: "Attendance Report Generation",
-    description: "Generate PDF/Excel attendance reports for students.",
-    project: "Student Portal",
-    requirement: "Student Attendance Tracking System",
-    assignee: "Areeb",
-    initials: "AR",
-    status: "In Review",
-    priority: "Medium",
-    dueDate: "May 26, 2025",
-    dueLabel: "Due today",
-    effort: "6h",
-    progress: 90,
-  },
-  {
-    id: "TSK-1027",
-    title: "Attendance Module UI",
-    description: "Build UI for attendance dashboard and student view.",
-    project: "Student Portal",
-    requirement: "Student Attendance Tracking System",
-    assignee: "Zeeshan",
-    initials: "ZZ",
-    status: "In Progress",
-    priority: "High",
-    dueDate: "May 29, 2025",
-    dueLabel: "3 days left",
-    effort: "10h",
-    progress: 40,
-  },
-  {
-    id: "TSK-1031",
-    title: "Student Login API",
-    description: "Implement secure student login and authentication.",
-    project: "Student Portal",
-    requirement: "Secure User Authentication",
-    assignee: "Zeeshan",
-    initials: "ZZ",
-    status: "Completed",
-    priority: "High",
-    dueDate: "May 20, 2025",
-    dueLabel: "Completed",
-    effort: "6h",
-    progress: 100,
-  },
-  {
-    id: "TSK-1032",
-    title: "Password Reset API",
-    description: "Create password reset and email verification flow.",
-    project: "Student Portal",
-    requirement: "Secure User Authentication",
-    assignee: "Ganga",
-    initials: "GA",
-    status: "Completed",
-    priority: "Medium",
-    dueDate: "May 21, 2025",
-    dueLabel: "Completed",
-    effort: "4h",
-    progress: 100,
-  },
-  {
-    id: "TSK-1033",
-    title: "Role-Based Access Middleware",
-    description: "Implement role-based access control middleware.",
-    project: "Student Portal",
-    requirement: "Secure User Authentication",
-    assignee: "Areeb",
-    initials: "AR",
-    status: "To Do",
-    priority: "Medium",
-    dueDate: "Jun 02, 2025",
-    dueLabel: "1 week left",
-    effort: "6h",
-    progress: 0,
-  },
-  {
-    id: "TSK-1041",
-    title: "Email Notifications Service",
-    description: "Send email notifications for attendance alerts and announcements.",
-    project: "Notification System",
-    requirement: "Real-time Notification System",
-    assignee: "Zeeshan",
-    initials: "ZZ",
-    status: "To Do",
-    priority: "Low",
-    dueDate: "Jun 05, 2025",
-    dueLabel: "8 days left",
-    effort: "5h",
-    progress: 0,
-  },
-];
+import { tasks } from "../../data/tasks";
+import useProjectStore from '../../stores/projectStore';
+import { requirements } from '../../data/requirements';
+import { getInitials } from '../../utils/getInitials';
 
 function StatusBadge({ status }) {
   const styles = {
     "In Progress": "bg-blue-50 text-info",
-    "To Do": "bg-blue-50 text-info",
-    "In Review": "bg-purple-50 text-primary",
+    Todo: "bg-blue-50 text-info",
+    // "In Review": "bg-purple-50 text-primary",
     Completed: "bg-green-50 text-success",
   };
 
@@ -183,7 +64,8 @@ function ProgressBar({ progress }) {
   );
 }
 
-function TaskList() {
+function TaskList({ selectedTask, setSelectedTask }) {
+  const projects = useProjectStore(state => state.projects);
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-white">
       {/* Header */}
@@ -228,8 +110,10 @@ function TaskList() {
       </div>
 
       {/* Rows */}
-      {tasks.map((task) => (
+      {(tasks.slice(0, 8)).map((task) => (
         <div
+          role="button"
+          onClick={() => setSelectedTask(task)}
           key={task.id}
           className="border-b border-border px-4 py-3 last:border-b-0 hover:bg-surface/40"
         >
@@ -241,14 +125,15 @@ function TaskList() {
             >
               <CheckSquare
                 size={16}
-                className="text-text-secondary"
+                fill={selectedTask.id === task.id ? "green" : "none"}
+                className={`${selectedTask.id === task.id ? "text-white" : "text-text-secondary"}`}
               />
             </button>
 
             {/* Task */}
             <div className="min-w-0">
               <p className="text-xs text-text-secondary">
-                {task.id}
+                {task.id.toUpperCase()}
               </p>
 
               <h3 className="mt-0.5 truncate text-sm font-semibold text-text-primary">
@@ -263,22 +148,22 @@ function TaskList() {
             {/* Project */}
             <div className="min-w-0">
               <p className="truncate text-sm font-medium text-text-primary">
-                {task.project}
+                {projects.find(project => project.id === task.projectId)?.name}
               </p>
 
               <p className="mt-0.5 line-clamp-2 text-xs leading-4 text-text-secondary">
-                {task.requirement}
+                {requirements.find(requirement => requirement.id === task.requirementId)?.name}
               </p>
             </div>
 
             {/* Assignee */}
             <div className="flex min-w-0 items-center gap-2">
               <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                {task.initials}
+                {getInitials(task.assignee?.name)}
               </div>
 
               <span className="truncate text-xs text-text-primary">
-                {task.assignee}
+                {task.assignee?.name}
               </span>
             </div>
 
@@ -294,16 +179,8 @@ function TaskList() {
                 {task.dueDate}
               </p>
 
-              <p
-                className={`mt-0.5 text-xs ${
-                  task.dueLabel === "Due today"
-                    ? "font-semibold text-danger"
-                    : task.dueLabel === "Completed"
-                      ? "text-success"
-                      : "text-text-secondary"
-                }`}
-              >
-                {task.dueLabel}
+              <p className="text-xs font-medium text-text-primary">
+                {task.dueDate}
               </p>
             </div>
 
@@ -356,7 +233,7 @@ function TaskList() {
                       Project
                     </p>
                     <p className="mt-1 text-xs font-medium">
-                      {task.project}
+                      {projects.find(project => project.id === task.projectId)?.name}
                     </p>
                   </div>
 
@@ -365,7 +242,7 @@ function TaskList() {
                       Assignee
                     </p>
                     <p className="mt-1 text-xs font-medium">
-                      {task.assignee}
+                      {task.assignee?.name}
                     </p>
                   </div>
 

@@ -4,7 +4,7 @@ import {
   Rocket,
   X,
 } from "lucide-react";
-import { getInitials } from '../../utils/getIniitals';
+import { getInitials } from '../../utils/getInitials';
 import useProjectStore from "../../stores/projectStore";
 
 // const acceptanceCriteria = [

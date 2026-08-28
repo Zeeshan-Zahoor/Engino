@@ -5,6 +5,27 @@ import {
   Clock3,
   CheckCircle2,
 } from "lucide-react";
+import { requirements } from "../../data/requirements";
+import { getInitials } from "../../utils/getInitials";
+
+const statusStyles = {
+    "In Progress": "bg-blue-50 text-info",
+    Todo: "bg-blue-50 text-info",
+    // "In Review": "bg-purple-50 text-primary",
+    Completed: "bg-green-50 text-success",
+  };
+
+const complexityStyles = {
+  High: "text-danger",
+  Medium: "text-warning",
+  Low: "text-success",
+};
+
+const priorityStyles = {
+  High: "text-danger",
+  Medium: "text-warning",
+  Low: "text-success",
+};
 
 function DetailRow({ label, children }) {
   return (
@@ -20,7 +41,7 @@ function DetailRow({ label, children }) {
   );
 }
 
-function TaskDetailsPanel() {
+function TaskDetailsPanel({ task }) {
   return (
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-white">
       {/* Header */}
@@ -28,16 +49,16 @@ function TaskDetailsPanel() {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-xs font-semibold text-text-secondary">
-              TSK-1024
+              {task.id.toUpperCase()}
             </p>
 
             <h2 className="mt-1 text-lg font-semibold leading-6 text-text-primary">
-              Build Attendance API
+              {task.title}
             </h2>
 
             <div className="mt-2 flex items-center gap-2 text-xs text-text-secondary">
-              <span className="text-primary">▣</span>
-              <span>Student Attendance Tracking System</span>
+              <span className="text-primary text-lg">▣</span>
+              <span>{requirements.find(requirement => requirement.id === task.requirementId).name}</span>
             </div>
           </div>
 
@@ -54,9 +75,9 @@ function TaskDetailsPanel() {
         <div className="mt-3 flex justify-end">
           <button
             type="button"
-            className="flex items-center gap-2 rounded-md bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-info"
+            className={`flex items-center gap-2 rounded-md bg-blue-50 px-2.5 py-1.5 text-xs font-semibold ${statusStyles[task.status]}`}
           >
-            In Progress
+            {task.status}
             <ChevronDown size={13} />
           </button>
         </div>
@@ -104,8 +125,7 @@ function TaskDetailsPanel() {
           </h3>
 
           <p className="mt-3 text-sm leading-5 text-text-secondary">
-            Develop RESTful API endpoints to mark, update and
-            retrieve student attendance records.
+            {task.description}
           </p>
 
           <button
@@ -121,54 +141,53 @@ function TaskDetailsPanel() {
           <DetailRow label="Assignee">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                AK
+                {getInitials(task.assignee.name)}
               </div>
-              Ahmed Khan
+              {task.assignee.name}
             </div>
           </DetailRow>
 
           <DetailRow label="Reporter">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                ZZ
+                {getInitials(task.reporter.name)}
               </div>
-              Zeeshan Zahoor
+              {task.reporter.name}
             </div>
           </DetailRow>
 
           <DetailRow label="Priority">
-            <span className="inline-flex rounded-md bg-red-50 px-2 py-1 text-xs font-semibold text-danger">
-              High
+            <span className={`inline-flex rounded-md bg-red-50 px-2 py-1 text-xs font-semibold ${priorityStyles[task.priority]}`}>
+              {task.priority}
             </span>
           </DetailRow>
 
           <DetailRow label="Due Date">
             <div>
-              <span>May 28, 2025</span>
-              <span className="ml-1 text-danger">(2 days left)</span>
+              <span>{task.dueDate}</span>
             </div>
           </DetailRow>
 
           <DetailRow label="Estimated Effort">
-            8h
+            {task.effort}
           </DetailRow>
 
           <DetailRow label="Time Spent">
-            4h 48m
+            {task.timeSpent}
           </DetailRow>
 
           <DetailRow label="Task Type">
             <span className="inline-flex rounded-md bg-purple-50 px-2 py-1 text-xs font-semibold text-primary">
-              Development
+              {task.type}
             </span>
           </DetailRow>
 
           <DetailRow label="Complexity">
             <div className="flex items-center gap-2">
-              <span className="tracking-wide text-warning">
-                ●●●○
-              </span>
-              <span>Medium</span>
+                <ComplexityStyling 
+                  complexity={task.complexity}
+                  valueClassName={complexityStyles[task.complexity]}
+                />
             </div>
           </DetailRow>
         </section>
@@ -180,7 +199,7 @@ function TaskDetailsPanel() {
           </h3>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            {["backend", "api", "attendance", "express.js"].map(
+            {task.tags.map(
               (tag) => (
                 <span
                   key={tag}
@@ -208,20 +227,26 @@ function TaskDetailsPanel() {
             </h3>
 
             <span className="text-sm font-semibold text-text-primary">
-              60%
+              {task.progress}%
             </span>
           </div>
 
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface">
             <div
-              className="h-full rounded-full bg-primary"
-              style={{ width: "60%" }}
+              className={`h-full rounded-full transition-all ${
+              task.progress === 100
+                ? "bg-success"
+                : task.progress > 0
+                  ? "bg-primary"
+                  : "bg-border"
+            }`}
+              style={{ width: `${task.progress}%` }}
             />
           </div>
 
           <div className="mt-2 flex items-center justify-end gap-1 text-xs text-text-secondary">
             <Clock3 size={13} />
-            4h 48m of 8h
+            {task.timeSpent} of {task.effort}
           </div>
         </section>
 
@@ -239,11 +264,11 @@ function TaskDetailsPanel() {
 
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-text-primary">
-                  Student Attendance Tracking System
+                  {requirements.find(requirement => requirement.id === task.requirementId).name}
                 </p>
 
                 <p className="mt-1 text-xs text-text-secondary">
-                  REQ-001
+                  {requirements.find(requirement => requirement.id === task.requirementId).id.toUpperCase()}
                 </p>
               </div>
             </div>
@@ -273,6 +298,49 @@ function TaskDetailsPanel() {
       </div>
     </aside>
   );
+}
+
+function ComplexityStyling ({ complexity, valueClassName }) {
+  return(
+    <div className="flex gap-2 items-center">
+      {complexity === "Medium"
+          ? (
+            <div className="mt-2 flex gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+              <span className="h-1.5 w-1.5 rounded-full bg-border" />
+              <span className="h-1.5 w-1.5 rounded-full bg-border" />
+            </div>
+          )
+          : complexity === "High"
+                ? (
+                  <div className="mt-2 flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                  </div>
+                )
+                : (
+                  <div className="mt-2 flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
+                  </div>
+                )
+    
+    }
+      <span
+        className={`mt-1 text-sm font-semibold ${valueClassName}`}
+      >
+        {complexity}
+      </span>
+    </div>
+  )
 }
 
 export default TaskDetailsPanel;

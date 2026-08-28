@@ -6,7 +6,7 @@ import {
   Share2,
 } from "lucide-react";
 
-import { getInitials } from "../../utils/getIniitals";
+import { getInitials } from "../../utils/getInitials";
 
 function ProjectOverviewHeader({ project }) {
   return (
