@@ -179,5 +179,6 @@ const getCurrentUser = async(req, res) => {
 export default {
     registerUser,
     loginUser,
+    logoutUser,
     getCurrentUser,
 }
