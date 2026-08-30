@@ -51,7 +51,7 @@ const registerUser = async (req, res) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: process.env.JWT_EXPIRY,
+                maxAge: 15 * 60 * 1000,
             }
         );
 
@@ -64,6 +64,7 @@ const registerUser = async (req, res) => {
         return res
                 .status(500)
                 .json({
+                    error: error.message,
                     message: "Internal Server Error",
                 })
     }
@@ -111,7 +112,7 @@ const loginUser = async (req, res) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: process.env.JWT_EXPIRY,
+                maxAge: 15 * 60 * 1000,
             }
         );
 
@@ -176,7 +177,7 @@ const getCurrentUser = async(req, res) => {
     }
 }
 
-export default {
+export {
     registerUser,
     loginUser,
     logoutUser,
