@@ -1,12 +1,14 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.model.js';
+import Workspace from '../models/workspace.model.js';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
-const registerUser = async (req, res) => {
+const registerAdmin = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, description } = req.body;
 
-        if(!name || !email || !password || !role) {
+        if(!name || !email || !password) {
             return res
                 .status(400)
                 .json({
@@ -26,14 +28,38 @@ const registerUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new User({ 
-            name: name.trim(),
-            email: email.toLowerCase().trim(),
-            password: hashedPassword,
-            role,
-         });
+        let newUser;
 
-         await newUser.save();
+        // transaction for atomicity
+        const session = await mongoose.startSession();
+        try {
+            session.startTransaction();
+
+            newUser = new User({ 
+                name: name.trim(),
+                email: email.toLowerCase().trim(),
+                password: hashedPassword,
+                role: "Admin",
+            });
+
+            const workspace = new Workspace({
+                name: `${newUser.name}'s Workspace`,
+                description,
+                ownerId: newUser._id,
+            })
+            
+            await newUser.save({ session });
+            await workspace.save({ session });
+
+            await session.commitTransaction();
+
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+
+        } finally {
+            await session.endSession();
+        }
 
         // generate jwt
         const token = jwt.sign(
@@ -178,7 +204,7 @@ const getCurrentUser = async(req, res) => {
 }
 
 export {
-    registerUser,
+    registerAdmin,
     loginUser,
     logoutUser,
     getCurrentUser,
