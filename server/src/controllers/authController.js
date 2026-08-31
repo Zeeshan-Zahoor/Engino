@@ -3,6 +3,7 @@ import User from '../models/user.model.js';
 import Workspace from '../models/workspace.model.js';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import WorkspaceMember from '../models/workspaceMember.model.js';
 
 const registerAdmin = async (req, res) => {
     try {
@@ -46,10 +47,19 @@ const registerAdmin = async (req, res) => {
                 name: `${newUser.name}'s Workspace`,
                 description,
                 ownerId: newUser._id,
+            });
+
+            const workspaceMember = new WorkspaceMember({
+                workspaceId: workspace._id,
+                userId: newUser._id,
+                role: "Admin",
+                status: "active",
+                joinedAt: Date.now(),
             })
             
             await newUser.save({ session });
             await workspace.save({ session });
+            await workspaceMember.save({ session });
 
             await session.commitTransaction();
 
