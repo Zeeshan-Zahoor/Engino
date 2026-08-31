@@ -3,8 +3,10 @@ import {
     createProject,
  } from '../controllers/projectController.js';
 
+ import authMiddleware from '../middleware/authMiddleware.js';
+
 const router = express.Router();
 
-router.post('/create', createProject);
+router.post('/create', authMiddleware, createProject);
 
 export default router;
