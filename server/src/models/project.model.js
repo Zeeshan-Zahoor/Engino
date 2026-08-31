@@ -32,12 +32,6 @@ const projectSchema = mongoose.Schema(
             enum: ["Planning", "In Progress", "On Hold", "Completed"],
             default: "Planning",
         },
-        progress: {
-            type: Number,
-            min: 0,
-            max: 100,
-            default: 0,
-        },
         startDate: {
             type: Date,
             required: true,

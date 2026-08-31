@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import authRoutes from './routers/authRoutes.js';
 import workspaceRoutes from './routers/workspaceRoutes.js';
+import projectRoutes from './routers/projectRoutes.js';
 
 const app = express();
 
@@ -21,7 +22,8 @@ app.use(cookieParser());
 
 // mount routes
 app.use('/api/auth', authRoutes);
-app.use('/api', workspaceRoutes);
+app.use('/api/workspace', workspaceRoutes);
+app.use('/api/project', projectRoutes);
 
 app.get("/", (req, res) => {
     res.json({

@@ -11,7 +11,7 @@ import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/workspace', authMiddleware, getCurrentWorkspace);
+router.get('/current', authMiddleware, getCurrentWorkspace);
 router.get('/team', authMiddleware, getWorkspaceMembers);
 
 router.post('/invite', authMiddleware, sendInvitation);
