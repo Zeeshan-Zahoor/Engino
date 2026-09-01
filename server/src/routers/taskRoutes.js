@@ -6,6 +6,6 @@ import {
 
 const router = express.Router();
 
-router.post('/create', authMiddleware, createTask);
+router.post('/:projectId/create', authMiddleware, createTask);
 
 export default router;
