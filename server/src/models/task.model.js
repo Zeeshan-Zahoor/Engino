@@ -28,13 +28,13 @@ const taskSchema = mongoose.Schema(
 
         status: {
             type: String,
-            required: true,
+            enum: ["Todo", "In Progress", "Done"],
             default: "Todo",
         },
 
         priority: {
             type: String,
-            required: true,
+            enum: ["Low", "Medium", "High"],
             default: "Medium",
         },
 
@@ -61,19 +61,6 @@ const taskSchema = mongoose.Schema(
             min: 0,
         },
 
-        timeSpentMinutes: {
-            type: Number,
-            default: 0,
-            min: 0,
-        },
-
-        progress: {
-            type: Number,
-            default: 0,
-            min: 0,
-            max: 100,
-        },
-
         type: {
             type: String,
             required: true,
@@ -81,6 +68,7 @@ const taskSchema = mongoose.Schema(
 
         complexity: {
             type: String,
+            enum: ["Low", "Medium", "High"],
             required: true,
         },
 
@@ -93,6 +81,9 @@ const taskSchema = mongoose.Schema(
         timestamps: true,
     }
 );
+
+taskSchema.index({ projectId: 1 });
+taskSchema.index({ assignee: 1 });
 
 const Task = mongoose.model("Task", taskSchema);
 
