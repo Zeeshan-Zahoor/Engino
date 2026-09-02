@@ -3,13 +3,18 @@ import authMiddleware from '../middleware/authMiddleware.js';
 import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
 import { 
     createTask,
-    getAllTasks
+    deleteTask,
+    getAllTasks,
+    getTask,
 } from '../controllers/taskController.js';
 
 const router = express.Router({ mergeParams: true });
 
 router.get('/', authMiddleware, workspaceMiddleware, getAllTasks);
+router.get('/:taskId', authMiddleware, workspaceMiddleware, getTask);
 
 router.post('/', authMiddleware, workspaceMiddleware, createTask);
+
+router.delete('/:taskId', authMiddleware, workspaceMiddleware, deleteTask);
 
 export default router;
