@@ -17,8 +17,10 @@ const registerAdmin = async (req, res) => {
                 })
         }
 
+        const normalizedEmail = email.toLowerCase().trim();
+
         // check for already existing user
-        const userExists = await User.findOne({ email });
+        const userExists = await User.findOne({ normalizedEmail });
         if(userExists) {
             return res
                 .status(409)
@@ -38,7 +40,7 @@ const registerAdmin = async (req, res) => {
 
             newUser = new User({ 
                 name: name.trim(),
-                email: email.toLowerCase().trim(),
+                email: normalizedEmail,
                 password: hashedPassword,
                 role: "Admin",
             });
@@ -116,7 +118,9 @@ const loginUser = async (req, res) => {
                     })
         }
 
-        const user = await User.findOne({ email });
+        const normalizedEmail = email.toLowerCase().trim();
+
+        const user = await User.findOne({ normalizedEmail });
         if(!user) {
             return res.status(404).json({
                 success: false,

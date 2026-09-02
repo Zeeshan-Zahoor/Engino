@@ -1,11 +1,15 @@
 import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
+import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
 import { 
-    createTask
+    createTask,
+    getAllTasks
 } from '../controllers/taskController.js';
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.post('/:projectId/create', authMiddleware, createTask);
+router.get('/', authMiddleware, workspaceMiddleware, getAllTasks);
+
+router.post('/', authMiddleware, workspaceMiddleware, createTask);
 
 export default router;

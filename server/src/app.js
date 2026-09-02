@@ -23,9 +23,9 @@ app.use(cookieParser());
 
 // mount routes
 app.use('/api/auth', authRoutes);
-app.use('/api/workspace', workspaceRoutes);
-app.use('/api/projects', projectRoutes);
-app.use('/api/tasks', taskRoutes);
+app.use('/api/workspaces', workspaceRoutes);
+app.use('/api/workspaces/:workspaceId/projects', projectRoutes);
+app.use('/api/workspaces/:workspaceId/projects/:projectId/tasks', taskRoutes);
 
 app.get("/", (req, res) => {
     res.json({

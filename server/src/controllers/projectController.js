@@ -9,20 +9,13 @@ const createProject = async (req, res) => {
         const { name, code, description, goals, technologies, status, startDate, targetDate } = req.body;
 
         const userId = req.user.userId;
+        const membership = req.membership;
+        const workspaceId = req.workspaceId;
 
         if(!userId) {
             return res.status(404).json({
                 success: false,
                 message: "User not found!",
-            });
-        }
-
-        const membership = await WorkspaceMember.findOne({ userId, status: "active" });
-
-        if(!membership) {
-            return res.status(404).json({
-               success: false,
-               message: "No active membership found!", 
             });
         }
 
@@ -58,13 +51,13 @@ const createProject = async (req, res) => {
                 startDate,
                 targetDate,
                 createdBy: userId,
-                workspaceId: membership.workspaceId,
+                workspaceId,
             });
 
             projectMembership = new ProjectMember({
                 projectId: newProject._id,
                 userId,
-                role: membership.role,
+                role: "Project Manager",
                 joinedAt: Date.now(),
             });
 
@@ -98,21 +91,16 @@ const createProject = async (req, res) => {
 
 const addProjectMember = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        const { projectId, targetUserId, role } = req.body;
+        const { projectId } = req.params;
+        const { targetUserId, role } = req.body;
+
+        const membership = req.membership;
+        const workspaceId = req.workspaceId;
 
         if(!projectId || !targetUserId || !role) {
             return res.status(400).json({
-                status: false,
-                message: "Invalid or insufficient data",
-            });
-        }
-
-        const membership = await WorkspaceMember.findOne({ userId, status: "active" });
-        if(!membership) {
-            return res.status(404).json({
                 success: false,
-                message: "No active membership found!",
+                message: "Invalid or insufficient data",
             });
         }
 
@@ -123,24 +111,21 @@ const addProjectMember = async (req, res) => {
             });
         }
 
-        const project = await Project.findById(projectId);
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
+        });
+
         if(!project) {
             return res.status(404).json({
                 success: false,
-                message: "Project not found!",
-            });
-        }
-
-        if( !project.workspaceId.equals(membership.workspaceId) ) {
-            return res.status(400).json({
-                success: false,
-                message: "Project does not belong to current workspace",
+                message: "Project not found in the workspace!",
             });
         }
 
         const targetUserMembership = await WorkspaceMember.findOne({ 
             userId: targetUserId,
-            workspaceId: membership.workspaceId,
+            workspaceId,
             status: "active",
         });
 
@@ -188,20 +173,11 @@ const addProjectMember = async (req, res) => {
 
 const removeProjectMember = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        const { projectId, targetUserId } = req.body;
+        const { projectId } = req.params;
+        const targetUserId = req.params.userId;
 
-        const membership = await WorkspaceMember.findOne({ 
-            userId,
-            status: "active",
-        });
-
-        if(!membership) {
-            return res.status(404).json({
-                success: false,
-                message: "No active workspace membership found!",
-            });
-        }
+        const membership = req.membership;
+        const workspaceId = req.workspaceId;
 
         if(membership.role !== "Admin") {
             return res.status(403).json({
@@ -212,7 +188,7 @@ const removeProjectMember = async (req, res) => {
 
         const project = await Project.findOne({
             _id: projectId,
-            workspaceId: membership.workspaceId,
+            workspaceId,
         });
 
         if(!project) {
@@ -225,7 +201,7 @@ const removeProjectMember = async (req, res) => {
         if(targetUserId.toString() === project.createdBy.toString()) { 
             return res.status(400).json({
                 success: false,
-                message: "Cannot remove self!",
+                message: "Cannot remove the project creator!",
             })
         }
 
@@ -257,24 +233,12 @@ const removeProjectMember = async (req, res) => {
 
 const getProject = async (req, res) => {
     try {
-        const userId = req.user.userId;
         const { projectId } = req.params;
-
-        const membership = await WorkspaceMember.findOne({
-            userId,
-            status: "active",
-        });
-
-        if (!membership) {
-            return res.status(404).json({
-                success: false,
-                message: "No active workspace membership found!",
-            });
-        }
-
+        const workspaceId =  req.workspaceId;
+        
         const project = await Project.findOne({
             _id: projectId,
-            workspaceId: membership.workspaceId,
+            workspaceId,
         });
 
         if (!project) {
@@ -300,22 +264,10 @@ const getProject = async (req, res) => {
 
 const getAllProjects = async (req, res) => {
     try {
-        const userId = req.user.userId;
-
-        const membership = await WorkspaceMember.findOne({
-            userId,
-            status: "active",
-        });
-
-        if (!membership) {
-            return res.status(404).json({
-                success: false,
-                message: "No active workspace membership found!",
-            });
-        }
+        const workspaceId = req.workspaceId;
 
         const projects = await Project.find({
-            workspaceId: membership.workspaceId,
+            workspaceId,
         });
 
         return res.status(200).json({
@@ -334,33 +286,22 @@ const getAllProjects = async (req, res) => {
 
 const getProjectMembers = async (req, res) => {
     try {
-        const userId = req.user.userId;
         const { projectId } = req.params;
-        
-        const workspaceMember = await WorkspaceMember.findOne({ 
-            userId,
-            status: "active",
+        const workspaceId = req.workspaceId;
+
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
         });
 
-        if (!workspaceMember) {
-            return res.status(404).json({
-                success: false,
-                message: "No active workspace membership found!",
-            });
-        }
-        
-        const workspaceId = workspaceMember.workspaceId;
-
-        const project = await Project.findById(projectId);
-
-        if (!project || !project.workspaceId.equals(workspaceId)) {
+        if (!project) {
             return res.status(404).json({
                 success: false,
                 message: "Project not found in the workspace!",
             });
         }
 
-        const projectMembers = await ProjectMember.find({ projectId: project._id }).populate("userId", "-password");
+        const projectMembers = await ProjectMember.find({ projectId }).populate("userId", "-password");
 
         return res.status(200).json({
             success: true,
@@ -379,19 +320,9 @@ const getProjectMembers = async (req, res) => {
 const updateProject = async (req, res) => {
     try {
         const { projectId } = req.params;
-        const userId = req.user.userId;
 
-        const membership = await WorkspaceMember.findOne({
-            userId,
-            status: "active",
-        });
-
-        if (!membership) {
-            return res.status(404).json({
-                success: false,
-                message: "No active workspace membership found!",
-            });
-        }
+        const workspaceId = req.workspaceId;
+        const membership = req.membership;
 
         if(membership.role !== "Admin") {
             return res.status(403).json({
@@ -422,7 +353,7 @@ const updateProject = async (req, res) => {
         const updatedProject = await Project.findOneAndUpdate(
             { 
                 _id: projectId,
-                workspaceId: membership.workspaceId,
+                workspaceId,
             },
             { 
                 $set: updateFields,
@@ -457,19 +388,8 @@ const updateProject = async (req, res) => {
 const deleteProject = async (req, res) => {
     try {
         const { projectId } = req.params;
-        const userId = req.user.userId;
-
-        const membership = await WorkspaceMember.findOne({
-            userId,
-            status: "active",
-        });
-
-        if (!membership) {
-            return res.status(404).json({
-                success: false,
-                message: "No active workspace membership found!",
-            });
-        }
+        const workspaceId = req.workspaceId;
+        const membership = req.membership;
 
         if(membership.role !== "Admin") {
             return res.status(403).json({
@@ -480,7 +400,7 @@ const deleteProject = async (req, res) => {
 
         const project = await Project.findOne({
             _id: projectId,
-            workspaceId: membership.workspaceId,
+            workspaceId,
         });
 
         if (!project) {

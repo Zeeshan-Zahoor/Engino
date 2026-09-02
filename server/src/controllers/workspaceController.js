@@ -9,11 +9,11 @@ import mongoose from "mongoose";
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
-const getCurrentWorkspace = async (req, res) => {
+const getWorkspace = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        
-        const workspace = await Workspace.findOne({ ownerId: userId });
+        const workspaceId = req.workspaceId;
+        const workspace = await Workspace.findById(workspaceId);
+
         if(!workspace) {
             return res.status(404).json({
                 success: false,
@@ -38,6 +38,15 @@ const sendInvitation = async (req, res) => {
     try {
         const { email, role } = req.body;
         const userId = req.user.userId;
+        const workspaceId = req.workspaceId;
+        const membership = req.membership;
+
+        if (membership.role !== "Admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Admin-Only operation",
+            });
+        }
 
         if(!email) {
             return res.status(400).json({
@@ -46,7 +55,16 @@ const sendInvitation = async (req, res) => {
             });
         }
 
-        const workspace = await Workspace.findOne({ ownerId: userId });
+        const normalizedEmail = email.toLowerCase().trim();
+
+        if (!["Admin", "User"].includes(role)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid workspace role",
+            });
+        }
+
+        const workspace = await Workspace.findById(workspaceId);
 
         if(!workspace) {
             return res.status(404).json({
@@ -55,11 +73,11 @@ const sendInvitation = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ normalizedEmail });
         if(user) {
             const isMember = await WorkspaceMember.findOne({ 
                 userId: user._id, 
-                workspaceId: workspace._id 
+                workspaceId,
             });
 
             if(isMember) {
@@ -70,7 +88,8 @@ const sendInvitation = async (req, res) => {
             }
         }
 
-        const invitationExists = await Invitation.findOne({ email, workspaceId: workspace._id });
+        const invitationExists = await Invitation.findOne({ email: normalizedEmail, workspaceId });
+
         if(invitationExists && invitationExists.expiresAt > new Date() && invitationExists.status === "Pending") {
             return res.status(400).json({
                 success: false,
@@ -81,13 +100,13 @@ const sendInvitation = async (req, res) => {
         const token = crypto.randomBytes(32).toString('hex');
 
         const invitation = new Invitation({
-            email,
-            workspaceId: workspace._id,
+            email: normalizedEmail,
+            workspaceId,
             invitedBy: userId,
             role,
             token,
             status: "Pending",
-            expiresAt: Date.now() + 24* 60 * 60 * 1000,
+            expiresAt: Date.now() + 24 * 60 * 60 * 1000,
         });
 
         await invitation.save();
@@ -119,7 +138,7 @@ const acceptInvitation = async (req, res) => {
             });
         }
 
-        if(invitation.expiresAt < Date.now()) {
+        if(invitation.expiresAt <= new Date()) {
             return res.status(400).json({
                 message: "Invitation has expired",
                 success: false,
@@ -289,19 +308,7 @@ const declineInvitation = async (req, res) => {
 
 const getWorkspaceMembers = async (req, res) => {
     try {
-        const userId = req.user.userId;
-
-        // Find the workspace that the current user belongs to 
-        const member = await WorkspaceMember.findOne({ userId });
-
-        if (!member) { 
-            return res.status(404).json({ 
-                success: false, 
-                message: "Workspace membership not found!", 
-            }); 
-        }
-
-        const workspaceId = member.workspaceId;
+        const workspaceId = req.workspaceId;
 
         // get all members of the workspace
         const workspaceMembers = await WorkspaceMember.find({ workspaceId }).populate("userId", "-password");
@@ -320,7 +327,7 @@ const getWorkspaceMembers = async (req, res) => {
 }
 
 export {
-    getCurrentWorkspace,
+    getWorkspace,
     sendInvitation,
     acceptInvitation,
     declineInvitation,

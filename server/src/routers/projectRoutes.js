@@ -11,19 +11,20 @@ import {
  } from '../controllers/projectController.js';
 
  import authMiddleware from '../middleware/authMiddleware.js';
+ import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.get('/all', authMiddleware, getAllProjects);
-router.get('/:projectId', authMiddleware, getProject);
-router.get('/:projectId/members', authMiddleware, getProjectMembers);
+router.get('/', authMiddleware, workspaceMiddleware, getAllProjects);
+router.get('/:projectId', authMiddleware, workspaceMiddleware, getProject);
+router.get('/:projectId/members', authMiddleware, workspaceMiddleware, getProjectMembers);
 
-router.post('/create', authMiddleware, createProject);
-router.post('/add-member', authMiddleware, addProjectMember);
-router.post('/remove-member', authMiddleware, removeProjectMember);
+router.post('/', authMiddleware, workspaceMiddleware, createProject);
+router.post('/:projectId/members', authMiddleware, workspaceMiddleware, addProjectMember);
 
-router.delete('/:projectId', authMiddleware, deleteProject);
+router.delete('/:projectId/members/:userId', authMiddleware, workspaceMiddleware, removeProjectMember);
+router.delete('/:projectId', authMiddleware, workspaceMiddleware, deleteProject);
 
-router.put('/:projectId', authMiddleware, updateProject);
+router.put('/:projectId', authMiddleware, workspaceMiddleware, updateProject);
 
 export default router;
