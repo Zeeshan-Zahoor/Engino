@@ -1,5 +1,20 @@
 import mongoose from "mongoose";
 
+const messageSchema = new mongoose.Schema(
+  {
+    role: {
+      type: String,
+      enum: ["user", "assistant"],
+      required: true,
+    },
+
+    content: {
+      type: String,
+      required: true,
+    }
+  }
+);
+
 const aiConversationSchema = new mongoose.Schema(
   {
     requirementId: {
@@ -15,7 +30,7 @@ const aiConversationSchema = new mongoose.Schema(
     },
 
     messages: {
-      type: [mongoose.Schema.Types.Mixed],
+      type: [messageSchema],
       default: [],
     },
 
@@ -29,6 +44,9 @@ const aiConversationSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+aiConversationSchema.index({ requirementId: 1 });
+aiConversationSchema.index({ userId: 1 });
 
 const AIConversation = mongoose.model("AIConversation", aiConversationSchema);
 

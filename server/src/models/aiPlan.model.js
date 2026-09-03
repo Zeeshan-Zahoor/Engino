@@ -15,8 +15,9 @@ const aiPlanSchema = new mongoose.Schema(
     },
 
     status: {
-      type: String,
-      required: true,
+        type: String,
+        enum: ["Generated", "Under Review", "Approved"],
+        default: "Generated",
     },
 
     content: {
@@ -34,6 +35,8 @@ const aiPlanSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+aiPlanSchema.index({ requirementId: 1 });
 
 const AIPlan = mongoose.model("AIPlan", aiPlanSchema);
 
