@@ -30,6 +30,7 @@ const requirementSchema = new mongoose.Schema(
             type: String,
             enum: [
                 "Pending",
+                "Clear",
                 "Needs Clarification",
                 "Plan Generated",
                 "AI Plan Ready",

@@ -89,7 +89,7 @@ const registerAdmin = async (req, res) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000,
+                maxAge: 24 * 60 * 60 * 1000,
             }
         );
 
@@ -120,7 +120,7 @@ const loginUser = async (req, res) => {
 
         const normalizedEmail = email.toLowerCase().trim();
 
-        const user = await User.findOne({ normalizedEmail });
+        const user = await User.findOne({ email: normalizedEmail });
         if(!user) {
             return res.status(404).json({
                 success: false,
@@ -152,7 +152,7 @@ const loginUser = async (req, res) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000,
+                maxAge: 24 * 60 * 60 * 1000,
             }
         );
 

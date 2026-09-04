@@ -7,6 +7,7 @@ import workspaceRoutes from './routers/workspaceRoutes.js';
 import projectRoutes from './routers/projectRoutes.js';
 import taskRoutes from './routers/taskRoutes.js';
 import requirementRoutes from './routers/requirementRoutes.js';
+import aiRoutes from './routers/aiRoutes.js';
 
 const app = express();
 
@@ -26,7 +27,8 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/workspaces', workspaceRoutes);
 app.use('/api/workspaces/:workspaceId/projects', projectRoutes);
-app.use('/api/workspaces/:workspaceId/projects/:projectId/requirements', requirementRoutes)
+app.use('/api/workspaces/:workspaceId/projects/:projectId/requirements', requirementRoutes);
+app.use('/api/workspaces/:workspaceId/projects/:projectId/requirements/:requirementId/ai', aiRoutes);
 app.use('/api/workspaces/:workspaceId/projects/:projectId/tasks', taskRoutes);
 
 app.get("/", (req, res) => {
