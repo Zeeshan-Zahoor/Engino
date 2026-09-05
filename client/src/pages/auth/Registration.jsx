@@ -5,11 +5,22 @@ import {
     Eye,
     EyeOff,
     Lightbulb,
+    Loader,
     Users,
     Zap,
 } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+import useAuthStore from "../../stores/authStore";
+
 const Registration = () => {
+    const { 
+        register,
+        checkAuth,
+     }  = useAuthStore();
+
+     const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -19,7 +30,11 @@ const Registration = () => {
         confirmPassword: "",
     });
 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
     const handleChange = (e) => {
+        setError("");
         const { name, value } = e.target;
 
         setFormData((prev) => ({
@@ -47,11 +62,22 @@ const Registration = () => {
         },
     ];
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Backend integration will be added later.
-        console.log("Registration data:", formData);
+        setError("");
+        setLoading(true);
+
+        try {
+            await register(formData);
+            await checkAuth();
+
+            navigate("/");
+        } catch (error) {
+            setError(error.response?.data?.message || "Registration failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -288,12 +314,21 @@ const Registration = () => {
                                     ))}
                                 </div>
 
+                                {error && (
+                                    <p className="text-danger text-center text-sm my-2">{error}</p>
+                                )}
+
                                 {/* Submit */}
                                 <button
                                     type="submit"
                                     className="mt-10 group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#542cff] text-sm font-semibold text-white shadow-lg shadow-[#542cff]/20 transition hover:bg-[#4520e6] hover:shadow-[#542cff]/30 active:scale-[0.99]"
                                 >
-                                    Create account
+                                    {loading ? (
+                                        <>
+                                            <Loader />
+                                            <span>Creating...</span>
+                                        </>
+                                    ) : "Create account"}
 
                                     <ArrowRight
                                         size={17}

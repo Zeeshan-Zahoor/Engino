@@ -20,7 +20,7 @@ const registerAdmin = async (req, res) => {
         const normalizedEmail = email.toLowerCase().trim();
 
         // check for already existing user
-        const userExists = await User.findOne({ normalizedEmail });
+        const userExists = await User.findOne({ email: normalizedEmail });
         if(userExists) {
             return res
                 .status(409)

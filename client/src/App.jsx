@@ -1,11 +1,16 @@
+import { useEffect } from "react";
+import useAuthStore from "./stores/authStore";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
+
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-      <div className="rounded-xl bg-primary text-3xl font-bold text-white shadow-lg py-3 px-6">
-        Engino
-      </div>
-    </div>
-  );
+  const { checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  return <RouterProvider router={router}/>
 }
 
 export default App;

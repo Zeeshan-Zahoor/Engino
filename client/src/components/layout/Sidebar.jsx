@@ -1,7 +1,33 @@
+import { LogOut } from "lucide-react";
 import { adminNavigation } from "../../config/navigation";
 import { NavLink } from "react-router-dom";
+import LogoutConfirmModal from "../common/LogoutConfirmationModal";
+import { useState } from "react";
+import useAuthStore from "../../stores/authStore";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar() {
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await logout();
+      setIsModalOpen(false);
+      navigate('/login');
+
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to log out. Try Again.");
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r border-border bg-white">
       {/* Logo */}
@@ -48,7 +74,7 @@ function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="border-t border-border p-4">
+      <div className="flex justify-between items-center border-t border-border p-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
             ZZ
@@ -62,7 +88,22 @@ function Sidebar() {
             <p className="text-xs text-text-secondary">Admin</p>
           </div>
         </div>
+
+        <div
+          role="button"
+          onClick={() => setIsModalOpen(true)}
+          className="text-primary cursor-pointer h-8 w-8 rounded-l hover:bg-surface flex justify-center items-center">
+          <LogOut size={18} strokeWidth={2}  />
+        </div>
       </div>
+
+      <LogoutConfirmModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleLogout}
+        isLoading={loading}
+        error={error}
+      />
     </aside>
   );
 }

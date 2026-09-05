@@ -7,8 +7,18 @@ import {
     Users,
     Zap,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import useAuthStore from "../../stores/authStore";
+import Loader from "../../components/common/Loader";
 
 const Login = () => {
+    const { 
+        login,
+        checkAuth,
+    } =  useAuthStore();
+
+    const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -16,7 +26,11 @@ const Login = () => {
         password: "",
     });
 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
     const handleChange = (e) => {
+        setError(false);
         const { name, value } = e.target;
 
         setFormData((prev) => ({
@@ -25,11 +39,22 @@ const Login = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Backend integration later
-        console.log("Login data:", formData);
+        setError("");
+        setLoading(true) 
+        try {
+            await login(formData);
+            await checkAuth();
+
+            navigate("/");
+        } catch (error) {
+            console.log(error)
+            setError(error.response?.data?.message || "Failed to login user. Try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -211,12 +236,21 @@ const Login = () => {
                                     </div>
                                 </div>
 
+                                {error && (
+                                    <p className="text-danger text-center text-sm my-2">{error}</p>
+                                )}
+
                                 {/* Submit */}
                                 <button
                                     type="submit"
                                     className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#542cff] text-sm font-semibold text-white shadow-lg shadow-[#542cff]/20 transition hover:bg-[#4520e6] hover:shadow-[#542cff]/30 active:scale-[0.99]"
                                 >
-                                    Sign in
+                                    {loading ? (
+                                        <>
+                                            <Loader />
+                                            <span>Signing...</span>
+                                        </>
+                                    ) : "Sign In"}
 
                                     <ArrowRight
                                         size={17}

@@ -7,44 +7,55 @@ import AIRequirements from "../pages/AIRequirements";
 import Tasks from "../pages/Tasks";
 import Registration from "../pages/auth/Registration";
 import Login from "../pages/auth/Login";
+import PublicRoute from "../pages/auth/PublicRoute";
+import ProtectedRoute from "../pages/auth/ProtectedRoute";
 
 const router = createBrowserRouter([
     {
-        path: '/',
-        element: <AppLayout />,
+        element: <ProtectedRoute />,
         children: [
             {
-                index: true,
-                element: <Dashboard />
+                element: <AppLayout />,
+                children: [
+                    {
+                        path: '/',
+                        element: <Dashboard />
+                    },
+                    {
+                        path:'projects',
+                        element: <Projects />,
+                    },
+                    {
+                        path: 'projects/:projectId',
+                        element: <ProjectDetails />
+                    },
+                    {
+                        path: 'requirements',
+                        element: <AIRequirements />
+                    },
+                    {
+                        path: 'tasks',
+                        element: <Tasks />
+                    }
+                ],
             },
-            {
-                path:'projects',
-                element: <Projects />,
-            },
-            {
-                path: 'projects/:projectId',
-                element: <ProjectDetails />
-            },
-            {
-                path: 'requirements',
-                element: <AIRequirements />
-            },
-            {
-                path: 'tasks',
-                element: <Tasks />
-            }
-        ],
+        ]
     },
 
     // auth pages
     {
-        path: "/register",
-        element: <Registration />
-    },
-    {
-        path: "/login",
-        element: <Login />
-    },
+        element: <PublicRoute />,
+        children: [
+            {
+                path: "/register",
+                element: <Registration />
+            },
+            {
+                path: "/login",
+                element: <Login />
+            },
+        ]
+    }
 ]);
 
 export default router;

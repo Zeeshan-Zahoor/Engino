@@ -36,6 +36,21 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.loader {
+  display: inline-block;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes toast-progress {
   from {
     width: 100%;
