@@ -1,7 +1,10 @@
+import mongoose from "mongoose";
 import AIConversation from "../models/aiConversation.model.js";
 import AIPlan from "../models/aiPlan.model.js";
 import Project from "../models/project.model.js";
 import Requirement from "../models/requirement.model.js";
+import Task from "../models/task.model.js";
+import { generateTasks } from "../services/ai/generateTaskAI.service.js";
 import { generateAIPlan } from "../services/ai/planAI.service.js";
 import { analyzeRequirement, continueAnalysis } from "../services/ai/requirementAI.service.js";
 
@@ -299,7 +302,7 @@ const generatePlan = async (req, res) => {
             (total, feature) => total + feature.estimatedEffortMinutes,
             0
         );
-        
+
         const plan = await generateAIPlan(requirement, conversation);
 
 
@@ -347,8 +350,123 @@ const generatePlan = async (req, res) => {
     }
 }
 
+const generateAiTasks = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const workspaceId = req.workspaceId;
+        const membership = req.membership;
+
+        const { requirementId, projectId } = req.params;
+
+        if (!projectId || !requirementId) {
+            return res.status(400).json({
+                success: false,
+                message: "Project ID and requirement ID are required!",
+            });
+        }
+
+        if (membership.role !== "Admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Only admins can generate AI tasks",
+            });
+        }
+
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
+        });
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found in the workspace",
+            });
+        }
+
+        const requirement = await Requirement.findOne({
+            _id: requirementId,
+            projectId,
+        });
+
+        if (!requirement) {
+            return res.status(404).json({
+                success: false,
+                message: "Requirement not found in the project",
+            });
+        }
+
+        if(requirement.aiStatus !== "Clear") {
+            return res.status(400).json({
+                success: false,
+                message: "Requirement must be clear before generating AI tasks",
+            });
+        }
+
+        const plan = await AIPlan.findOne({
+            requirementId,
+        }).sort({ version: -1 });
+
+        if (!plan) {
+            return res.status(404).json({
+                success: false,
+                message: "Plan not found!",
+            });
+        }
+
+        const generatedTasks = await generateTasks(requirement, plan);
+
+        if (!generatedTasks || generatedTasks.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Failed to generate AI tasks",
+            });
+        }
+
+        const session = await mongoose.startSession();
+        try {
+            session.startTransaction();
+
+            for(const task of generatedTasks) {
+                const newTask = new Task({
+                    ...task,
+                    projectId,
+                    requirementId,
+                    reporter: userId,
+                });
+
+                await newTask.save({ session });
+            }
+
+            await session.commitTransaction();
+
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+
+        } finally {
+            await session.endSession();
+
+        }   
+
+
+        return res.status(201).json({
+            success: true,
+            message: "Tasks created successfully!",
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
+    }
+}
+
 export {
     aiAnalysis,
     answerClarification,
     generatePlan,
+    generateAiTasks,
 }
