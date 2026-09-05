@@ -5,6 +5,8 @@ import Projects from "../pages/Projects";
 import ProjectDetails from "../pages/ProjectDetails";
 import AIRequirements from "../pages/AIRequirements";
 import Tasks from "../pages/Tasks";
+import Registration from "../pages/auth/Registration";
+import Login from "../pages/auth/Login";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +34,16 @@ const router = createBrowserRouter([
                 element: <Tasks />
             }
         ],
+    },
+
+    // auth pages
+    {
+        path: "/register",
+        element: <Registration />
+    },
+    {
+        path: "/login",
+        element: <Login />
     },
 ]);
 
