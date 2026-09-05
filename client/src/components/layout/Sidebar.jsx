@@ -5,6 +5,7 @@ import LogoutConfirmModal from "../common/LogoutConfirmationModal";
 import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
+import WorkspaceSwitcher from "../common/WorkspaceSwitcher";
 
 function Sidebar() {
   const { logout } = useAuthStore();
@@ -35,14 +36,8 @@ function Sidebar() {
         <h1 className="text-xl font-bold text-primary">Engino</h1>
       </div>
 
-      {/* Workspace */}
-      <div className="px-4">
-        <div className="rounded-lg bg-primary px-3 py-2">
-          <p className="mt-0.5 text-sm font-semibold text-primary-light">
-            Admin / Founder
-          </p>
-        </div>
-      </div>
+      {/* Workspace Switcher*/}
+      <WorkspaceSwitcher />
 
       {/* Navigation */}
       <nav className="mt-6 flex-1 px-4">

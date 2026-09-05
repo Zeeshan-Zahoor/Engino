@@ -34,6 +34,37 @@ const getWorkspace = async (req, res) => {
     }
 }
 
+const getWorkspaces = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        const memberships = await WorkspaceMember.find({ userId }).populate("workspaceId").lean();
+
+        if (memberships.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found in any workspace",
+            });
+        }
+
+        const workspaces = memberships.map((membership) => ({
+            ...membership.workspaceId,
+            role: membership.role,
+        }));
+
+        return res.status(200).json({
+            success: true,
+            workspaces,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+}
+
 const sendInvitation = async (req, res) => {
     try {
         const { email, role } = req.body;
@@ -328,6 +359,7 @@ const getWorkspaceMembers = async (req, res) => {
 
 export {
     getWorkspace,
+    getWorkspaces,
     sendInvitation,
     acceptInvitation,
     declineInvitation,
