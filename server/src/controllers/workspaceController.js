@@ -309,7 +309,7 @@ const acceptInvitation = async (req, res) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000,
+                maxAge: 24 * 60 * 60 * 1000,
             },
         )
 
@@ -317,12 +317,47 @@ const acceptInvitation = async (req, res) => {
             success: true,
             message: "Invitation accepted successfully",
             user: { ...memberUser.toObject(), password: undefined },
-        })
+        });
 
     } catch (error) {
         return res.status(500).json({
             error: error.message,
             message: "Internal Server Error",
+        });
+    }
+}
+
+const getInvitation = async (req, res) => {
+    try {
+        const { token } = req.params;
+
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                message: "Token is required",
+            });
+        }
+
+        const invitation = await Invitation.findOne({ token })
+        .populate("workspaceId")
+        .populate("invitedBy", "-password");
+
+        if (!invitation) {
+            return res.status(404).json({
+                success: false,
+                message: "Invitation not found!",
+            });
+        } 
+
+        return res.status(200).json({
+            success: true,
+            invitation,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
         });
     }
 }
@@ -398,6 +433,7 @@ const getWorkspaceMembers = async (req, res) => {
 export {
     getWorkspace,
     getWorkspaces,
+    getInvitation,
     sendInvitation,
     acceptInvitation,
     declineInvitation,

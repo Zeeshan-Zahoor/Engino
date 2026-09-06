@@ -9,6 +9,7 @@ import Registration from "../pages/auth/Registration";
 import Login from "../pages/auth/Login";
 import PublicRoute from "../pages/auth/PublicRoute";
 import ProtectedRoute from "../pages/auth/ProtectedRoute";
+import InvitationPage from "../pages/invitation/Invitation";
 
 const router = createBrowserRouter([
     {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
                 element: <Login />
             },
         ]
+    },
+    {
+        path: "/invitations/:token",
+        element: <InvitationPage />
     }
 ]);
 

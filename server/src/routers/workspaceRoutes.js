@@ -5,6 +5,7 @@ import {
     getWorkspace,
     getWorkspaceMembers,
     getWorkspaces,
+    getInvitation,
     sendInvitation,
  } from '../controllers/workspaceController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
@@ -15,8 +16,10 @@ const router = express.Router();
 router.get('/', authMiddleware, getWorkspaces);
 router.get('/:workspaceId', authMiddleware, workspaceMiddleware, getWorkspace);
 router.get('/:workspaceId/team', authMiddleware, workspaceMiddleware, getWorkspaceMembers);
+router.get('/invitations/:token', getInvitation);
 
 router.post('/:workspaceId/invite', authMiddleware, workspaceMiddleware, sendInvitation);
+
 router.post('/accept-invite', acceptInvitation);
 router.post('/decline-invite', declineInvitation);
 
