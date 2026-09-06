@@ -30,7 +30,7 @@ const Login = () => {
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
-        setError(false);
+        setError("");
         const { name, value } = e.target;
 
         setFormData((prev) => ({

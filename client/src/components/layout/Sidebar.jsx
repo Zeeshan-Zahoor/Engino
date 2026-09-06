@@ -1,4 +1,4 @@
-import { LogOut } from "lucide-react";
+import { LogOut, UserPlus } from "lucide-react";
 import { sidebarNavigation } from "../../config/navigation";
 import { NavLink } from "react-router-dom";
 import LogoutConfirmModal from "../common/LogoutConfirmationModal";
@@ -7,12 +7,22 @@ import useAuthStore from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import WorkspaceSwitcher from "../common/WorkspaceSwitcher";
 import { getInitials } from "../../utils/getInitials";
+import useWorkspaceStore from "../../stores/workspaceStore";
+import InvitationModal from "../common/InvitationModal";
 
 function Sidebar() {
   const { user, logout } = useAuthStore();
+  const { workspaces, currentWorkspaceId } = useWorkspaceStore();
   const navigate = useNavigate();
 
+  const selectedWorkspace = workspaces.find((workspace) => 
+    workspace._id === currentWorkspaceId
+  );
+
+  const isAdmin = selectedWorkspace?.role === "Admin";
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -30,6 +40,7 @@ function Sidebar() {
       setLoading(false);
     }
   }
+
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r border-border bg-white">
       {/* Logo */}
@@ -39,6 +50,23 @@ function Sidebar() {
 
       {/* Workspace Switcher*/}
       <WorkspaceSwitcher />
+
+      {/* Invite button */}
+      {isAdmin && (
+        <button
+          type="button"
+          onClick={() => setIsInviteModalOpen(true)}
+          className="mx-4 mb-5 w-[calc(100%-2rem)] flex items-center justify-center gap-2
+                    rounded-xl bg-primary px-4 py-2.5
+                    text-sm font-semibold text-white
+                    shadow-sm transition-all
+                    hover:opacity-90 hover:shadow-md
+                    active:scale-[0.98]"
+        >
+          <UserPlus size={17} strokeWidth={2.2} />
+          Invite Members
+        </button>
+      )}
 
       {/* Navigation */}
       <nav className="mt-6 flex-1 px-4">
@@ -110,6 +138,12 @@ function Sidebar() {
         onConfirm={handleLogout}
         isLoading={loading}
         error={error}
+      />
+
+      <InvitationModal 
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        workspaceId={currentWorkspaceId}
       />
     </aside>
   );
