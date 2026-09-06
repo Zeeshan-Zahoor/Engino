@@ -7,7 +7,7 @@ import {
   Settings,
 } from "lucide-react";
 
-export const adminNavigation = [
+export const sidebarNavigation = [
   {
     label: "Dashboard",
     path: "/",

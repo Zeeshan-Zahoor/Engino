@@ -1,14 +1,15 @@
 import { LogOut } from "lucide-react";
-import { adminNavigation } from "../../config/navigation";
+import { sidebarNavigation } from "../../config/navigation";
 import { NavLink } from "react-router-dom";
 import LogoutConfirmModal from "../common/LogoutConfirmationModal";
 import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import WorkspaceSwitcher from "../common/WorkspaceSwitcher";
+import { getInitials } from "../../utils/getInitials";
 
 function Sidebar() {
-  const { logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +47,7 @@ function Sidebar() {
         </p>
 
         <div className="space-y-1">
-          {adminNavigation.map((item) => {
+          {sidebarNavigation.map((item) => {
             const Icon = item.icon;
 
             return (
@@ -72,24 +73,35 @@ function Sidebar() {
       <div className="flex justify-between items-center border-t border-border p-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
-            ZZ
+            {user?.avatar 
+                ? (
+                <img 
+                    src={user?.avatar} 
+                    alt="Profile"
+                    className="h-full w-full object-cover rounded-full"
+                  />
+                ) 
+              : (
+                getInitials(user?.name || "?")
+              )
+            }
           </div>
 
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-text-primary">
-              Zeeshan Zahoor
+              {user?.name}
             </p>
 
-            <p className="text-xs text-text-secondary">Admin</p>
+            <p className="text-xs text-text-secondary">{user?.role}</p>
           </div>
         </div>
 
-        <div
+        <button
           role="button"
           onClick={() => setIsModalOpen(true)}
           className="text-primary cursor-pointer h-8 w-8 rounded-l hover:bg-surface flex justify-center items-center">
           <LogOut size={18} strokeWidth={2}  />
-        </div>
+        </button>
       </div>
 
       <LogoutConfirmModal 

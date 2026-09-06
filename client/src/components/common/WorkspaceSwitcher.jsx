@@ -4,37 +4,22 @@ import {
     ChevronDown,
 } from "lucide-react";
 
+import { getInitials } from "../../utils/getInitials";
+import useWorkspaceStore from "../../stores/workspaceStore";
+import useAuthStore from "../../stores/authStore";
+
 function WorkspaceSwitcher() {
+    const { workspaces, currentWorkspaceId, setCurrentWorkspace } = useWorkspaceStore();
+    const { user } = useAuthStore();
+
     const [isOpen, setIsOpen] = useState(false);
 
-    const workspaces = [
-        {
-            id: "1",
-            name: "Zeeshan's Workspace",
-            meta: "7 projects · 5 members",
-            initial: "Z",
-            color: "bg-violet-600",
-        },
-        {
-            id: "2",
-            name: "Engineering Team",
-            meta: "12 projects · 8 members",
-            initial: "E",
-            color: "bg-blue-500",
-        },
-        {
-            id: "3",
-            name: "Student Portal",
-            meta: "4 projects · 3 members",
-            initial: "S",
-            color: "bg-emerald-500",
-        },
-    ];
+    const selectedWorkspace = workspaces.find((workspace) =>
+        workspace._id === currentWorkspaceId
+    )
 
-    const [selectedWorkspace, setSelectedWorkspace] = useState(workspaces[0]);
-
-    const handleSelect = (workspace) => {
-        setSelectedWorkspace(workspace);
+    const handleSelect = (id) => {
+        setCurrentWorkspace(id)
         setIsOpen(false);
     };
 
@@ -51,19 +36,22 @@ function WorkspaceSwitcher() {
                     }`}
             >
                 <div
-                    className={`h-9 w-9 shrink-0 rounded-full ${selectedWorkspace.color}
-                    flex items-center justify-center text-white font-semibold text-sm`}
+                    className={`h-9 w-9 shrink-0 rounded-full
+                    flex items-center justify-center font-semibold text-sm text-white bg-violet-600`}
                 >
-                    {selectedWorkspace.initial}
+                    {getInitials(selectedWorkspace?.name || "?")}
                 </div>
 
                 <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-slate-900 truncate">
-                        {selectedWorkspace.name}
+                        {selectedWorkspace?.name || "Select Workspace"}
                     </p>
 
                     <p className="text-xs text-slate-500 truncate">
-                        Personal Workspace
+                        {selectedWorkspace?.ownerId === user._id
+                            ? ("Personal Workspace")
+                            : (`${selectedWorkspace?.name}'s Workspace`)
+                        }
                     </p>
                 </div>
 
@@ -91,14 +79,14 @@ function WorkspaceSwitcher() {
                     <div className="px-2 pb-2">
                         {workspaces.map((workspace) => {
                             const isSelected =
-                                selectedWorkspace.id === workspace.id;
+                                selectedWorkspace?._id === workspace._id;
 
                             return (
                                 <button
-                                    key={workspace.id}
+                                    key={workspace._id}
                                     type="button"
                                     onClick={() =>
-                                        handleSelect(workspace)
+                                        handleSelect(workspace._id)
                                     }
                                     className={`w-full flex items-center gap-3
                                         rounded-lg px-2.5 py-2.5 text-left
@@ -110,20 +98,19 @@ function WorkspaceSwitcher() {
                                 >
                                     <div
                                         className={`h-9 w-9 shrink-0 rounded-full
-                                            ${workspace.color}
                                             flex items-center justify-center
-                                            text-white font-semibold text-sm`}
+                                            text-white bg-violet-500 font-semibold text-sm`}
                                     >
-                                        {workspace.initial}
+                                        {getInitials(workspace?.name)}
                                     </div>
 
                                     <div className="min-w-0 flex-1">
                                         <p className="text-sm font-semibold text-slate-800 truncate">
-                                            {workspace.name}
+                                            {workspace?.name}
                                         </p>
 
                                         <p className="text-xs text-slate-500 truncate">
-                                            {workspace.meta}
+                                            {workspace?.role}
                                         </p>
                                     </div>
 
