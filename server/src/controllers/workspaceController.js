@@ -3,6 +3,7 @@ import Invitation from "../models/invitation.model.js";
 import User from "../models/user.model.js";
 import Workspace from "../models/workspace.model.js";
 import WorkspaceMember from "../models/workspaceMember.model.js";
+import transporter from "../utils/mail.js";
 
 import mongoose from "mongoose";
 
@@ -88,7 +89,7 @@ const sendInvitation = async (req, res) => {
 
         const normalizedEmail = email.toLowerCase().trim();
 
-        if (!["Admin", "User"].includes(role)) {
+        if (!["Admin", "Member"].includes(role)) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid workspace role",
@@ -104,7 +105,7 @@ const sendInvitation = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ normalizedEmail });
+        const user = await User.findOne({ email: normalizedEmail });
         if(user) {
             const isMember = await WorkspaceMember.findOne({ 
                 userId: user._id, 
@@ -142,10 +143,47 @@ const sendInvitation = async (req, res) => {
 
         await invitation.save();
 
+        // send the invitation
+        const invitationLink = `${process.env.FRONTEND_URL}/invitations/${token}`;
+        
+        try {
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: normalizedEmail,
+                subject: `Engino Invitation from ${workspace.name}`,
+                text: `You have been invited to join our workspace as ${role}.`,
+                html: `
+                    <h2>You're invited to join Engino!</h2>
+
+                    <p>
+                        You have been invited to join a workspace as an <strong>${role}</strong>.
+                    </p>
+
+                    <a
+                        href="${invitationLink}"
+                        style="
+                            display:inline-block;
+                            padding:12px 20px;
+                            background:#000;
+                            color:#fff;
+                            text-decoration:none;
+                            border-radius:6px;
+                        "
+                    >
+                        View Invitation
+                    </a>
+
+                    <p>This invitation will expire in 24 hours.</p>
+                `,
+            })
+        } catch (error) {
+            await Invitation.findByIdAndDelete(invitation._id);
+            throw error;
+        }
+
         return res.status(201).json({
             success: true,
-            message: "Invitation created successfully!",
-            invitation,
+            message: "Invitation sent successfully!",
         });
 
     } catch (error) {
