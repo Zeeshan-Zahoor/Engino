@@ -1,37 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ChevronDown,
   Plus,
   X,
 } from "lucide-react";
+import Loader from '../common/Loader';
 import useProjectStore from "../../stores/projectStore";
 import useToastStore from "../../stores/toastStore";
-
-const teamMembers = [
-  { id: "1", name: "Zeeshan Zahoor", initials: "ZZ" },
-  { id: "2", name: "Ganga", initials: "GA" },
-  { id: "3", name: "Areeb", initials: "AR" },
-  { id: "4", name: "Ahmed Khan", initials: "AK" },
-];
+import useWorkspaceStore from "../../stores/workspaceStore";
+import Avatar from "../../utils/Avatar";
 
 function CreateProjectModal({ isOpen, onClose }) {
 
- const addProject = useProjectStore((state) => state.addProject);
+  const { workspaceMembers, getWorkspaceMembers, currentWorkspaceId } = useWorkspaceStore();
+  const { addProject, isLoading } = useProjectStore();
+
  const showToast = useToastStore((state) => state.showToast);
 
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [projectCode, setProjectCode] = useState("--- ---");
+  const [technologyInput, setTechnologyInput] = useState("");
+  const [goalInput, setGoalInput] = useState("");
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    status: "Not Started",
+    goals: [],
+    technologies: [],
+    status: "Planning",
     startDate: "",
     targetDate: "",
     team: [],
-    url: ""
+    projectCode,
   });
+
+  useEffect(() => {
+    getWorkspaceMembers();
+  }, [getWorkspaceMembers]);
 
 
   const handleNameChange = (e) => {
@@ -58,27 +64,88 @@ function CreateProjectModal({ isOpen, onClose }) {
     setFormData((prev) => ({
         ...prev,
         name,
-        code: generatedCode,
+        projectCode: generatedCode,
     }))
   }
+
+  const handleAddTechnology = (e) => {
+        if (e.key !== "Enter") return;
+
+        e.preventDefault();
+
+        const technology = technologyInput.trim();
+
+        if (!technology) return;
+
+        if (
+          formData.technologies.some(
+            (tech) => tech.toLowerCase() === technology.toLowerCase()
+          )
+        ) {
+          setTechnologyInput("");
+          return;
+        }
+
+        setFormData((prev) => ({
+          ...prev,
+          technologies: [...prev.technologies, technology],
+        }));
+
+        setTechnologyInput("");
+    };
+
+    const removeTechnology = (technology) => {
+      setFormData((prev) => ({
+        ...prev,
+        technologies: prev.technologies.filter(
+          (tech) => tech !== technology
+        ),
+      }));
+    };
+
+    const handleAddGoal = () => {
+      const goal = goalInput.trim();
+
+      if(!goal) return;
+
+      if(formData.goals.includes(goal)) {
+        setError("This goal has already been added.");
+        return;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        goals: [...prev.goals, goal],
+      }));
+
+      setGoalInput("");
+    };
+
+
+    const removeGoal = (index) => {
+      setFormData((prev) => ({
+        ...prev,
+        goals: prev.goals.filter((_, i) => i !== index),
+      }));
+    };
 
   if (!isOpen) return null;
 
   const toggleMember = (memberId) => {
     setError("");
     setSelectedMembers((current) => { 
-        const member = teamMembers.find((member) => (
-            member.id === memberId
+        const member = workspaceMembers?.find((member) => (
+            member.userId._id === memberId
         ));
 
         if(!member) return current;
 
         const alreadySelected = current.some((member) => 
-            member.id === memberId
+            member.userId._id === memberId
         )
 
         const updatedMembers = alreadySelected
-            ? current.filter((member) => member.id !== memberId)
+            ? current.filter((member) => member.userId._id !== memberId)
             : [...current, member]
 
         setFormData(prev => ({
@@ -112,41 +179,40 @@ function CreateProjectModal({ isOpen, onClose }) {
     return true;
  }
 
-    const validateGithubURL = () => {
-        const githubRepoRegex = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)(?:\.git)?\/?$/;
-        if(formData.url !== "" && !formData.url.match(githubRepoRegex)) {
-            return false;
-        }
-        return true;
-    }
-
-  const handleAddProject = () => {
+  const handleAddProject = async () => {
     if(!validateRequiredFields()) {
         setError("The required fields can not be empty!");
         return;
     } else if (!validateTeam()) {
         setError("Please select team members for this project!");
         return;
-    } else if (!validateGithubURL()) {
-        setError("Enter a valid repository link!");
-        return;
     } else if (!dateValidation()) {
         setError("Target date must be after start date")
         return;
     }
 
-    addProject(formData);
-    setFormData({
+
+    try {
+      await addProject(currentWorkspaceId, formData);
+
+      setFormData({
         name: "",
         description: "",
+        goals:[],
+        technologies: [],
         status: "Not Started",
         startDate: "",
         targetDate: "",
         team: [],
-        url: ""
+        projectCode,
     })
-    onClose();
-    showToast("Project Created Successfully!", "success");
+
+      onClose();
+      showToast("Project Created Successfully!", "success");
+
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to add project. Try again.");
+    }
   }
 
   return (
@@ -237,6 +303,119 @@ function CreateProjectModal({ isOpen, onClose }) {
             </p>
           </div>
 
+          {/* Project Goals */}
+          <div className="mt-5">
+              <label className="mb-2 block text-sm font-medium text-text-primary">
+                Project Goals
+              </label>
+
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={goalInput}
+                  onChange={(e) => {
+                    setError("");
+                    setGoalInput(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if(e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddGoal();
+                    }
+                  }}
+                  placeholder="e.g. Provide students with a centralized learning platform"
+                  className="flex-1 rounded-lg border border-border bg-white px-3 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+                 />
+
+                 <button 
+                  type="button"
+                  onClick={handleAddGoal}
+                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                 >
+                    Add
+                 </button>
+              </div>
+
+              {/* Goals list */}
+              {formData.goals.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {formData.goals.map((goal, index) => (
+                    <div
+                      key={`${goal}-${index}`}
+                      className="flex items-start gap-3 rounded-lg border border-border bg-surface px-3 py-2.5"
+                    >
+                      <span className="mt-0.5 text-sm font-medium text-primary">
+                        {index + 1}
+                      </span>
+
+                      <p className="flex-1 text-sm text-text-primary">
+                        {goal}
+                      </p>
+
+                      <button 
+                        type="button"
+                        onClick={() => removeGoal(index)}
+                        className="text-xs font-medium text-red-500 transition hover:text-red-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <p className="mt-1.5 text-xs text-text-secondary">
+                Add the main outcomes or objectives you want this project to achieve.
+              </p>
+          </div>
+
+
+          {/* Technologies */}
+          <div className="mt-5">
+            <label className="mb-2 block text-sm font-medium text-text-primary">
+              Technologies
+            </label>
+
+            <div className="min-h-11 w-full rounded-lg border border-border bg-white px-3 py-2 transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
+              
+              <div className="flex flex-wrap items-center gap-2">
+                {formData.technologies.map((technology) => (
+                  <span
+                    key={technology}
+                    className="flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1.5 text-xs font-medium text-primary"
+                  >
+                    {technology}
+
+                    <button
+                      type="button"
+                      onClick={() => removeTechnology(technology)}
+                      className="rounded-full hover:text-danger"
+                    >
+                      <X size={13} />
+                    </button>
+                  </span>
+                ))}
+
+                <input
+                  type="text"
+                  value={technologyInput}
+                  onChange={(e) => setTechnologyInput(e.target.value)}
+                  onKeyDown={handleAddTechnology}
+                  placeholder={
+                    formData.technologies.length === 0
+                      ? "e.g. React, Node.js, MongoDB..."
+                      : "Add technology..."
+                  }
+                  className="min-w-[180px] flex-1 bg-transparent py-1 text-sm text-text-primary outline-none placeholder:text-text-secondary"
+                />
+              </div>
+            </div>
+
+            <p className="mt-1.5 text-xs text-text-secondary">
+              Press Enter after each technology to add it.
+            </p>
+          </div>
+
           {/* Status + Start Date */}
           <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
 
@@ -254,7 +433,6 @@ function CreateProjectModal({ isOpen, onClose }) {
                   }))}
                   className="h-11 w-full appearance-none rounded-lg border border-border bg-white px-3 pr-10 text-sm text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 >
-                  <option value="Not Started">Not Started</option>
                   <option value="Planning">Planning</option>
                   <option value="In Progress">In Progress</option>
                   <option value="On Hold">On Hold</option>
@@ -331,10 +509,10 @@ function CreateProjectModal({ isOpen, onClose }) {
                 >
                   <option value="">Select team members...</option>
 
-                  {teamMembers.map((member) => (
-                    <option key={member.id} value={member.id}>
-                      {selectedMembers.some((selected) => selected.id === member.id) ? "✓ " : ""}
-                      {member.name}
+                  {workspaceMembers?.map((member) => (
+                    <option key={member.userId._id} value={member.userId._id}>
+                      {selectedMembers.some((selected) => selected.userId._id === member.userId._id) ? "✓ " : ""}
+                      {member.userId.name}
                     </option>
                   ))}
                 </select>
@@ -350,14 +528,18 @@ function CreateProjectModal({ isOpen, onClose }) {
                   {selectedMembers.map((member) => {
                     return (
                       <span
-                        key={member.id}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
+                        key={member.userId._id}
+                        className="flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
                       >
-                        {member.initials}
+                        <div className="flex h-6 w-6 items-center justify-cneter rounded-full">
+                          <Avatar 
+                          user={member?.userId}
+                        /> 
+                        </div>
 
                         <button
                           type="button"
-                          onClick={() => toggleMember(member.id)}
+                          onClick={() => toggleMember(member.userId._id)}
                           className="hover:text-danger"
                         >
                           <X size={12} />
@@ -374,30 +556,7 @@ function CreateProjectModal({ isOpen, onClose }) {
             </div>
           </div>
 
-          {/* Repository */}
-          <div className="mt-5">
-            <label className="mb-2 block text-sm font-medium text-text-primary">
-              Repository URL
-            </label>
-
-            <input
-              type="url"
-              value={formData.url}
-              onChange={(e) => {
-                setError("");
-                setFormData(prev => ({
-                    ...prev,
-                    url: e.target.value
-                }))
-              }}
-              placeholder="https://github.com/..."
-              className="h-11 w-full rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
-            />
-
-            <p className="mt-1.5 text-xs text-text-secondary">
-              Optional · You can add or change this later.
-            </p>
-          </div>
+          
         </div>
 
         {/* Footer */}
@@ -419,7 +578,9 @@ function CreateProjectModal({ isOpen, onClose }) {
             className="flex h-10 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-white transition hover:bg-primary-dark"
           >
             <Plus size={16} strokeWidth={2.5} />
-            Add Project
+            {isLoading ? (
+              <Loader />
+            ) : ("Add Project")}
           </button>
         </div>
       </div>

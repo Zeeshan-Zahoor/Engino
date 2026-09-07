@@ -6,9 +6,9 @@ import { useState } from "react";
 import useAuthStore from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import WorkspaceSwitcher from "../common/WorkspaceSwitcher";
-import { getInitials } from "../../utils/getInitials";
 import useWorkspaceStore from "../../stores/workspaceStore";
 import InvitationModal from "../common/InvitationModal";
+import Avatar from "../../utils/Avatar";
 
 function Sidebar() {
   const { user, logout } = useAuthStore();
@@ -101,18 +101,9 @@ function Sidebar() {
       <div className="flex justify-between items-center border-t border-border p-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
-            {user?.avatar 
-                ? (
-                <img 
-                    src={user?.avatar} 
-                    alt="Profile"
-                    className="h-full w-full object-cover rounded-full"
-                  />
-                ) 
-              : (
-                getInitials(user?.name || "?")
-              )
-            }
+            <Avatar 
+              user={user}
+            />
           </div>
 
           <div className="min-w-0">

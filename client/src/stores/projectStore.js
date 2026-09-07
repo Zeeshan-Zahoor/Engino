@@ -1,9 +1,11 @@
 import { create } from 'zustand';
-import { projects as initialProjects } from '../data/projects';
+import api from '../lib/api';
 
-const useProjectStore = create((set) => ({
-    projects: initialProjects,
+const useProjectStore = create((set, get) => ({
+    projects: [],
     selectedProjectId: null,
+    isLoading: false,
+    error: null,
 
     selectProject: (projectId) => set({
         selectedProjectId: projectId,
@@ -13,52 +15,29 @@ const useProjectStore = create((set) => ({
         selectedProjectId: null,
     }),
 
-    addProject: (projectData) => {
-        const newProject = {
-            ...projectData,
-            id: crypto.randomUUID(),
-            progress: 0,
-            technologies: [],
-            goals: [],
-            stats: {
-                totalTasks: 0,
-                completedTasks: 0,
-                inProgressTasks: 0,
-                todoTasks: 0,
-                reviewTasks: 0,
-            },
+    addProject: async (workspaceId, projectData) => {
+        set({ isLoading: true, error: null });
+        const { projects } =  get();
+        try { 
+            const response = await api.post(`/workspaces/${workspaceId}/projects`, projectData);
 
-            updatedDate: (new Date()).toDateString(),
-            updated: "Just now",
-        };
+            set({
+                isLoading: false,
+                projects: [...projects, response?.data?.newProject],
+            });
 
-        set((state) => ({
-            projects: [...state.projects, newProject],
-        }))
+            return response?.data;
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Failed to add project. Try again.",
+                isLoading: false,
+            });
+
+            throw error;
+        }
     },
-
-    updateProject: (projectId, updates) => set((state) => ({
-        projects: state.projects.map((project) => (
-            project.id === projectId 
-                    ?  { 
-                            ...project, 
-                            ...updates
-                       }   
-                    : project
-
-        )),
-    })),
-
-    deleteProject: (projectId) => set((state) => ({
-        projects: state.projects.filter((project) => (
-            project.id !== projectId
-        )),
-
-        selectedProjectId: 
-            state.selectedProjectId === projectId
-                        ? null
-                        : state.selectedProjectId, 
-    })),
+    
 }));
 
 

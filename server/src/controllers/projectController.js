@@ -6,7 +6,9 @@ import mongoose from "mongoose";
 
 const createProject = async (req, res) => {
     try {
-        const { name, code, description, goals, technologies, status, startDate, targetDate } = req.body;
+        const { name, projectCode, description, goals, team, technologies, status, startDate, targetDate } = req.body;
+
+        const code = projectCode;
 
         const userId = req.user.userId;
         const membership = req.membership;
@@ -33,8 +35,20 @@ const createProject = async (req, res) => {
             });
         }
 
+        const project = await Project.findOne({
+            code,
+            workspaceId,
+        });
+
+        if (project) {
+            return res.status(400).json({
+                success: false,
+                message: "Project code must be unique!. Try typing name again!",
+            });
+        }
+
         let newProject;
-        let projectMembership;
+        let adminMembership;
         
         const session = await mongoose.startSession();
         
@@ -54,15 +68,30 @@ const createProject = async (req, res) => {
                 workspaceId,
             });
 
-            projectMembership = new ProjectMember({
+            adminMembership = new ProjectMember({
                 projectId: newProject._id,
                 userId,
                 role: "Project Manager",
                 joinedAt: Date.now(),
             });
 
+            if (team?.length > 0) {
+                const newTeam = team.filter((member) => member._id !== userId)
+
+                for(const member of newTeam) {
+                    const newMembership = new ProjectMember({
+                        projectId: newProject._id,
+                        userId: member._id,
+                        role: "Developer",
+                        joinedAt: Date.now(),
+                    });
+
+                    await newMembership.save({ session });
+                }
+            }
+
             await newProject.save({ session });
-            await projectMembership.save({ session });
+            await adminMembership.save({ session });
 
             await session.commitTransaction();
 

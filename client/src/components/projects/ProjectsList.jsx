@@ -47,7 +47,7 @@ function ProjectsList({
       </div>
 
       {/* Projects */}
-      <div className="divide-y divide-border">
+      <div className="divide-y divide-border">cha
         {paginatedProjects.map((project) => {
           let team = project.team;
           if(team.length > 3) {

@@ -8,6 +8,7 @@ const useWorkspaceStore = create(
         currentWorkspaceId: null,
         isLoading: false,
         error: null,
+        workspaceMembers: [],
 
         fetchWorkspaces: async () => {
             try {
@@ -54,9 +55,33 @@ const useWorkspaceStore = create(
                 currentWorkspaceId: null,
                 error: null,
             });
+        },
+
+        getWorkspaceMembers: async () => {
+            const { currentWorkspaceId } = get();
+
+            try {
+                set({ isLoading: true, error: null });
+                const response = await api.get(`workspaces/${currentWorkspaceId}/team`);
+
+                set({
+                    workspaceMembers: response.data.workspaceMembers,
+                    isLoading: false,
+                });
+            
+                return response.data;
+                
+            } catch (error) {
+                set({
+                    error: error.response?.data?.message || "Failed to load workspace members",
+                    isLoading: false,
+                });
+
+                throw error;
+            }
         }
     }),
-
+ 
     {
         name: "workspace-storage",
         partialize: (state)=> ({
