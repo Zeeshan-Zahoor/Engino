@@ -3,6 +3,8 @@ import api from '../lib/api';
 
 const useProjectStore = create((set, get) => ({
     projects: [],
+    activeProject: null,
+    team: [],
     selectedProjectId: null,
     isLoading: false,
     error: null,
@@ -14,6 +16,78 @@ const useProjectStore = create((set, get) => ({
     clearSelectedProject: () => set({
         selectedProjectId: null,
     }),
+
+    fetchProject: async (workspaceId, projectId) => {
+        set({ isLoading: true, error: null });
+
+        try { 
+            const response = await api.get(`/workspaces/${workspaceId}/projects/${projectId}`);
+
+            set({
+                isLoading: false,
+                activeProject: response?.data?.project,
+            });
+
+            return response?.data;
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Error fetching project. Try again.",
+                isLoading: false,
+            });
+
+            console.log(error.response)
+
+            throw error;
+        }
+    },
+
+    fetchProjects: async (workspaceId) => {
+        set({ isLoading: true, error: null });
+
+        try { 
+            const response = await api.get(`/workspaces/${workspaceId}/projects`);
+
+            set({
+                isLoading: false,
+                projects: response?.data?.projects,
+            });
+
+            return response?.data;
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Error fetching projects. Try again.",
+                isLoading: false,
+            });
+
+            throw error;
+        }
+
+    },
+
+    fetchProjectMembers: async (workspaceId, projectId) => {
+        set({ isLoading: true, error: null });
+
+        try { 
+            const response = await api.get(`/workspaces/${workspaceId}/projects/${projectId}/members`);
+
+            set({
+                isLoading: false,
+                team: response?.data?.projectMembers,
+            });
+
+            return response?.data;
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Error fetching project members. Try again.",
+                isLoading: false,
+            });
+
+            throw error;
+        }
+    },
 
     addProject: async (workspaceId, projectData) => {
         set({ isLoading: true, error: null });

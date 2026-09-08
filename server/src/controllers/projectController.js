@@ -1,6 +1,8 @@
 import Project from "../models/project.model.js";
 import WorkspaceMember from '../models/workspaceMember.model.js';
 import ProjectMember from '../models/projectMember.model.js';
+import Task from '../models/task.model.js';
+import Requirement from "../models/requirement.model.js";
 
 import mongoose from "mongoose";
 
@@ -76,12 +78,12 @@ const createProject = async (req, res) => {
             });
 
             if (team?.length > 0) {
-                const newTeam = team.filter((member) => member._id !== userId)
+                const newTeam = team.filter((member) => member.userId._id !== userId)
 
                 for(const member of newTeam) {
                     const newMembership = new ProjectMember({
                         projectId: newProject._id,
-                        userId: member._id,
+                        userId: member.userId._id,
                         role: "Developer",
                         joinedAt: Date.now(),
                     });
@@ -277,9 +279,17 @@ const getProject = async (req, res) => {
             });
         }
 
+        const [tasks, requirements, projectMemberships] = await Promise.all([
+            Task.find({ projectId }).populate("assignee", "-password").lean(),
+            Requirement.find({ projectId }).lean(),
+            ProjectMember.find({ projectId }).populate("userId", "-password").lean(),
+        ])
+
+        const team = projectMemberships.map(membership => membership.userId);
+        
         return res.status(200).json({
             success: true,
-            project,
+            project: { ...project.toObject(), tasks, team, requirements },
         });
 
     } catch (error) {
@@ -297,11 +307,31 @@ const getAllProjects = async (req, res) => {
 
         const projects = await Project.find({
             workspaceId,
-        });
+        }).lean();
+
+        const projectIds = projects.map(project => project._id);
+
+        const tasks = await Task.find({ projectId: { $in: projectIds } }).lean();
+
+        const members = await ProjectMember.find({
+            projectId: { $in: projectIds },
+        })
+        .populate("userId", "name avatar")
+        .lean();
+
+        const projectsWithTeam = projects.map(project => ({
+            ...project,
+            team: members.filter(
+                member => member.projectId.toString() === project._id.toString()
+            ),
+            tasks: tasks.filter(
+                task => task.projectId.toString() === project._id.toString()
+            )
+        }));
 
         return res.status(200).json({
             success: true,
-            projects,
+            projects: projectsWithTeam,
         });
 
     } catch (error) {

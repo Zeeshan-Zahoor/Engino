@@ -212,6 +212,7 @@ function CreateProjectModal({ isOpen, onClose }) {
 
     } catch (error) {
       setError(error.response?.data?.message || "Failed to add project. Try again.");
+      console.log(error?.response)
     }
   }
 

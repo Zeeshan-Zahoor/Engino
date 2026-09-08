@@ -1,11 +1,13 @@
 import { Bell, Search } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Avatar from "../../utils/Avatar";
 
 function Header({
   title,
   description,
   showBack = false,
+  user,
 }) {
   const navigate = useNavigate();
   return (
@@ -66,7 +68,7 @@ function Header({
           className="flex items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
-            ZZ
+            <Avatar user={user}/>
           </div>
         </button>
       </div>

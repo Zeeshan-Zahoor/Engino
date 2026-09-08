@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Header from "../components/layout/Header"
 import StatsCard from "../components/dashboard/StatsCard"
 import { 
@@ -13,6 +13,8 @@ import ProjectsList from "../components/projects/ProjectsList"
 import CreateProjectModal from "../components/projects/CreateProjectModal"
 
 import useProjectStore from "../stores/projectStore"
+import useWorkspaceStore from "../stores/workspaceStore"
+import useAuthStore from "../stores/authStore"
 
 function Projects() {
     const [searchInput, setSearchInput] = useState("");
@@ -20,7 +22,13 @@ function Projects() {
     const [sortBy, setSortBy] = useState("Recently Updated");
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-    const projects = useProjectStore((state) => state.projects);
+    const { projects, fetchProjects, isLoading, error } = useProjectStore();
+    const { currentWorkspaceId } = useWorkspaceStore();
+    const { user } = useAuthStore();
+
+    useEffect(() => {
+        fetchProjects(currentWorkspaceId);
+    }, [fetchProjects, currentWorkspaceId]);
 
     const statusFilteredProjects = projects.filter((project) => {
         if(selectedStatus === "All") {
@@ -30,19 +38,19 @@ function Projects() {
     })
 
     const filteredProjects = statusFilteredProjects.filter((project) => {
-        const nameMatches = project.name?.toLowerCase().includes(searchInput.toLowerCase());
-        const projectCodeMatches = project?.code.toLowerCase().includes(searchInput.toLowerCase());
+        const nameMatches = project?.name?.toLowerCase().includes(searchInput.toLowerCase());
+        const projectCodeMatches = project?.code?.toLowerCase().includes(searchInput.toLowerCase());
 
         return nameMatches || projectCodeMatches;
      })
 
-     const sortedProjects = [...filteredProjects].sort((a, b) => {
+     const sortedProjects = [...filteredProjects]?.sort((a, b) => {
         switch (sortBy) {
             case "Recently Updated":
-                return new Date(b.updatedDate) - new Date(a.updatedDate);
+                return new Date(b.updatedAt) - new Date(a.updatedAt);
 
             case "Oldest Updated":
-                return new Date(a.updatedDate) - new Date(b.updatedDate);
+                return new Date(a.updatedAt) - new Date(b.updatedAt);
 
             case "Progress: High to Low":
                 return b.progress - a.progress;
@@ -61,21 +69,25 @@ function Projects() {
         }
     });
 
-    const totalProjects = projects.length;
-    const activeProjects = projects.filter((project) => 
+    const totalProjects = projects?.length || 0;
+    const activeProjects = projects?.filter((project) => 
         project.status === "In Progress"
     )
-    const onHoldProjects = projects.filter((project) => 
+    const onHoldProjects = projects?.filter((project) => 
         project.status === "On Hold"
     )
 
     const avgProgress = () => {
-        const sum = projects.reduce((acc, curr) => {
-            acc += curr.progress;
+        const sum = projects?.reduce((acc, curr) => {
+            const tasks = curr.tasks;
+            const completedTasks = tasks.filter(task => task.status === "Done")
+            const progress = ((completedTasks.length / tasks.length) * 100 ) || 0;
+            
+            acc += progress;
             return acc;
         }, 0);
 
-        const avg = Math.round(sum / projects.length);
+        const avg = Math.round(sum / projects?.length);
         return avg;
     }
 
@@ -85,6 +97,7 @@ function Projects() {
         <Header 
             title="Projects"
             description="Manage all your projects and their progress."
+            user={user}
         />
 
         {/* Statistics */}
@@ -102,25 +115,18 @@ function Projects() {
                     iconClassName="bg-green-50 text-success"
                     title="Active Projects"
                     value={activeProjects.length}
-                    description="1 from last month"
-                    trend="1"
                 />
                 <StatsCard 
                     icon={SquareStop}
                     iconClassName="bg-red-50 text-danger"
                     title="On Hold Projects"
                     value={onHoldProjects.length}
-                    description="1 from last month"
-                    trend="1"
-                    trendType="negative"
                 />
                 <StatsCard 
                     icon={CircleCheck}
                     iconClassName="bg-blue-50 text-success"
                     title="Avg. Progress"
                     value={`${avgProgress()}%`}
-                    description="8% from last month"
-                    trend="8"
                 />
             </div>
             <button
@@ -144,6 +150,8 @@ function Projects() {
 
         <ProjectsList 
             filteredProjects={sortedProjects}
+            loading={isLoading}
+            error={error}
         />
 
 

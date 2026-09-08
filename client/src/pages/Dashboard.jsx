@@ -17,9 +17,10 @@ import QuickActions from "../components/dashboard/QuickActions";
 import RepositoryStatus from "../components/dashboard/RepositoryStatus";
 import useProjectStore from "../stores/projectStore";
 import { tasks } from "../data/tasks";
-
+import useAuthStore from '../stores/authStore';
 
 function Dashboard() {
+    const { user } = useAuthStore();
     const projects = useProjectStore(state => state.projects);
     const activeProjects = projects.filter((project) => project.status === "In Progress");
     
@@ -48,6 +49,7 @@ function Dashboard() {
         <Header 
             title="Dashboard"
             description="Welcome back, Zeeshan. Here's what's happening with your workspace."
+            user={user}
         />
         
         <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(320px,0.9fr)]">

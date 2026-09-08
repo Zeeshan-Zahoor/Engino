@@ -7,22 +7,31 @@ import ProjectRequirements from "../components/projects/ProjectRequirements"
 import ProjectTabs from "../components/projects/ProjectTabs"
 import ProjectTasks from "../components/projects/ProjectTasks"
 
+import { useEffect } from "react"
 
 import { useParams } from "react-router-dom"
 
+import useWorkspaceStore from "../stores/workspaceStore"
 import useProjectStore from '../stores/projectStore'
+import useAuthStore from "../stores/authStore"
 
 function ProjectDetails() {
   const { projectId } = useParams();
-  const { projects } = useProjectStore();
-  const activeProject = projects.find((project) => project.id === projectId);
+  const { activeProject, fetchProject } = useProjectStore();
+  const { currentWorkspaceId } = useWorkspaceStore();
+  const { user } = useAuthStore();
 
+  useEffect(() => {
+    fetchProject(currentWorkspaceId, projectId);
+
+  }, [fetchProject, projectId, currentWorkspaceId]);
 
   return (
     <div className="space-y-6 px-8">
         <Header 
-            title={activeProject.name}
+            title={activeProject?.name}
             showBack={true}
+            user={user}
         />
 
         <ProjectOverviewHeader 
@@ -36,9 +45,9 @@ function ProjectDetails() {
         />
 
         <div className="grid gap-4 lg:grid-cols-[1fr_1.8fr_0.9fr]">
-            <ProjectRequirements projectId={activeProject.id}/>
-            <ProjectTasks projectId={activeProject.id}/>
-            <ProjectActivity projectId={activeProject.id}/>
+            <ProjectRequirements project={activeProject}/>
+            <ProjectTasks project={activeProject}/>
+            {/* <ProjectActivity project={activeProject}/> */}
         </div>
 
         <ProjectDescription project={activeProject}/>

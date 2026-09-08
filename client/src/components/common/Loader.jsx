@@ -1,7 +1,7 @@
-function Loader({ size = 18 }) {
+function Loader({ size = 18, color = "text-white" }) {
   return (
     <span
-      className="loader"
+      className={`loader ${color}`}
       style={{ width: size, height: size }}
     />
   );

@@ -1,5 +1,4 @@
 import { ArrowRight, FileText } from "lucide-react";
-import { requirements } from "../../data/requirements";
 
 const statusStyles = {
   "Completed": "bg-green-50 text-success",
@@ -7,8 +6,8 @@ const statusStyles = {
   "Planned": "bg-surface text-text-secondary",
 };
 
-function ProjectRequirements({ projectId }) {
-  const projectRequirements = requirements.filter((requirement) => requirement.projectId === projectId)
+function ProjectRequirements({ project }) {
+  const projectRequirements = project?.requirements || [];
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
@@ -30,7 +29,7 @@ function ProjectRequirements({ projectId }) {
       <div className="divide-y divide-border">
         {projectRequirements.map((requirement) => (
           <div
-            key={requirement.id}
+            key={requirement._id}
             className="flex items-center gap-3 px-5 py-3.5"
           >
             {/* Icon */}
@@ -42,21 +41,21 @@ function ProjectRequirements({ projectId }) {
 
             {/* Name */}
             <p className="min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
-              {requirement.name}
+              {requirement?.name}
             </p>
 
             {/* Status + Date */}
             <div className="flex shrink-0 flex-col items-end gap-1">
               <span
                 className={`rounded-md px-2 py-1 text-xs font-medium ${
-                  statusStyles[requirement.status]
+                  statusStyles[requirement?.status]
                 }`}
               >
-                {requirement.status}
+                {requirement?.status}
               </span>
 
               <span className="text-xs text-text-secondary">
-                {requirement.date}
+                {requirement?.createdAt ? new Date(requirement.createdAt) : ""}
               </span>
             </div>
           </div>
