@@ -78,7 +78,7 @@ const createProject = async (req, res) => {
             });
 
             if (team?.length > 0) {
-                const newTeam = team.filter((member) => member.userId._id !== userId)
+                const newTeam = team.filter((member) => String(member.userId._id) !== String(userId))
 
                 for(const member of newTeam) {
                     const newMembership = new ProjectMember({
@@ -392,7 +392,6 @@ const updateProject = async (req, res) => {
 
         const allowedFields = [
             "name",
-            "code",
             "description",
             "goals",
             "technologies",
@@ -403,30 +402,109 @@ const updateProject = async (req, res) => {
 
         const updateFields = {};
 
+        const hasTeamUpdate = Array.isArray(req.body.team);
+
         for(const field of allowedFields) {
             if (req.body[field] !== undefined) {
                 updateFields[field] = req.body[field];
             }
         }
 
-        const updatedProject = await Project.findOneAndUpdate(
-            { 
-                _id: projectId,
-                workspaceId,
-            },
-            { 
-                $set: updateFields,
-            },
-            { 
-                new: true,
-            },
-        );
+        if (Object.keys(updateFields).length === 0 && !hasTeamUpdate) {
+            return res.status(400).json({
+                success: false,
+                message: "No fields provided for update.",
+            });
+        }
 
-        if (!updatedProject) {
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
+        });
+
+        if (!project) {
             return res.status(404).json({
                 success: false,
                 message: "Project not found!",
             });
+        }
+
+        const session = await mongoose.startSession();
+        let updatedProject;
+
+        try {
+            session.startTransaction();
+
+            if (Object.keys(updateFields).length > 0) {
+                updatedProject = await Project.findOneAndUpdate(
+                    {
+                        _id: projectId,
+                        workspaceId,
+                    },
+                    {
+                        $set: updateFields,
+                    },
+                    {
+                        new: true,
+                        session,
+                    },
+                );
+            } else {
+                updatedProject = project;
+            }
+
+            if (hasTeamUpdate) {
+                const requestedUserIds = req.body.team
+                    .map((member) => member?.userId?._id || member?.userId)
+                    .filter(Boolean)
+                    .map((id) => String(id));
+
+                const workspaceMembers = await WorkspaceMember.find({
+                    workspaceId,
+                    status: "active",
+                    userId: { $in: requestedUserIds },
+                }).session(session);
+
+                const validUserIds = new Set(
+                    workspaceMembers.map((member) => String(member.userId))
+                );
+
+                if (requestedUserIds.some((id) => !validUserIds.has(id))) {
+                    await session.abortTransaction();
+                    return res.status(400).json({
+                        success: false,
+                        message: "All project members must belong to the workspace.",
+                    });
+                }
+
+                const memberUserIds = [...new Set(
+                    requestedUserIds.filter((id) => id !== String(project.createdBy))
+                )];
+
+                await ProjectMember.deleteMany({
+                    projectId,
+                    userId: { $ne: project.createdBy },
+                }, { session });
+
+                if (memberUserIds.length > 0) {
+                    await ProjectMember.insertMany(
+                        memberUserIds.map((userId) => ({
+                            projectId,
+                            userId,
+                            role: "Developer",
+                            joinedAt: Date.now(),
+                        })),
+                        { session },
+                    );
+                }
+            }
+
+            await session.commitTransaction();
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            await session.endSession();
         }
 
         return res.status(200).json({

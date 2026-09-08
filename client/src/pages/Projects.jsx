@@ -21,10 +21,26 @@ function Projects() {
     const [selectedStatus, setSelectedStatus] = useState("All")
     const [sortBy, setSortBy] = useState("Recently Updated");
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [editingProject, setEditingProject] = useState(null);
 
     const { projects, fetchProjects, isLoading, error } = useProjectStore();
     const { currentWorkspaceId } = useWorkspaceStore();
     const { user } = useAuthStore();
+
+    const handleCreateProject = () => {
+        setEditingProject(null);
+        setIsCreateModalOpen(true);
+    };
+
+    const handleEditProject = (project) => {
+        setEditingProject(project);
+        setIsCreateModalOpen(true);
+    };
+
+    const handleCloseProjectModal = () => {
+        setIsCreateModalOpen(false);
+        setEditingProject(null);
+    };
 
     useEffect(() => {
         fetchProjects(currentWorkspaceId);
@@ -131,7 +147,7 @@ function Projects() {
             </div>
             <button
                 type="button"
-                onClick={() => setIsCreateModalOpen(true)}
+                onClick={handleCreateProject}
                 className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark"
             >
                 <Plus size={17} strokeWidth={2.8} />
@@ -152,13 +168,16 @@ function Projects() {
             filteredProjects={sortedProjects}
             loading={isLoading}
             error={error}
+            onEditProject={handleEditProject}
         />
 
 
         {/* Render Modal */}
         <CreateProjectModal 
+            key={editingProject?._id}
             isOpen={isCreateModalOpen}
-            onClose={() => setIsCreateModalOpen(false)}
+            onClose={handleCloseProjectModal}
+            project={editingProject}
         />
     </div>
   )

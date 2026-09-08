@@ -91,20 +91,58 @@ const useProjectStore = create((set, get) => ({
 
     addProject: async (workspaceId, projectData) => {
         set({ isLoading: true, error: null });
-        const { projects } =  get();
         try { 
             const response = await api.post(`/workspaces/${workspaceId}/projects`, projectData);
 
-            set({
-                isLoading: false,
-                projects: [...projects, response?.data?.newProject],
-            });
+            await get().fetchProjects(workspaceId);
+            set({ isLoading: false, error: null });
 
             return response?.data;
 
         } catch (error) {
             set({
                 error: error.response?.data?.message || "Failed to add project. Try again.",
+                isLoading: false,
+            });
+
+            throw error;
+        }
+    },
+
+    updateProject: async (workspaceId, projectId, projectData) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.put(
+                `/workspaces/${workspaceId}/projects/${projectId}`,
+                projectData
+            );
+
+            const updatedProject = response.data.updatedProject;
+
+            await get().fetchProjects(workspaceId);
+            await get().fetchProject(workspaceId, projectId);
+
+            set((state) => ({
+                projects: state.projects.map((project) =>
+                    project._id === projectId
+                        ? { ...project, ...updatedProject }
+                        : project
+                ),
+                activeProject:
+                state.activeProject?._id === projectId
+                    ? { ...state.activeProject, ...updatedProject }
+                    : state.activeProject,
+                    
+                isLoading: false,
+            }));
+
+            return response.data;
+        } catch (error) {
+            set({
+                error:
+                    error.response?.data?.message ||
+                    "Failed to update project. Try again.",
                 isLoading: false,
             });
 

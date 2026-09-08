@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   ChevronDown,
   Plus,
@@ -10,35 +10,100 @@ import useToastStore from "../../stores/toastStore";
 import useWorkspaceStore from "../../stores/workspaceStore";
 import Avatar from "../../utils/Avatar";
 
-function CreateProjectModal({ isOpen, onClose }) {
+function CreateProjectModal({ isOpen, onClose, project }) {
+
+  const isEditMode = Boolean(project);
 
   const { workspaceMembers, getWorkspaceMembers, currentWorkspaceId } = useWorkspaceStore();
-  const { addProject, isLoading } = useProjectStore();
+  const { addProject, updateProject, isLoading } = useProjectStore();
 
  const showToast = useToastStore((state) => state.showToast);
 
-  const [selectedMembers, setSelectedMembers] = useState([]);
-  const [projectCode, setProjectCode] = useState("--- ---");
   const [technologyInput, setTechnologyInput] = useState("");
   const [goalInput, setGoalInput] = useState("");
   const [error, setError] = useState("");
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    goals: [],
-    technologies: [],
-    status: "Planning",
-    startDate: "",
-    targetDate: "",
-    team: [],
-    projectCode,
-  });
+
+  const getInitialFormData = (project) => {
+      if (!project) {
+          return {
+              name: "",
+              description: "",
+              goals: [],
+              technologies: [],
+              status: "Planning",
+              startDate: "",
+              targetDate: "",
+              team: [],
+              projectCode: "",
+          };
+      }
+
+      const teamMembers = (project.team || []).map((member) =>
+          member?.userId ? member : { userId: member }
+      );
+      const projectCodeValue = project.projectCode || project.code || "";
+
+      return {
+          name: project.name || "",
+          description: project.description || "",
+          goals: project.goals || [],
+          technologies: project.technologies || [],
+          status: project.status || "Planning",
+          startDate: project.startDate
+              ? new Date(project.startDate).toISOString().slice(0, 10)
+              : "",
+          targetDate: project.targetDate
+              ? new Date(project.targetDate).toISOString().slice(0, 10)
+              : "",
+          team: teamMembers,
+          projectCode: projectCodeValue,
+      };
+  };
+
+  const [formData, setFormData] = useState(() =>
+      getInitialFormData(project)
+  );
+
+  const [selectedMembers, setSelectedMembers] = useState(
+      () => (project?.team || []).map((member) =>
+          member?.userId ? member : { userId: member }
+      )
+  );
+
+  const [projectCode, setProjectCode] = useState(
+      () => project?.projectCode || project?.code || "--- ---"
+  );
+
+
+  const resetForm = useCallback(() => {
+    setFormData({
+        name: "",
+        description: "",
+        goals:[],
+        technologies: [],
+        status: "Planning",
+        startDate: "",
+        targetDate: "",
+        team: [],
+        projectCode: "--- ---",
+    });
+
+    setProjectCode("--- ---");
+    setSelectedMembers([]);
+    setTechnologyInput("");
+    setGoalInput("");
+    setError("");
+
+  }, []);
 
   useEffect(() => {
-    getWorkspaceMembers();
-  }, [getWorkspaceMembers]);
+    if (isOpen && !workspaceMembers?.length) {
+      getWorkspaceMembers();
+    }
+  }, [isOpen, getWorkspaceMembers, workspaceMembers?.length]);
 
+  
 
   const handleNameChange = (e) => {
     setError("");
@@ -50,7 +115,7 @@ function CreateProjectModal({ isOpen, onClose }) {
         setFormData((prev) => ({
             ...prev,
             name,
-            code: "",
+            projectCode: "--- ---",
         }));
 
         return;
@@ -65,7 +130,7 @@ function CreateProjectModal({ isOpen, onClose }) {
         ...prev,
         name,
         projectCode: generatedCode,
-    }))
+    }));
   }
 
   const handleAddTechnology = (e) => {
@@ -179,7 +244,7 @@ function CreateProjectModal({ isOpen, onClose }) {
     return true;
  }
 
-  const handleAddProject = async () => {
+  const handleSubmit = async () => {
     if(!validateRequiredFields()) {
         setError("The required fields can not be empty!");
         return;
@@ -193,25 +258,21 @@ function CreateProjectModal({ isOpen, onClose }) {
 
 
     try {
-      await addProject(currentWorkspaceId, formData);
+      if (isEditMode) {
+            await updateProject(currentWorkspaceId, project._id, formData);
 
-      setFormData({
-        name: "",
-        description: "",
-        goals:[],
-        technologies: [],
-        status: "Not Started",
-        startDate: "",
-        targetDate: "",
-        team: [],
-        projectCode,
-    })
+            showToast("Project updated successfully!", "success");
+        } else {
+            await addProject(currentWorkspaceId, formData);
 
-      onClose();
-      showToast("Project Created Successfully!", "success");
+            showToast("Project created successfully!", "success");
+        }
+
+        resetForm();
+        onClose();
 
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to add project. Try again.");
+      setError(error.response?.data?.message || `Failed to ${isEditMode ? "update" : "create"} project.`);
       console.log(error?.response)
     }
   }
@@ -224,11 +285,14 @@ function CreateProjectModal({ isOpen, onClose }) {
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <h2 className="text-xl font-semibold text-text-primary">
-              Create New Project
+              {isEditMode ? "Edit Project" : "Create New Project"}
             </h2>
 
             <p className="mt-1 text-sm text-text-secondary">
-              Create a project and start managing its work.
+              {isEditMode
+                  ? "Update project details and keep your team aligned."
+                  : "Create a project and start managing its work."
+              }
             </p>
           </div>
 
@@ -511,9 +575,9 @@ function CreateProjectModal({ isOpen, onClose }) {
                   <option value="">Select team members...</option>
 
                   {workspaceMembers?.map((member) => (
-                    <option key={member.userId._id} value={member.userId._id}>
-                      {selectedMembers.some((selected) => selected.userId._id === member.userId._id) ? "✓ " : ""}
-                      {member.userId.name}
+                    <option key={member?.userId?._id} value={member?.userId?._id}>
+                      {selectedMembers.some((selected) => selected?.userId?._id === member?.userId?._id) ? "✓ " : ""}
+                      {member?.userId?.name}
                     </option>
                   ))}
                 </select>
@@ -529,7 +593,7 @@ function CreateProjectModal({ isOpen, onClose }) {
                   {selectedMembers.map((member) => {
                     return (
                       <span
-                        key={member.userId._id}
+                        key={member?.userId?._id}
                         className="flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
                       >
                         <div className="flex h-6 w-6 items-center justify-cneter rounded-full">
@@ -540,7 +604,7 @@ function CreateProjectModal({ isOpen, onClose }) {
 
                         <button
                           type="button"
-                          onClick={() => toggleMember(member.userId._id)}
+                          onClick={() => toggleMember(member?.userId?._id)}
                           className="hover:text-danger"
                         >
                           <X size={12} />
@@ -575,13 +639,16 @@ function CreateProjectModal({ isOpen, onClose }) {
 
           <button
             type="button"
-            onClick={handleAddProject}
+            onClick={handleSubmit}
             className="flex h-10 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-white transition hover:bg-primary-dark"
           >
             <Plus size={16} strokeWidth={2.5} />
             {isLoading ? (
               <Loader />
-            ) : ("Add Project")}
+            ) : (
+              isEditMode ? "Save Changes" : "Create Project"
+            )
+            }
           </button>
         </div>
       </div>

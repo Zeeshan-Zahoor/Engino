@@ -9,7 +9,7 @@ import {
 import { getInitials } from "../../utils/getInitials";
 import { getRelativeTime } from "../../utils/getRelativeTime";
 
-function ProjectOverviewHeader({ project }) {
+function ProjectOverviewHeader({ project, onEdit }) {
 
   return (
     <section className="rounded-2xl border border-border bg-white p-4">
@@ -61,6 +61,7 @@ function ProjectOverviewHeader({ project }) {
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
+            onClick={onEdit}
             className="flex items-center gap-2 rounded-lg border border-border px-3.5 py-2 text-xs font-semibold text-text-primary transition hover:bg-surface"
           >
             <Pencil size={14} />

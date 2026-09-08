@@ -20,6 +20,7 @@ function ProjectsList({
   filteredProjects,
   loading,
   error,
+  onEditProject,
 }) {
 
   const navigate = useNavigate();
@@ -205,6 +206,10 @@ function ProjectsList({
                         {/* Actions */}
                         <button
                           type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEditProject(project);
+                          }}
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition hover:bg-surface hover:text-text-primary"
                         >
                           <MoreVertical size={17} />
