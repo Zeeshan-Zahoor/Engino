@@ -17,7 +17,6 @@ function AddProjectMembersModal({ isOpen, onClose, project }) {
 
     const {
         addProjectMembers,
-        fetchProject,
         isLoading,
     } = useProjectStore();
 
@@ -122,7 +121,7 @@ function AddProjectMembersModal({ isOpen, onClose, project }) {
             showToast(`${members.length} ${members.length === 1 ?  "member" : "members"} added successfully.`, "success");
 
             onClose();
-            
+
         } catch (error) {
             showToast(
                 error.response?.data?.message ||
