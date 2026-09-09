@@ -46,7 +46,6 @@ const useWorkspaceStore = create(
                     ? id 
                     : workspaces[0]?._id || null,
             });
-            
         },
 
         clearWorkspaces: () => {

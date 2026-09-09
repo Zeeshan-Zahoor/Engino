@@ -16,6 +16,18 @@ const projectMemberSchema = new mongoose.Schema(
 
     role: {
       type: String,
+      enum: [
+        "Project Manager",
+        "Frontend Developer",
+        "Backend Developer",
+        "Full Stack Developer",
+        "UI/UX Designer",
+        "QA Tester",
+        "DevOps Engineer",
+        "AI Engineer",
+        "Developer",
+        "Other"
+    ],
       required: true,
     },
 

@@ -4,9 +4,9 @@ import ProjectDescription from "../components/projects/ProjectDescription"
 import ProjectOverviewHeader from "../components/projects/ProjectOverviewHeader"
 import ProjectOverviewStats from "../components/projects/ProjectOverviewStats"
 import ProjectRequirements from "../components/projects/ProjectRequirements"
-import ProjectTabs from "../components/projects/ProjectTabs"
 import ProjectTasks from "../components/projects/ProjectTasks"
 import CreateProjectModal from "../components/projects/CreateProjectModal"
+import ProjectTeam from "../components/projects/ProjectTeam"
 
 import { useEffect, useState } from "react"
 
@@ -16,6 +16,9 @@ import useWorkspaceStore from "../stores/workspaceStore"
 import useProjectStore from '../stores/projectStore'
 import useAuthStore from "../stores/authStore"
 
+
+const tabs = ["Overview", "AI Requirements", "Tasks", "Team", "Activity"];
+
 function ProjectDetails() {
   const { projectId } = useParams();
   const { activeProject, fetchProject } = useProjectStore();
@@ -24,6 +27,8 @@ function ProjectDetails() {
 
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   useEffect(() => {
     fetchProject(currentWorkspaceId, projectId);
@@ -51,20 +56,29 @@ function ProjectDetails() {
           onEdit={handleEditProject}
         />
 
-        <ProjectTabs />
-
-        <ProjectOverviewStats 
-          project={activeProject}
-        />
-
-        <div className="grid gap-4 lg:grid-cols-[1fr_1.8fr_0.9fr]">
-            <ProjectRequirements project={activeProject}/>
-            <ProjectTasks project={activeProject}/>
-            {/* <ProjectActivity project={activeProject}/> */}
+        {/* tabs */}
+        <div className="overflow-x-auto border-b border-border">
+          <div className="flex min-w-max items-center gap-7">
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => {
+                  setActiveTab(tab)
+                }}
+                className={`relative py-3 text-sm font-medium transition ${
+                  activeTab === tab
+                    ? "text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary transition-all"
+                    : "text-text-secondary hover:text-text-primary"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <ProjectDescription project={activeProject}/>
-
+        <TabBody tab={activeTab} activeProject={activeProject}/>
 
         <CreateProjectModal 
           key={activeProject?._id}
@@ -74,6 +88,42 @@ function ProjectDetails() {
         />
     </div>
   )
+}
+
+const TabBody = ({ tab, activeProject }) => {
+  switch (tab) {
+      case "Overview":
+        return <>
+          <ProjectOverviewStats 
+            project={activeProject}
+          />
+
+          <div className="grid gap-4 lg:grid-cols-[1fr_1.8fr_0.9fr]">
+              <ProjectRequirements project={activeProject}/>
+              <ProjectTasks project={activeProject}/>
+              {/* <ProjectActivity project={activeProject}/> */}
+          </div>
+
+          <ProjectDescription project={activeProject}/>
+          </>
+        
+      case "AI Requirements":
+        return null;
+       
+      case "Tasks":
+        return null; 
+       
+      case "Team":
+        return <ProjectTeam 
+            project={activeProject}
+        />; 
+       
+      case "Activity":
+        return null; 
+
+      default:
+        break;
+    }
 }
 
 export default ProjectDetails

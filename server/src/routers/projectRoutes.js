@@ -1,6 +1,6 @@
 import express from 'express';
 import { 
-    addProjectMember,
+    addProjectMembers,
     createProject,
     deleteProject,
     getAllProjects,
@@ -20,7 +20,7 @@ router.get('/:projectId', authMiddleware, workspaceMiddleware, getProject);
 router.get('/:projectId/members', authMiddleware, workspaceMiddleware, getProjectMembers);
 
 router.post('/', authMiddleware, workspaceMiddleware, createProject);
-router.post('/:projectId/members', authMiddleware, workspaceMiddleware, addProjectMember);
+router.post('/:projectId/members', authMiddleware, workspaceMiddleware, addProjectMembers);
 
 router.delete('/:projectId/members/:userId', authMiddleware, workspaceMiddleware, removeProjectMember);
 router.delete('/:projectId', authMiddleware, workspaceMiddleware, deleteProject);

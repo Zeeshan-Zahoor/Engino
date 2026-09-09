@@ -120,87 +120,124 @@ const createProject = async (req, res) => {
     }
 }
 
-const addProjectMember = async (req, res) => {
+const addProjectMembers = async (req, res) => {
     try {
         const { projectId } = req.params;
-        const { targetUserId, role } = req.body;
+        const { members } = req.body;
 
         const membership = req.membership;
         const workspaceId = req.workspaceId;
 
-        if(!projectId || !targetUserId || !role) {
+        // Basic validation
+        if (
+            !projectId ||
+            !Array.isArray(members) ||
+            members.length === 0
+        ) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid or insufficient data",
             });
         }
 
-        if(membership.role !== "Admin") {
+        // Workspace Admin only
+        if (membership.role !== "Admin") {
             return res.status(403).json({
                 success: false,
                 message: "Admin-Only operation",
             });
         }
 
+        // Verify project belongs to workspace
         const project = await Project.findOne({
             _id: projectId,
             workspaceId,
         });
 
-        if(!project) {
+        if (!project) {
             return res.status(404).json({
                 success: false,
                 message: "Project not found in the workspace!",
             });
         }
 
-        const targetUserMembership = await WorkspaceMember.findOne({ 
-            userId: targetUserId,
-            workspaceId,
-            status: "active",
-        });
-
-        if(!targetUserMembership) {
-            return res.status(404).json({
-                success: false,
-                message: "No active target user found in workspace",
-            });
+        // Validate each member payload
+        for (const member of members) {
+            if (!member.targetUserId || !member.role) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Each member must have a userId and role",
+                });
+            }
         }
 
-        const alreadyInProject = await ProjectMember.findOne({ 
-            projectId,
-            userId: targetUserId,
-        });
+        // Prevent duplicate users in same request
+        const targetUserIds = members.map(
+            (member) => String(member.targetUserId)
+        );
 
-        if(alreadyInProject) {
+        const uniqueUserIds = new Set(targetUserIds);
+
+        if (uniqueUserIds.size !== targetUserIds.length) {
             return res.status(400).json({
                 success: false,
-                message: "Target user already in the project",
+                message: "Duplicate members are not allowed",
             });
         }
 
-        const newProjectMember = new ProjectMember({
+        // Verify all users are active workspace members
+        const workspaceMemberships = await WorkspaceMember.find({
+            workspaceId,
+            userId: { $in: targetUserIds },
+            status: "active",
+        }).lean();
+
+        if (workspaceMemberships.length !== targetUserIds.length) {
+            return res.status(400).json({
+                success: false,
+                message: "One or more selected users are not active workspace members",
+            });
+        }
+
+        // Check which users are already project members
+        const existingMembers = await ProjectMember.find({
             projectId,
-            userId: targetUserId,
-            role,
-            joinedAt: Date.now(),
-        });
-        
-        await newProjectMember.save();
+            userId: { $in: targetUserIds },
+        }).lean();
+
+        if (existingMembers.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "One or more selected users are already project members",
+            });
+        }
+
+        // Create project memberships
+        const projectMembers = members.map((member) => ({
+            projectId,
+            userId: member.targetUserId,
+            role: member.role,
+            joinedAt: new Date(),
+        }));
+
+        const createdMembers = await ProjectMember.insertMany(
+            projectMembers
+        );
 
         return res.status(201).json({
             success: true,
-            message: "User added to project successfully!",
-            newProjectMember,
+            message: `${createdMembers.length} member(s) added to project successfully!`,
+            projectMembers: createdMembers,
         });
+
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: error.message,
             message: "Internal Server Error",
-        })
+        });
     }
-}
+};
 
 const removeProjectMember = async (req, res) => {
     try {
@@ -285,7 +322,7 @@ const getProject = async (req, res) => {
             ProjectMember.find({ projectId }).populate("userId", "-password").lean(),
         ])
 
-        const team = projectMemberships.map(membership => membership.userId);
+        const team = projectMemberships;
         
         return res.status(200).json({
             success: true,
@@ -589,7 +626,7 @@ const deleteProject = async (req, res) => {
 
 export {
     createProject,
-    addProjectMember,
+    addProjectMembers,
     removeProjectMember,
     getProject,
     getAllProjects,

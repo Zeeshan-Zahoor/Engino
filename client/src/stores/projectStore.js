@@ -4,7 +4,6 @@ import api from '../lib/api';
 const useProjectStore = create((set, get) => ({
     projects: [],
     activeProject: null,
-    team: [],
     selectedProjectId: null,
     isLoading: false,
     error: null,
@@ -64,29 +63,6 @@ const useProjectStore = create((set, get) => ({
             throw error;
         }
 
-    },
-
-    fetchProjectMembers: async (workspaceId, projectId) => {
-        set({ isLoading: true, error: null });
-
-        try { 
-            const response = await api.get(`/workspaces/${workspaceId}/projects/${projectId}/members`);
-
-            set({
-                isLoading: false,
-                team: response?.data?.projectMembers,
-            });
-
-            return response?.data;
-
-        } catch (error) {
-            set({
-                error: error.response?.data?.message || "Error fetching project members. Try again.",
-                isLoading: false,
-            });
-
-            throw error;
-        }
     },
 
     addProject: async (workspaceId, projectData) => {
@@ -150,6 +126,72 @@ const useProjectStore = create((set, get) => ({
         }
     },
     
+    addProjectMembers: async (workspaceId, projectId, members) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.post(
+                `/workspaces/${workspaceId}/projects/${projectId}/members`,
+                {
+                    members,
+                }
+            );
+
+            // Refresh project so team is immediately updated
+            await get().fetchProject(workspaceId, projectId);
+
+            set({
+                isLoading: false,
+                error: null,
+            });
+
+            return response.data;
+
+        } catch (error) {
+            set({
+                error:
+                    error.response?.data?.message ||
+                    "Failed to add project members.",
+                isLoading: false,
+            });
+
+            throw error;
+        }
+    },
+
+    removeProjectMember: async (workspaceId, projectId, userId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.delete(`/workspaces/${workspaceId}/projects/${projectId}/members/${userId}`);
+
+            set((state) => ({
+                activeProject:
+                    state.activeProject?._id === projectId ?
+                        {
+                            ...state.activeProject,
+                            team: state.activeProject.team?.filter(
+                                member => member.userId?._id !== userId                                         
+                            ),
+                        }
+
+                        : state.activeProject,
+                isLoading: false,
+                error: null,
+            }));
+
+            return response.data;
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message ||
+                    "Failed to remove project member. Try again.",
+                isLoading: false,
+            });
+
+            throw error;
+        }
+    }
 }));
 
 
