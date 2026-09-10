@@ -7,6 +7,7 @@ import ProjectRequirements from "../components/projects/ProjectRequirements"
 import ProjectTasks from "../components/projects/ProjectTasks"
 import CreateProjectModal from "../components/projects/CreateProjectModal"
 import ProjectTeam from "../components/projects/ProjectTeam"
+import Tasks from "../components/projects/Tasks";
 
 import { useEffect, useState } from "react"
 
@@ -111,7 +112,9 @@ const TabBody = ({ tab, activeProject }) => {
         return null;
        
       case "Tasks":
-        return null; 
+        return <Tasks 
+          project={activeProject}
+        />; 
        
       case "Team":
         return <ProjectTeam 

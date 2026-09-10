@@ -43,8 +43,10 @@ function Projects() {
     };
 
     useEffect(() => {
-        fetchProjects(currentWorkspaceId);
-    }, [fetchProjects, currentWorkspaceId]);
+        if(projects.length === 0) {
+            fetchProjects(currentWorkspaceId);
+        }
+    }, [fetchProjects, currentWorkspaceId, projects.length]);
 
     const statusFilteredProjects = projects.filter((project) => {
         if(selectedStatus === "All") {

@@ -29,8 +29,6 @@ function ProjectOverviewStats({ project }) {
   // team members display
   let team = project?.team.map(member => member.userId);
 
-  console.log(team)
-
   let extraMembers = 0;
   if(project?.team?.length > 3) {
     team = team.slice(0, 3);
