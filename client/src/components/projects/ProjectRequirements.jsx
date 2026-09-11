@@ -55,7 +55,7 @@ function ProjectRequirements({ project }) {
               </span>
 
               <span className="text-xs text-text-secondary">
-                {requirement?.createdAt ? new Date(requirement.createdAt) : ""}
+                {requirement?.createdAt ? new Date(requirement.createdAt).toLocaleDateString() : ""}
               </span>
             </div>
           </div>

@@ -10,6 +10,7 @@ import Login from "../pages/auth/Login";
 import PublicRoute from "../pages/auth/PublicRoute";
 import ProtectedRoute from "../pages/auth/ProtectedRoute";
 import InvitationPage from "../pages/invitation/Invitation";
+import ProjectRequirementDetails from "../components/projects/requirements/ProjectRequirementDetails";
 
 const router = createBrowserRouter([
     {
@@ -28,7 +29,11 @@ const router = createBrowserRouter([
                     },
                     {
                         path: 'projects/:projectId',
-                        element: <ProjectDetails />
+                        element: <ProjectDetails />,
+                    },
+                    {
+                        path: 'projects/:projectId/requirements/:requirementId',
+                        element: <ProjectRequirementDetails />
                     },
                     {
                         path: 'requirements',

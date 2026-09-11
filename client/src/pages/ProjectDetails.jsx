@@ -1,5 +1,4 @@
 import Header from "../components/layout/Header"
-// import ProjectActivity from "../components/projects/ProjectActivity"
 import ProjectDescription from "../components/projects/ProjectDescription"
 import ProjectOverviewHeader from "../components/projects/ProjectOverviewHeader"
 import ProjectOverviewStats from "../components/projects/ProjectOverviewStats"
@@ -16,6 +15,7 @@ import { useParams } from "react-router-dom"
 import useWorkspaceStore from "../stores/workspaceStore"
 import useProjectStore from '../stores/projectStore'
 import useAuthStore from "../stores/authStore"
+import Requirements from "../components/projects/Requirements"
 
 
 const tabs = ["Overview", "AI Requirements", "Tasks", "Team", "Activity"];
@@ -109,7 +109,9 @@ const TabBody = ({ tab, activeProject }) => {
           </>
         
       case "AI Requirements":
-        return null;
+        return <Requirements 
+            project={activeProject}
+          />;
        
       case "Tasks":
         return <Tasks 
@@ -129,4 +131,4 @@ const TabBody = ({ tab, activeProject }) => {
     }
 }
 
-export default ProjectDetails
+export default ProjectDetails;
