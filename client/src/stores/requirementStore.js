@@ -28,6 +28,27 @@ const useRequirementStore = create((set) => ({
         }
     },
 
+    fetchRequirement: async (workspaceId, projectId, requirementId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.get(`workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}`);
+
+            set(({
+                isLoading: false,
+                currentRequirement: response.data.requirement,
+            }));
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Failed to fetch requirement. Try again.",
+                isLoading: false,
+            });
+
+            throw error;
+        }
+    },
+
     createRequirement: async (workspaceId, projectId, requirementData) => {
         set({ isLoading: true, error: null });
 

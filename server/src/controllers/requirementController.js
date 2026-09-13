@@ -164,6 +164,7 @@ const getRequirement = async (req, res) => {
         })
             .populate("owner", "-password")
             .populate("createdBy", "-password")
+            .populate("projectId")
             .populate("updatedBy", "-password");
 
         if (!requirement) {

@@ -8,18 +8,27 @@ import RequirementStep from "./components/RequirementStep";
 import AnalysisStep from "./components/AnalysisStep";
 import PlanStep from "./components/PlanStep";
 import ReviewStep from "./components/ReviewStep";
+import Loader from "../../common/Loader";
 
 import useWorkflowNavigation from "./hooks/useWorkflowNavigation";
+import useWorkspaceStore from "../../../stores/workspaceStore";
+import useRequirementStore from "../../../stores/requirementStore";
 
 import {
-  mockRequirement,
   workflowSteps,
 } from "./data/mockRequirement";
 
 
 const ProjectRequirementDetails = () => {
   const navigate = useNavigate();
-  const { projectId } = useParams();
+  const { projectId, requirementId } = useParams();
+  const { currentWorkspaceId } = useWorkspaceStore();
+  const { 
+    currentRequirement, 
+    fetchRequirement, 
+    isLoading, 
+    error,
+   } = useRequirementStore();
 
   const {
     currentStep,
@@ -38,6 +47,20 @@ const ProjectRequirementDetails = () => {
     });
   }, [currentStep]);
 
+  useEffect(() => {
+    if(!currentWorkspaceId || !projectId || !requirementId) return;
+
+    if(currentRequirement) return;
+
+    fetchRequirement(
+      currentWorkspaceId,
+      projectId,
+      requirementId,
+    );
+
+  }, [currentWorkspaceId, projectId, requirementId, fetchRequirement, currentRequirement]);
+
+  console.log("Current Requirement: ", currentRequirement);
 
   const handleContinue = () => {
       const currentIndex = workflowSteps.findIndex(
@@ -66,7 +89,7 @@ const ProjectRequirementDetails = () => {
       case "requirement":
         return (
           <RequirementStep
-            requirement={mockRequirement}
+            requirement={currentRequirement}
             onContinue={handleContinue}
           />
         );
@@ -74,8 +97,8 @@ const ProjectRequirementDetails = () => {
       case "analysis":
         return (
           <AnalysisStep
-            analysis={mockRequirement.aiAnalysis}
-            questions={mockRequirement.clarificationQuestions}
+            analysis={currentRequirement?.aiAnalysis}
+            questions={currentRequirement?.clarificationQuestions}
             onComplete={() => {
               completeStep("analysis");
               navigateToStep("plan");
@@ -86,8 +109,8 @@ const ProjectRequirementDetails = () => {
       case "plan":
         return (
           <PlanStep
-            requirement={mockRequirement}
-            tasks={mockRequirement.plannedTasks}
+            requirement={currentRequirement}
+            tasks={currentRequirement?.plannedTasks}
             onContinue={handleContinue}
           />
         );
@@ -95,7 +118,7 @@ const ProjectRequirementDetails = () => {
       case "review":
         return (
           <ReviewStep
-            tasks={mockRequirement.plannedTasks}
+            tasks={currentRequirement.plannedTasks}
             onContinue={handleContinue}
           />
         );
@@ -125,6 +148,28 @@ const ProjectRequirementDetails = () => {
   };
 
 
+  if (isLoading && !currentRequirement) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-sm text-text-secondary flex items-center justify-center gap-2">
+          <Loader color="text-secondary"/>
+          Loading requirement...
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !currentRequirement) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="rounded-2xl border border-danger/20 bg-danger/10 px-6 py-5 text-sm text-danger">
+          {error}
+        </div>
+      </div>
+    );
+  }
+  if (!currentRequirement) return null;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Page Header */}
@@ -141,11 +186,11 @@ const ProjectRequirementDetails = () => {
 
             <div className="min-w-0">
               <p className="text-xs font-medium text-text-secondary">
-                {mockRequirement.projectName}
+                {currentRequirement?.projectId?.name}
               </p>
 
               <h1 className="mt-0.5 truncate text-lg font-semibold text-text-primary">
-                {mockRequirement.name}
+                {currentRequirement?.name}
               </h1>
             </div>
           </div>
@@ -156,7 +201,7 @@ const ProjectRequirementDetails = () => {
             </span>
 
             <span className="rounded-full bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">
-              {mockRequirement.status}
+              {currentRequirement?.status}
             </span>
           </div>
         </div>
@@ -165,7 +210,7 @@ const ProjectRequirementDetails = () => {
 
       {/* Main Layout */}
       <div className="px-8 py-8">
-        <div className="mx-auto grid max-w-[1500px] gap-8 lg:grid-cols-[260px_minmax(0,1fr)_300px]">
+        <div className="flex gap-8">
           
           {/* Workflow Navigation */}
           <div>
@@ -180,30 +225,30 @@ const ProjectRequirementDetails = () => {
 
 
           {/* Active Step */}
-          <main className="min-w-0">
+          <main className="flex-1">
             {renderCurrentStep()}
           </main>
 
 
           {/* Right Sidebar */}
-          <aside className="space-y-5">
+          {/* <aside className="space-y-5"> */}
             
             {/* Requirement Details */}
-            <RequirementDetailsPanel
-              requirement={mockRequirement}
-            />
+            {/* <RequirementDetailsPanel
+              requirement={currentRequirement}
+            /> */}
 
             {/* AI Summary */}
-            <AiSummaryPanel
-              requirement={mockRequirement}
-            />
+            {/* <AiSummaryPanel
+              requirement={currentRequirement}
+            /> */}
 
             {/* Activity */}
-            <ActivityPanel
-              activity={mockRequirement.activity}
-            />
+            {/* <ActivityPanel
+              activity={currentRequirement?.activity}
+            /> */}
 
-          </aside>
+          {/* </aside> */}
         </div>
       </div>
     </div>
@@ -216,138 +261,138 @@ const ProjectRequirementDetails = () => {
    ================================================== */
 
 
-const RequirementDetailsPanel = ({
-  requirement,
-}) => {
-  return (
-    <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
-      <h2 className="text-sm font-semibold text-text-primary">
-        Requirement Details
-      </h2>
+// const RequirementDetailsPanel = ({
+//   requirement,
+// }) => {
+//   return (
+//     <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
+//       <h2 className="text-sm font-semibold text-text-primary">
+//         Requirement Details
+//       </h2>
 
-      <div className="mt-4 space-y-4">
-        <DetailItem
-          label="ID"
-          value={requirement.id}
-        />
+//       <div className="mt-4 space-y-4">
+//         <DetailItem
+//           label="ID"
+//           value={(requirement?._id.toString().toUpperCase().slice(requirement?._id.length-5, requirement?._id.length))}
+//         />
 
-        <DetailItem
-          label="Owner"
-          value={requirement.owner?.name}
-        />
+//         <DetailItem
+//           label="Owner"
+//           value={requirement?.owner?.name}
+//         />
 
-        <DetailItem
-          label="Complexity"
-          value={requirement.complexity}
-        />
+//         <DetailItem
+//           label="Complexity"
+//           value={requirement?.complexity}
+//         />
 
-        <DetailItem
-          label="Created"
-          value={requirement.created}
-        />
+//         <DetailItem
+//           label="Created"
+//           value={requirement?.createdAt ? new Date(requirement.createdAt).toLocaleDateString() : ""}
+//         />
 
-        <DetailItem
-          label="Updated"
-          value={requirement.updated}
-        />
-      </div>
-    </section>
-  );
-};
-
-
-const AiSummaryPanel = ({
-  requirement,
-}) => {
-  const analysis = requirement.aiAnalysis;
-
-  return (
-    <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-text-primary">
-          AI Summary
-        </h2>
-
-        <span className="rounded-full bg-primary-light px-2.5 py-1 text-[11px] font-semibold text-primary">
-          {analysis?.clarity ?? 0}% clear
-        </span>
-      </div>
-
-      <p className="mt-4 text-sm leading-6 text-text-secondary">
-        {analysis?.summary ||
-          "No AI summary available."}
-      </p>
-    </section>
-  );
-};
+//         <DetailItem
+//           label="Updated"
+//           value={requirement?.updatedAt ? new Date(requirement.updatedAt).toLocaleDateString() : ""}
+//         />
+//       </div>
+//     </section>
+//   );
+// };
 
 
-const ActivityPanel = ({
-  activity = [],
-}) => {
-  return (
-    <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
-      <h2 className="text-sm font-semibold text-text-primary">
-        Activity
-      </h2>
+// const AiSummaryPanel = ({
+//   requirement,
+// }) => {
+//   const analysis = requirement?.aiAnalysis;
 
-      <div className="mt-5 space-y-5">
-        {activity.map((item, index) => (
-          <div
-            key={item.id}
-            className="relative flex gap-3"
-          >
-            {!(
-              index === activity.length - 1
-            ) && (
-              <div className="absolute left-[5px] top-5 h-full w-px bg-border" />
-            )}
+//   return (
+//     <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
+//       <div className="flex items-center justify-between gap-3">
+//         <h2 className="text-sm font-semibold text-text-primary">
+//           AI Summary
+//         </h2>
 
-            <div className="relative z-10 mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
+//         <span className="rounded-full bg-primary-light px-2.5 py-1 text-[11px] font-semibold text-primary">
+//           {analysis?.clarity ?? 0}% clear
+//         </span>
+//       </div>
 
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-text-primary">
-                {item.title}
-              </p>
-
-              <p className="mt-1 text-xs leading-5 text-text-secondary">
-                {item.description}
-              </p>
-
-              <p className="mt-1.5 text-[11px] text-text-secondary">
-                {item.time}
-              </p>
-            </div>
-          </div>
-        ))}
-
-        {activity.length === 0 && (
-          <p className="text-sm text-text-secondary">
-            No activity yet.
-          </p>
-        )}
-      </div>
-    </section>
-  );
-};
+//       <p className="mt-4 text-sm leading-6 text-text-secondary">
+//         {analysis?.summary ||
+//           "No AI summary available."}
+//       </p>
+//     </section>
+//   );
+// };
 
 
-const DetailItem = ({
-  label,
-  value,
-}) => {
-  return (
-    <div>
-      <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-        {label}
-      </p>
+// const ActivityPanel = ({
+//   activity = [],
+// }) => {
+//   return (
+//     <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
+//       <h2 className="text-sm font-semibold text-text-primary">
+//         Activity
+//       </h2>
 
-      <p className="mt-1 text-sm font-medium text-text-primary">
-        {value || "—"}
-      </p>
-    </div>
-  );
-};
+//       <div className="mt-5 space-y-5">
+//         {activity.map((item, index) => (
+//           <div
+//             key={item.id}
+//             className="relative flex gap-3"
+//           >
+//             {!(
+//               index === activity.length - 1
+//             ) && (
+//               <div className="absolute left-[5px] top-5 h-full w-px bg-border" />
+//             )}
+
+//             <div className="relative z-10 mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
+
+//             <div className="min-w-0">
+//               <p className="text-xs font-semibold text-text-primary">
+//                 {item.title}
+//               </p>
+
+//               <p className="mt-1 text-xs leading-5 text-text-secondary">
+//                 {item.description}
+//               </p>
+
+//               <p className="mt-1.5 text-[11px] text-text-secondary">
+//                 {item.time}
+//               </p>
+//             </div>
+//           </div>
+//         ))}
+
+//         {activity.length === 0 && (
+//           <p className="text-sm text-text-secondary">
+//             No activity yet.
+//           </p>
+//         )}
+//       </div>
+//     </section>
+//   );
+// };
+
+
+// const DetailItem = ({
+//   label,
+//   value,
+// }) => {
+//   return (
+//     <div>
+//       <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+//         {label}
+//       </p>
+
+//       <p className="mt-1 text-sm font-medium text-text-primary">
+//         {value || "—"}
+//       </p>
+//     </div>
+//   );
+// };
 
 
 export default ProjectRequirementDetails;

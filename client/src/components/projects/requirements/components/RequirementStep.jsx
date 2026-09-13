@@ -14,7 +14,7 @@ const RequirementStep = ({
   onContinue,
 }) => {
   return (
-    <div>
+    <div className="w-full">
       <StepHeader
         eyebrow="Requirement"
         title="Review the requirement"
@@ -32,7 +32,7 @@ const RequirementStep = ({
 
             <div className="min-w-0">
               <p className="text-xs font-medium text-text-secondary">
-                {requirement?.id}
+                {(requirement?._id.toString().toUpperCase().slice(requirement?._id.length-5, requirement?._id.length))}
               </p>
 
               <h2 className="mt-1 text-xl font-semibold text-text-primary">
@@ -40,7 +40,7 @@ const RequirementStep = ({
               </h2>
 
               <p className="mt-1 text-sm text-text-secondary">
-                {requirement?.projectName}
+                {requirement?.projectId?.name}
               </p>
             </div>
           </div>
@@ -73,7 +73,7 @@ const RequirementStep = ({
           <MetadataCard
             icon={Calendar}
             label="Created"
-            value={requirement?.created || "Not available"}
+            value={new Date(requirement.createdAt).toLocaleDateString() || "Not available"}
           />
 
           <MetadataCard
