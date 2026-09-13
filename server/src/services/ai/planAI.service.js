@@ -4,7 +4,6 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
 })
 
-
 const generateAIPlan = async (requirement, conversation) => {
     const input =  `
         Requirement:
@@ -26,7 +25,7 @@ const generateAIPlan = async (requirement, conversation) => {
             `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.6-flash",
 
         system_instruction: `
             You are a senior software requirements analyst.

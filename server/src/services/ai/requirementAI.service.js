@@ -23,7 +23,7 @@ const analyzeRequirement = async (requirement) => {
     `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.6-flash",
         system_instruction: `
             You are a software requirements analyst.
 
@@ -93,7 +93,7 @@ const analyzeRequirement = async (requirement) => {
                     },
 
                     confidence: {
-                        type: "interger",
+                        type: "integer",
                         minimum: 0,
                         maximum: 100,
                     },
@@ -158,7 +158,7 @@ const continueAnalysis = async (requirement, conversation) => {
     `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.6-flash",
 
         system_instruction: `
             You are a software requirements analyst.
@@ -196,6 +196,12 @@ const continueAnalysis = async (requirement, conversation) => {
                         type: "string",
                     },
 
+                    confidence: {
+                        type: "integer",
+                        minimum: 0,
+                        maximum: 100,
+                    },
+
                     questions: {
                         type: "array",
                         items: {
@@ -207,6 +213,7 @@ const continueAnalysis = async (requirement, conversation) => {
                 required: [
                     "status",
                     "summary",
+                    "confidence",
                     "questions",
                 ],
             },

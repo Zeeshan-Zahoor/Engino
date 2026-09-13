@@ -40,7 +40,7 @@ const generateTasks = async (requirement, plan) => {
     `; 
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.6-flash",
         
         system_instruction: `
             You are an experienced software project manager and

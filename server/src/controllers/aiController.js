@@ -298,12 +298,20 @@ const generatePlan = async (req, res) => {
             requirementId,
         }).sort({ updatedAt: -1 });
 
+        const plan = await generateAIPlan(requirement, conversation);
+
+        if (!plan) {
+            return res.status(400).json({
+                success: false,
+                message: "AI Plan generation failed!",
+            });
+        }
+
         const estimatedEffortMinutes = plan.features.reduce(
             (total, feature) => total + feature.estimatedEffortMinutes,
             0
         );
 
-        const plan = await generateAIPlan(requirement, conversation);
 
 
         if(!plan) {

@@ -11,21 +11,24 @@ import {
 } from "lucide-react";
 
 import { useState } from "react";
-
 import StepHeader from "./StepHeader";
-
 
 const AnalysisStep = ({
   analysis,
-  questions = [],
+  onClarify,
   onComplete,
+  onRetry,
+  loading,
+  error
 }) => {
 
+  console.log("Analysis: ", analysis);
+  const questions = analysis?.questions || [];
 
   const [analysisRound, setAnalysisRound] = useState(1);
 
   const [status, setStatus] = useState(
-    analysis?.status === "Clear"
+    analysis?.status === "clear"
       ? "clear"
       : "needs_clarification"
   );
@@ -39,122 +42,75 @@ const AnalysisStep = ({
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const [clarificationQuestions, setClarificationQuestions] =
-    useState(questions);
-
-  const [submittedAnswers, setSubmittedAnswers] = useState([]);
+  // const [clarificationQuestions, setClarificationQuestions] =
+  //   useState(questions);
 
   const [analysisHistory, setAnalysisHistory] = useState([]);
 
+  console.log(questions);
 
-  /*
-   * --------------------------------------------------
-   * QUESTION ANSWERS
-   * --------------------------------------------------
-   */
-
-  const handleAnswerChange = (questionId, value) => {
+  const handleAnswerChange = (index, value) => {
     setAnswers((prev) => ({
       ...prev,
-      [questionId]: value,
+      [index]: value,
     }));
   };
 
 
-  const answeredCount = clarificationQuestions.filter(
-    (question) => answers[question.id]?.trim()
+  const answeredCount = questions.filter(
+    (_, index) => answers[index]?.trim()
   ).length;
 
 
   const allQuestionsAnswered =
-    clarificationQuestions.length > 0 &&
-    answeredCount === clarificationQuestions.length;
+    questions.length > 0 &&
+    answeredCount === questions.length;
 
 
-  const handleSubmitClarification = () => {
+  const handleSubmitClarification = async () => {
     if (!allQuestionsAnswered || isAnalyzing) {
       return;
     }
 
-    const currentAnswers = clarificationQuestions.map(
-      (question) => ({
-        question: question.question,
-        answer: answers[question.id],
-      })
-    );
+    const answer = questions.map((question, index) => 
+      `Question: ${question}\n Answer: ${answers[index]}`).join("\n\n")
+    
+      setIsAnalyzing(true);
 
-    setSubmittedAnswers((prev) => [
-      ...prev,
-      {
-        round: analysisRound,
-        answers: currentAnswers,
-      },
-    ]);
+      try {
+        const response = await onClarify(answer);
 
-    setIsAnalyzing(true);
-
-    setTimeout(() => {
-      const nextRound = analysisRound + 1;
-
-      /*
-       * Round 3 becomes clear.
-       */
-      if (nextRound >= 3) {
-        setStatus("clear");
+        const nextAnalysis = response.analysis;
 
         setAnalysisHistory((prev) => [
           ...prev,
           {
-            round: nextRound,
-            status: "clear",
+            round: analysisRound,
+            status: nextAnalysis.status,
           },
         ]);
 
+        setStatus(nextAnalysis.status);
+
+        // setClarificationQuestions(
+        //   nextAnalysis.questions.map((question, index) => ({
+        //     id: `question-${index}`,
+        //     question,
+        //     answer: "",
+        //     status: "pending",
+        //   }))
+        // );
+
+        setAnswers({});
+
+        setAnalysisRound(prev  => prev + 1);
+
+      } catch  {
+        // store already handles error
+      } finally {
         setIsAnalyzing(false);
-        return;
       }
-
-      /*
-       * Still unclear.
-       *
-       * Generate another static question.
-       */
-      const nextQuestion = {
-        id: `round-${nextRound}-question-1`,
-        question:
-          nextRound === 2
-            ? "How long should an authenticated user remain signed in before their session expires?"
-            : "Should users receive any notification when their session expires?",
-        answer: "",
-        status: "pending",
-      };
-
-      setAnalysisRound(nextRound);
-
-      setClarificationQuestions([nextQuestion]);
-
-      setAnswers({
-        [nextQuestion.id]: "",
-      });
-
-      setAnalysisHistory((prev) => [
-        ...prev,
-        {
-          round: nextRound,
-          status: "needs_clarification",
-        },
-      ]);
-
-      setIsAnalyzing(false);
-    }, 1400);
-  };
-
-
-  /*
-   * --------------------------------------------------
-   * CLEAR → AI PLAN
-   * --------------------------------------------------
-   */
+  }
 
     const handleContinueToPlan = () => {
         if (status !== "clear") {
@@ -164,12 +120,6 @@ const AnalysisStep = ({
         onComplete?.();
     };
 
-
-  /*
-   * --------------------------------------------------
-   * ANALYZING STATE
-   * --------------------------------------------------
-   */
 
   if (isAnalyzing) {
     return (
@@ -209,12 +159,105 @@ const AnalysisStep = ({
     );
   }
 
+  if (loading) {
+  return (
+    <div>
+      <StepHeader
+        eyebrow="AI Analysis"
+        title="Engino is analyzing your requirement"
+        description="Engino is carefully reviewing the requirement to identify ambiguity and determine whether more information is needed."
+        badge="Analyzing"
+      />
 
-  /*
-   * --------------------------------------------------
-   * CLEAR STATE
-   * --------------------------------------------------
-   */
+      <div className="rounded-2xl border border-border bg-background p-10 shadow-sm">
+        <div className="flex flex-col items-center justify-center text-center">
+
+          {/* AI Icon */}
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-primary-light text-primary">
+            <div className="absolute inset-0 animate-ping rounded-2xl bg-primary/10" />
+
+            <Sparkles
+              size={32}
+              className="relative animate-pulse"
+            />
+          </div>
+
+          <h2 className="mt-6 text-xl font-semibold text-text-primary">
+            Analyzing your requirement...
+          </h2>
+
+          <p className="mt-2 max-w-md text-sm leading-6 text-text-secondary">
+            Engino is checking the requirement for ambiguity,
+            missing information, and clarity.
+          </p>
+
+          {/* Loader */}
+          <div className="mt-7 flex items-center gap-2">
+            <Loader2
+              size={16}
+              className="animate-spin text-primary"
+            />
+
+            <span className="text-xs font-medium text-text-secondary">
+              AI analysis in progress
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+if (error) {
+  return (
+    <div>
+      <StepHeader
+        eyebrow="AI Analysis"
+        title="We couldn't analyze the requirement"
+        description="Engino ran into a problem while analyzing your requirement."
+        badge="Analysis Failed"
+      />
+
+      <div className="rounded-2xl border border-danger/20 bg-background p-10 shadow-sm">
+        <div className="flex flex-col items-center justify-center text-center">
+
+          {/* Error Icon */}
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-danger/10 text-danger">
+            <AlertCircle size={34} />
+          </div>
+
+          <h2 className="mt-6 text-xl font-semibold text-text-primary">
+            AI analysis couldn't be completed
+          </h2>
+
+          <p className="mt-2 max-w-md text-sm leading-6 text-text-secondary">
+            Something went wrong while Engino was analyzing this
+            requirement. Please try again.
+          </p>
+
+          {/* Error Message */}
+          <div className="mt-6 w-full max-w-md rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-left">
+            <p className="text-xs font-medium text-danger">
+              {error}
+            </p>
+          </div>
+
+          {/* Retry */}
+          <button
+            type="button"
+            onClick={onRetry}
+            className="mt-7 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+          >
+            <RefreshCw size={17} />
+            Try Again
+          </button>
+
+        </div>
+      </div>
+    </div>
+  );
+}
 
   if (status === "clear") {
     return (
@@ -261,7 +304,7 @@ const AnalysisStep = ({
                 </p>
 
                 <p className="mt-1 text-2xl font-bold text-text-primary">
-                  96%
+                  {analysis?.confidence}%
                 </p>
               </div>
 
@@ -273,7 +316,7 @@ const AnalysisStep = ({
             <div className="mt-5 h-2 overflow-hidden rounded-full bg-surface">
               <div
                 className="h-full rounded-full bg-success"
-                style={{ width: "96%" }}
+                style={{ width: `${analysis?.confidence ?? 0}%` }}
               />
             </div>
 
@@ -305,13 +348,6 @@ const AnalysisStep = ({
       </div>
     );
   }
-
-
-  /*
-   * --------------------------------------------------
-   * NEEDS CLARIFICATION STATE
-   * --------------------------------------------------
-   */
 
   return (
     <div>
@@ -399,15 +435,15 @@ const AnalysisStep = ({
             </div>
 
             <span className="rounded-full bg-surface px-3 py-1.5 text-xs font-semibold text-text-secondary">
-              {answeredCount}/{clarificationQuestions.length}
+              {answeredCount}/{questions.length}
             </span>
           </div>
 
           <div className="space-y-4">
-            {clarificationQuestions.map(
+            {questions.map(
               (question, index) => {
                 const value =
-                  answers[question.id] || "";
+                  answers[index] || "";
 
                 const answered = Boolean(
                   value.trim()
@@ -415,7 +451,7 @@ const AnalysisStep = ({
 
                 return (
                   <div
-                    key={question.id}
+                    key={index}
                     className={`rounded-xl border p-5 transition ${
                       answered
                         ? "border-success/30 bg-success/10"
@@ -439,18 +475,18 @@ const AnalysisStep = ({
 
                       <div className="min-w-0 flex-1">
                         <label
-                          htmlFor={`question-${question.id}`}
+                          htmlFor={`question-${index}`}
                           className="block text-sm font-semibold leading-6 text-text-primary"
                         >
-                          {question.question}
+                          {question}
                         </label>
 
                         <textarea
-                          id={`question-${question.id}`}
+                          id={`question-${index}`}
                           value={value}
                           onChange={(event) =>
                             handleAnswerChange(
-                              question.id,
+                              index,
                               event.target.value
                             )
                           }
@@ -484,7 +520,7 @@ const AnalysisStep = ({
         {/* Footer */}
         <div className="flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-xs text-text-secondary">
-            {answeredCount === clarificationQuestions.length
+            {answeredCount === questions.length
               ? "All questions answered."
               : "Answer all questions before submitting."}
           </div>
@@ -507,13 +543,6 @@ const AnalysisStep = ({
     </div>
   );
 };
-
-
-/*
- * --------------------------------------------------
- * ANALYSIS HISTORY
- * --------------------------------------------------
- */
 
 const AnalysisHistory = ({
   history,

@@ -70,6 +70,61 @@ const useRequirementStore = create((set) => ({
 
             throw error;
         }
+    },
+
+    analyzeRequirement: async (workspaceId, projectId, requirementId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.post(`workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}/ai/analyze`);
+
+            set({
+                isLoading: false,
+                error: null,
+            });
+
+            return response.data;
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Failed to       analyze requirement. Try again.",
+
+                isLoading: false,
+            });
+            console.log("Error: ", error.response)
+
+            throw error;
+        }
+    },
+
+    clarifyRequirement: async (workspaceId, projectId, requirementId, answer) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.post(
+                `workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}/ai/clarify`, 
+                {
+                    answer,
+                }
+            );
+            
+             set({
+                isLoading: false,
+            });
+
+            return response.data;
+
+        } catch (error) {
+            set({
+                error: 
+                    error.response?.data?.message || "Failed to submit clarification. Try again.",
+                isLoading: false,
+            });
+
+            console.log(error.response);
+
+            throw error;
+        }
     }
 }));
 

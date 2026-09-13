@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -25,7 +25,9 @@ const ProjectRequirementDetails = () => {
   const { currentWorkspaceId } = useWorkspaceStore();
   const { 
     currentRequirement, 
-    fetchRequirement, 
+    fetchRequirement,
+    analyzeRequirement, 
+    clarifyRequirement,
     isLoading, 
     error,
    } = useRequirementStore();
@@ -38,7 +40,7 @@ const ProjectRequirementDetails = () => {
     getStepStatus,
   } = useWorkflowNavigation();
 
-
+  const [analysis, setAnalysis] = useState(null);
 
   useEffect(() => {
     window.scrollTo({
@@ -60,7 +62,6 @@ const ProjectRequirementDetails = () => {
 
   }, [currentWorkspaceId, projectId, requirementId, fetchRequirement, currentRequirement]);
 
-  console.log("Current Requirement: ", currentRequirement);
 
   const handleContinue = () => {
       const currentIndex = workflowSteps.findIndex(
@@ -78,6 +79,36 @@ const ProjectRequirementDetails = () => {
       navigateToStep(nextStep.id);
   };
 
+  const handleStartAnalysis =  async () => {
+    try {
+      completeStep("requirement");
+      navigateToStep("analysis");
+      const response = await analyzeRequirement(
+        currentWorkspaceId,
+        projectId,
+        requirementId
+      );
+
+      setAnalysis(response.analysis);
+
+    } catch {
+        // Store already contains the error.
+    }
+  }
+
+  const handleRetryAnalysis = async () => {
+  try {
+    const response = await analyzeRequirement(
+      currentWorkspaceId,
+      projectId,
+      requirementId
+    );
+
+    setAnalysis(response.analysis);
+  } catch {
+    // Store already contains the error.
+  }
+};
 
   const handleBackToProject = () => {
     navigate(`/projects/${projectId}`);
@@ -90,15 +121,28 @@ const ProjectRequirementDetails = () => {
         return (
           <RequirementStep
             requirement={currentRequirement}
-            onContinue={handleContinue}
+            onContinue={handleStartAnalysis}
           />
         );
 
       case "analysis":
         return (
           <AnalysisStep
-            analysis={currentRequirement?.aiAnalysis}
-            questions={currentRequirement?.clarificationQuestions}
+            analysis={analysis}
+            onClarify={async (answer) => {
+              const response = await clarifyRequirement(
+                  currentWorkspaceId, 
+                  projectId,
+                  requirementId,
+                  answer,
+                );
+
+              setAnalysis(response.analysis);
+              return response;
+            }}
+            onRetry={handleRetryAnalysis}
+            loading={isLoading}
+            error={error}
             onComplete={() => {
               completeStep("analysis");
               navigateToStep("plan");
