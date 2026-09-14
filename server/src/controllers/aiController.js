@@ -70,6 +70,11 @@ const aiAnalysis = async (req, res) => {
         
         requirement.aiConfidence = analysis.confidence;
 
+        requirement.aiAnalysis = {
+            summary: analysis.summary,
+            questions: analysis.questions || [],
+        };
+
         if(analysis.status === "needs_clarification") {
             requirement.aiStatus = "Needs Clarification";
         } else if (analysis.status === "clear") {
@@ -207,6 +212,11 @@ const answerClarification = async (req, res) => {
 
         // Update requirement state
         requirement.aiConfidence = analysis.confidence;
+
+        requirement.aiAnalysis = {
+            summary: analysis.summary,
+            questions: analysis.questions || [],
+        };
 
         if(analysis.status === "needs_clarification") {
             requirement.aiStatus = "Needs Clarification";

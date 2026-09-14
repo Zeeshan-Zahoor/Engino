@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const initialWorkflow = {
   current: "requirement",
@@ -9,7 +9,7 @@ const initialWorkflow = {
 const useWorkflowNavigation = () => {
   const [workflow, setWorkflow] = useState(initialWorkflow);
 
-  const navigateToStep = (stepId) => {
+  const navigateToStep = useCallback((stepId) => {
     setWorkflow((prev) => ({
       ...prev,
       current: stepId,
@@ -17,9 +17,9 @@ const useWorkflowNavigation = () => {
         ? prev.visited
         : [...prev.visited, stepId],
     }));
-  };
+  }, []);
 
-  const completeStep = (stepId) => {
+  const completeStep = useCallback((stepId) => {
     setWorkflow((prev) => {
       if (prev.completed.includes(stepId)) {
         return prev;
@@ -30,11 +30,12 @@ const useWorkflowNavigation = () => {
         completed: [...prev.completed, stepId],
       };
     });
-  };
+  }, []);
 
-  const completeCurrentStep = () => {
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
+  const completeCurrentStep = useCallback(() => {
     completeStep(workflow.current);
-  };
+  }, [completeStep, workflow]);
 
   const canAccessStep = (stepId) => {
     return (

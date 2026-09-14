@@ -158,7 +158,7 @@ const continueAnalysis = async (requirement, conversation) => {
     `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.6-flash",
+        model: "gemini-3.5-flash",
 
         system_instruction: `
             You are a software requirements analyst.

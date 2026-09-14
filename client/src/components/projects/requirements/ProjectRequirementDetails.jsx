@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -28,6 +28,7 @@ const ProjectRequirementDetails = () => {
     fetchRequirement,
     analyzeRequirement, 
     clarifyRequirement,
+    generatePlan,
     isLoading, 
     error,
    } = useRequirementStore();
@@ -40,6 +41,7 @@ const ProjectRequirementDetails = () => {
     getStepStatus,
   } = useWorkflowNavigation();
 
+  const workflowInitiated = useRef(false);
   const [analysis, setAnalysis] = useState(null);
 
   useEffect(() => {
@@ -61,6 +63,38 @@ const ProjectRequirementDetails = () => {
     );
 
   }, [currentWorkspaceId, projectId, requirementId, fetchRequirement, currentRequirement]);
+  
+
+  useEffect(() => {
+      if (!currentRequirement || workflowInitiated.current) return;
+
+      workflowInitiated.current = true;
+
+      if (
+        currentRequirement.aiStatus === "Needs Clarification" ||
+        currentRequirement.aiStatus === "Clear"
+      ) {
+        navigateToStep("analysis");
+      }
+
+      if (currentRequirement.aiStatus === "Plan Generated") {
+        navigateToStep("plan");
+      }
+  }, [currentRequirement, navigateToStep]);
+
+  useEffect(() => {
+    if(!currentRequirement?.aiAnalysis) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAnalysis({
+      status: currentRequirement.aiStatus === "Clear"
+        ? "clear"
+        : "needs_clarification",
+      confidence: currentRequirement.aiConfidence,
+      summary: currentRequirement.aiAnalysis.summary,
+      questions: currentRequirement.aiAnalysis.questions || [],
+    });
+  }, [currentRequirement]);
 
 
   const handleContinue = () => {
@@ -108,7 +142,21 @@ const ProjectRequirementDetails = () => {
   } catch {
     // Store already contains the error.
   }
-};
+  };
+
+  const handleGeneratePlan = async () => {
+    try {
+      const response = await generatePlan(
+        currentWorkspaceId,
+        projectId,
+        requirementId
+      );
+
+      console.log("Ai Plan: ", response.plan)
+    } catch {
+      // store already contains the error.
+    }
+  }
 
   const handleBackToProject = () => {
     navigate(`/projects/${projectId}`);
@@ -146,6 +194,7 @@ const ProjectRequirementDetails = () => {
             onComplete={() => {
               completeStep("analysis");
               navigateToStep("plan");
+              handleGeneratePlan()
             }}
           />
         );
@@ -155,6 +204,8 @@ const ProjectRequirementDetails = () => {
           <PlanStep
             requirement={currentRequirement}
             tasks={currentRequirement?.plannedTasks}
+            loading={isLoading}
+            error={error}
             onContinue={handleContinue}
           />
         );

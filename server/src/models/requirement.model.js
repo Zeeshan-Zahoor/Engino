@@ -39,6 +39,18 @@ const requirementSchema = new mongoose.Schema(
             default: "Pending",
         },
 
+        aiAnalysis: {
+            summary: {
+                type: String,
+                default: "",
+            },
+
+            questions: {
+                type: [String],
+                default: [],
+            },
+        },
+
         complexity: {
             type: String,
             enum: ["Low", "Medium", "High"],

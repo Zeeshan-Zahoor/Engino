@@ -4,15 +4,121 @@ import {
   ClipboardList,
   Code2,
   Layers3,
+  RefreshCw,
   Sparkles,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 
 import StepHeader from "./StepHeader";
 
 const PlanStep = ({
+  requirement,
   tasks = [],
+  loading,
+  error,
   onContinue,
 }) => {
+
+  if (loading) {
+    return (
+      <div>
+        <StepHeader
+          eyebrow="AI Plan"
+          title="Engino is creating your engineering plan"
+          description="Engino is turning the clarified requirement into a structured implementation plan."
+          badge="Generating"
+        />
+
+        <div className="rounded-2xl border border-border bg-background p-10 shadow-sm">
+          <div className="flex flex-col items-center justify-center text-center">
+
+            {/* AI Icon */}
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-primary-light text-primary">
+              <div className="absolute inset-0 animate-ping rounded-2xl bg-primary/10" />
+
+              <Sparkles
+                size={32}
+                className="relative animate-pulse"
+              />
+            </div>
+
+            <h2 className="mt-6 text-xl font-semibold text-text-primary">
+              Generating your engineering plan...
+            </h2>
+
+            <p className="mt-2 max-w-md text-sm leading-6 text-text-secondary">
+              Engino is breaking down the requirement into objectives,
+              features, technical considerations, dependencies, and risks.
+            </p>
+
+            <div className="mt-7 flex items-center gap-2">
+              <Loader2
+                size={16}
+                className="animate-spin text-primary"
+              />
+
+              <span className="text-xs font-medium text-text-secondary">
+                AI plan generation in progress
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <StepHeader
+          eyebrow="AI Plan"
+          title="We couldn't generate the plan"
+          description="Engino ran into a problem while creating the engineering plan."
+          badge="Generation Failed"
+        />
+
+        <div className="rounded-2xl border border-danger/20 bg-background p-10 shadow-sm">
+          <div className="flex flex-col items-center justify-center text-center">
+
+            {/* Error Icon */}
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-danger/10 text-danger">
+              <AlertCircle size={34} />
+            </div>
+
+            <h2 className="mt-6 text-xl font-semibold text-text-primary">
+              AI plan couldn't be generated
+            </h2>
+
+            <p className="mt-2 max-w-md text-sm leading-6 text-text-secondary">
+              Something went wrong while Engino was creating the
+              engineering plan. Please try again.
+            </p>
+
+            {/* Error Message */}
+            <div className="mt-6 w-full max-w-md rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-left">
+              <p className="text-xs font-medium text-danger">
+                {error}
+              </p>
+            </div>
+
+            {/* Retry */}
+            <button
+              type="button"
+              onClick={onContinue}
+              className="mt-7 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+            >
+              <RefreshCw size={17} />
+              Try Again
+            </button>
+
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <StepHeader

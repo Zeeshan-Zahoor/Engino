@@ -22,10 +22,11 @@ const AnalysisStep = ({
   error
 }) => {
 
-  console.log("Analysis: ", analysis);
   const questions = analysis?.questions || [];
 
   const [analysisRound, setAnalysisRound] = useState(1);
+
+  const [lastAnswer, setLastAnswer] = useState("");
 
   const [status, setStatus] = useState(
     analysis?.status === "clear"
@@ -45,9 +46,8 @@ const AnalysisStep = ({
   // const [clarificationQuestions, setClarificationQuestions] =
   //   useState(questions);
 
-  const [analysisHistory, setAnalysisHistory] = useState([]);
+  // const [analysisHistory, setAnalysisHistory] = useState([]);
 
-  console.log(questions);
 
   const handleAnswerChange = (index, value) => {
     setAnswers((prev) => ({
@@ -75,41 +75,8 @@ const AnalysisStep = ({
     const answer = questions.map((question, index) => 
       `Question: ${question}\n Answer: ${answers[index]}`).join("\n\n")
     
-      setIsAnalyzing(true);
-
-      try {
-        const response = await onClarify(answer);
-
-        const nextAnalysis = response.analysis;
-
-        setAnalysisHistory((prev) => [
-          ...prev,
-          {
-            round: analysisRound,
-            status: nextAnalysis.status,
-          },
-        ]);
-
-        setStatus(nextAnalysis.status);
-
-        // setClarificationQuestions(
-        //   nextAnalysis.questions.map((question, index) => ({
-        //     id: `question-${index}`,
-        //     question,
-        //     answer: "",
-        //     status: "pending",
-        //   }))
-        // );
-
-        setAnswers({});
-
-        setAnalysisRound(prev  => prev + 1);
-
-      } catch  {
-        // store already handles error
-      } finally {
-        setIsAnalyzing(false);
-      }
+      setLastAnswer(answer);
+      await handleRetryClarification(answer);
   }
 
     const handleContinueToPlan = () => {
@@ -118,6 +85,28 @@ const AnalysisStep = ({
         }
 
         onComplete?.();
+    };
+
+    const handleRetryClarification = async (answer = lastAnswer) => {
+      if (!answer || isAnalyzing) {
+        return;
+      }
+
+      setIsAnalyzing(true);
+
+      try {
+        const response = await onClarify(answer);
+
+        const nextAnalysis = response.analysis;
+
+        setStatus(nextAnalysis.status);
+        setAnswers({});
+        setAnalysisRound((prev) => prev + 1);
+      } catch {
+        // store already handles error
+      } finally {
+        setIsAnalyzing(false);
+      }
     };
 
 
@@ -246,7 +235,9 @@ if (error) {
           {/* Retry */}
           <button
             type="button"
-            onClick={onRetry}
+            onClick={lastAnswer
+                    ? () => handleRetryClarification()
+                    : onRetry}
             className="mt-7 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
           >
             <RefreshCw size={17} />
@@ -327,11 +318,11 @@ if (error) {
           </section>
 
           {/* Analysis history */}
-          {analysisHistory.length > 0 && (
+          {/* {analysisHistory.length > 0 && (
             <AnalysisHistory
               history={analysisHistory}
             />
-          )}
+          )} */}
 
           {/* Footer */}
           <div className="flex items-center justify-end border-t border-border pt-5">
@@ -544,75 +535,75 @@ if (error) {
   );
 };
 
-const AnalysisHistory = ({
-  history,
-}) => {
-  return (
-    <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
-      <div className="mb-5">
-        <h2 className="text-base font-semibold text-text-primary">
-          Analysis History
-        </h2>
+// const AnalysisHistory = ({
+//   history,
+// }) => {
+//   return (
+//     <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+//       <div className="mb-5">
+//         <h2 className="text-base font-semibold text-text-primary">
+//           Analysis History
+//         </h2>
 
-        <p className="mt-1 text-sm text-text-secondary">
-          Previous AI analysis rounds for this requirement.
-        </p>
-      </div>
+//         <p className="mt-1 text-sm text-text-secondary">
+//           Previous AI analysis rounds for this requirement.
+//         </p>
+//       </div>
 
-      <div className="space-y-3">
-        {history.map((item) => {
-          const isClear =
-            item.status === "clear";
+//       <div className="space-y-3">
+//         {history.map((item) => {
+//           const isClear =
+//             item.status === "clear";
 
-          return (
-            <div
-              key={item.round}
-              className="flex items-center gap-3 rounded-xl bg-surface p-4"
-            >
-              <div
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                  isClear
-                    ? "bg-success/10 text-success"
-                    : "bg-warning/10 text-warning"
-                }`}
-              >
-                {isClear ? (
-                  <CheckCircle2 size={16} />
-                ) : (
-                  <AlertCircle size={16} />
-                )}
-              </div>
+//           return (
+//             <div
+//               key={item.round}
+//               className="flex items-center gap-3 rounded-xl bg-surface p-4"
+//             >
+//               <div
+//                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+//                   isClear
+//                     ? "bg-success/10 text-success"
+//                     : "bg-warning/10 text-warning"
+//                 }`}
+//               >
+//                 {isClear ? (
+//                   <CheckCircle2 size={16} />
+//                 ) : (
+//                   <AlertCircle size={16} />
+//                 )}
+//               </div>
 
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-text-primary">
-                  Analysis Round {item.round}
-                </p>
+//               <div className="min-w-0 flex-1">
+//                 <p className="text-sm font-semibold text-text-primary">
+//                   Analysis Round {item.round}
+//                 </p>
 
-                <p className="mt-0.5 text-xs text-text-secondary">
-                  {isClear
-                    ? "Requirement is clear"
-                    : "Additional clarification required"}
-                </p>
-              </div>
+//                 <p className="mt-0.5 text-xs text-text-secondary">
+//                   {isClear
+//                     ? "Requirement is clear"
+//                     : "Additional clarification required"}
+//                 </p>
+//               </div>
 
-              <span
-                className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                  isClear
-                    ? "bg-success/10 text-success"
-                    : "bg-warning/10 text-warning"
-                }`}
-              >
-                {isClear
-                  ? "Clear"
-                  : "Needs Clarification"}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </section>
-  );
-};
+//               <span
+//                 className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+//                   isClear
+//                     ? "bg-success/10 text-success"
+//                     : "bg-warning/10 text-warning"
+//                 }`}
+//               >
+//                 {isClear
+//                   ? "Clear"
+//                   : "Needs Clarification"}
+//               </span>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </section>
+//   );
+// };
 
 
 export default AnalysisStep;
