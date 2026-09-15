@@ -3,6 +3,7 @@ import Project from '../models/project.model.js';
 import ProjectMember from '../models/projectMember.model.js';
 import Task from '../models/task.model.js';
 import mongoose from 'mongoose';
+import AIPlan from '../models/aiPlan.model.js';
 
 const createRequirement = async (req, res) => {
     try {
@@ -173,11 +174,16 @@ const getRequirement = async (req, res) => {
                 message: "Requirement not found in the project",
             });
         }
+        const aiPlan = await AIPlan.findOne({
+            requirementId,
+            status: "Generated",
+        }).sort({ version: -1 });
 
         return res.status(200).json({
             success: true,
             message: "Requirement fetched successfully!",
             requirement,
+            aiPlan,
         });
     } catch (error) {
         return res.status(500).json({

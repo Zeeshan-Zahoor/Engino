@@ -23,7 +23,7 @@ const analyzeRequirement = async (requirement) => {
     `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.6-flash",
+        model: "gemini-3.5-flash-lite",
         system_instruction: `
             You are a software requirements analyst.
 
@@ -158,7 +158,7 @@ const continueAnalysis = async (requirement, conversation) => {
     `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.5-flash-lite",
 
         system_instruction: `
             You are a software requirements analyst.

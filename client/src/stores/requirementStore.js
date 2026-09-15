@@ -34,10 +34,16 @@ const useRequirementStore = create((set) => ({
         try {
             const response = await api.get(`workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}`);
 
-            set(({
+            set({
+                currentRequirement: {
+                    ...response.data.requirement,
+                    aiPlan: response.data.aiPlan || null,
+                },
                 isLoading: false,
-                currentRequirement: response.data.requirement,
-            }));
+                error: null,
+            });
+
+            return response.data;
 
         } catch (error) {
             set({

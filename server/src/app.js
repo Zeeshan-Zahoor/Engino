@@ -22,6 +22,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+console.log(
+  "Gemini key:",
+  process.env.GEMINI_API_KEY?.slice(0, 15)
+);
+
 
 // mount routes
 app.use('/api/auth', authRoutes);

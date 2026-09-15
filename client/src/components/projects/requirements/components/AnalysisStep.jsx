@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import StepHeader from "./StepHeader";
 
 const AnalysisStep = ({
@@ -42,6 +42,7 @@ const AnalysisStep = ({
   );
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const clarificationInFlight = useRef(false);
 
   // const [clarificationQuestions, setClarificationQuestions] =
   //   useState(questions);
@@ -87,11 +88,12 @@ const AnalysisStep = ({
         onComplete?.();
     };
 
-    const handleRetryClarification = async (answer = lastAnswer) => {
-      if (!answer || isAnalyzing) {
+  const handleRetryClarification = async (answer = lastAnswer) => {
+      if (!answer || isAnalyzing || clarificationInFlight.current) {
         return;
       }
 
+      clarificationInFlight.current = true;
       setIsAnalyzing(true);
 
       try {
@@ -105,6 +107,7 @@ const AnalysisStep = ({
       } catch {
         // store already handles error
       } finally {
+        clarificationInFlight.current = false;
         setIsAnalyzing(false);
       }
     };
@@ -518,7 +521,7 @@ if (error) {
 
           <button
             type="button"
-            disabled={!allQuestionsAnswered}
+            disabled={!allQuestionsAnswered || isAnalyzing}
             onClick={handleSubmitClarification}
             className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
               allQuestionsAnswered

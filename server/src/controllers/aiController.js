@@ -243,6 +243,14 @@ const answerClarification = async (req, res) => {
         });
 
     } catch (error) {
+        const providerStatus = error.status ?? error.response?.status;
+
+        console.error("Gemini clarification failed", {
+            providerStatus,
+            message: error.message,
+            details: error.details,
+        });
+
         return res.status(500).json({
             success: false,
             message: "Internal server error",

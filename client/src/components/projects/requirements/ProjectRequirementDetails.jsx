@@ -43,6 +43,7 @@ const ProjectRequirementDetails = () => {
 
   const workflowInitiated = useRef(false);
   const [analysis, setAnalysis] = useState(null);
+  const [plan, setPlan] = useState(null);
 
   useEffect(() => {
     window.scrollTo({
@@ -70,17 +71,24 @@ const ProjectRequirementDetails = () => {
 
       workflowInitiated.current = true;
 
-      if (
-        currentRequirement.aiStatus === "Needs Clarification" ||
-        currentRequirement.aiStatus === "Clear"
-      ) {
+      if (currentRequirement.aiStatus === "Needs Clarification") {
+        completeStep("requirement");
         navigateToStep("analysis");
+        return;
+      }
+
+      if (currentRequirement.aiStatus === "Clear") {
+        completeStep("requirement");
+        navigateToStep("analysis");
+        return;
       }
 
       if (currentRequirement.aiStatus === "Plan Generated") {
+        completeStep("requirement");
+        completeStep("analysis");
         navigateToStep("plan");
       }
-  }, [currentRequirement, navigateToStep]);
+  }, [currentRequirement, navigateToStep, completeStep]);
 
   useEffect(() => {
     if(!currentRequirement?.aiAnalysis) return;
@@ -94,6 +102,13 @@ const ProjectRequirementDetails = () => {
       summary: currentRequirement.aiAnalysis.summary,
       questions: currentRequirement.aiAnalysis.questions || [],
     });
+  }, [currentRequirement]);
+
+  useEffect(() => {
+    if (!currentRequirement?.aiPlan) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPlan(currentRequirement.aiPlan.content);
   }, [currentRequirement]);
 
 
@@ -152,6 +167,8 @@ const ProjectRequirementDetails = () => {
         requirementId
       );
 
+      setPlan(response.plan.content);
+
       console.log("Ai Plan: ", response.plan)
     } catch {
       // store already contains the error.
@@ -202,11 +219,11 @@ const ProjectRequirementDetails = () => {
       case "plan":
         return (
           <PlanStep
-            requirement={currentRequirement}
-            tasks={currentRequirement?.plannedTasks}
+            plan={plan}
             loading={isLoading}
             error={error}
             onContinue={handleContinue}
+            onRetry={handleGeneratePlan}
           />
         );
 
