@@ -17,6 +17,7 @@ import useRequirementStore from "../../../stores/requirementStore";
 import {
   workflowSteps,
 } from "./data/mockRequirement";
+import TasksStep from "./components/TasksStep";
 
 
 const ProjectRequirementDetails = () => {
@@ -29,6 +30,7 @@ const ProjectRequirementDetails = () => {
     analyzeRequirement, 
     clarifyRequirement,
     generatePlan,
+    generateAiTasks,
     approvePlan,
     isLoading, 
     error,
@@ -45,6 +47,7 @@ const ProjectRequirementDetails = () => {
   const workflowInitiated = useRef(false);
   const [analysis, setAnalysis] = useState(null);
   const [plan, setPlan] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     window.scrollTo({
@@ -96,6 +99,7 @@ const ProjectRequirementDetails = () => {
         completeStep("review");
         navigateToStep("tasks");
       }
+
   }, [currentRequirement, navigateToStep, completeStep]);
 
   useEffect(() => {
@@ -134,7 +138,7 @@ const ProjectRequirementDetails = () => {
       completeStep(currentStep);
 
       navigateToStep(nextStep.id);
-  };
+  }
 
   const handleStartAnalysis =  async () => {
     try {
@@ -165,7 +169,7 @@ const ProjectRequirementDetails = () => {
   } catch {
     // Store already contains the error.
   }
-  };
+  }
 
   const handleGeneratePlan = async () => {
     try {
@@ -183,6 +187,7 @@ const ProjectRequirementDetails = () => {
     }
   }
 
+  
   const handleApprovePlan = async (reviewedPlan) => {
     try {
       await approvePlan(
@@ -191,14 +196,29 @@ const ProjectRequirementDetails = () => {
         requirementId,
         reviewedPlan,
       );
-
+      
       setPlan(reviewedPlan);
-
+      
     } catch {
       // store already handles the error state
     }
   }
 
+  const handleGenerateTasks = async () => {
+    try {
+      const response = await generateAiTasks(
+        currentWorkspaceId,
+        projectId,
+        requirementId,
+      );
+
+      setTasks(response.tasks || []);
+
+    } catch {
+      // store already handles error state
+    }
+  }
+  
   const handleBackToProject = () => {
     navigate(`/projects/${projectId}`);
   };
@@ -262,21 +282,12 @@ const ProjectRequirementDetails = () => {
 
       case "tasks":
         return (
-          <div className="rounded-2xl border border-border bg-background p-8 shadow-sm">
-            <div className="text-center">
-              <h2 className="text-xl font-semibold text-text-primary">
-                Tasks
-              </h2>
-
-              <p className="mt-2 text-sm text-text-secondary">
-                Task creation screen will be implemented next.
-              </p>
-
-              <div className="mt-6 inline-flex items-center rounded-full bg-success/10 px-4 py-2 text-sm font-medium text-success">
-                Workflow completed
-              </div>
-            </div>
-          </div>
+          <TasksStep
+            tasks={tasks}
+            loading={isLoading}
+            error={error}
+            onGenerate={handleGenerateTasks}
+          />
         );
 
       default:

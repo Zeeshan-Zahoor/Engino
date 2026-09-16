@@ -10,7 +10,7 @@ const generateTasks = async (requirement, plan) => {
         ${JSON.stringify(requirement, null, 2)}
 
         APPROVED AI PLAN:
-        ${JSON.stringify(plan, null, 2)}
+        ${JSON.stringify(plan.content, null, 2)}
 
         Generate a set of actionable development tasks based on the
         requirement and the approved AI plan.

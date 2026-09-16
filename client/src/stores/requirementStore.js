@@ -177,6 +177,27 @@ const useRequirementStore = create((set) => ({
             throw error;
         }
     },
+
+    generateAiTasks: async (workspaceId, projectId, requirementId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await api.post(
+                `workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}/ai/generate`
+            );
+
+            set({ isLoading: false, error: null });
+            return response.data;
+
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.message || "Error generating ai tasks. Try again.",
+            });
+
+            console.log(error.response);
+            throw error;
+        }
+    }
 }));
 
 export default useRequirementStore;

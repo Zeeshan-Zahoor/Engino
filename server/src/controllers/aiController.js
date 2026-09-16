@@ -421,15 +421,16 @@ const generateAiTasks = async (req, res) => {
             });
         }
 
-        if(requirement.aiStatus !== "Clear") {
+        if(requirement.aiStatus !== "Approved") {
             return res.status(400).json({
                 success: false,
-                message: "Requirement must be clear before generating AI tasks",
+                message: "Requirement must have an approved plan before generating tasks",
             });
         }
 
         const plan = await AIPlan.findOne({
             requirementId,
+            status: "Approved",
         }).sort({ version: -1 });
 
         if (!plan) {
@@ -439,7 +440,7 @@ const generateAiTasks = async (req, res) => {
             });
         }
 
-        const generatedTasks = await generateTasks(requirement, plan);
+        const {  tasks: generatedTasks } = await generateTasks(requirement, plan);
 
         if (!generatedTasks || generatedTasks.length === 0) {
             return res.status(400).json({
@@ -449,6 +450,9 @@ const generateAiTasks = async (req, res) => {
         }
 
         const session = await mongoose.startSession();
+
+        let createdTasks = [];
+
         try {
             session.startTransaction();
 
@@ -461,6 +465,7 @@ const generateAiTasks = async (req, res) => {
                 });
 
                 await newTask.save({ session });
+                createdTasks.push(newTask);
             }
 
             await session.commitTransaction();
@@ -472,12 +477,12 @@ const generateAiTasks = async (req, res) => {
         } finally {
             await session.endSession();
 
-        }   
-
+        }
 
         return res.status(201).json({
             success: true,
             message: "Tasks created successfully!",
+            tasks: createdTasks,
         });
 
     } catch (error) {
