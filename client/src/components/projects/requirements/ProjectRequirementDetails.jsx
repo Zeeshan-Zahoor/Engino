@@ -29,6 +29,7 @@ const ProjectRequirementDetails = () => {
     analyzeRequirement, 
     clarifyRequirement,
     generatePlan,
+    approvePlan,
     isLoading, 
     error,
    } = useRequirementStore();
@@ -74,19 +75,26 @@ const ProjectRequirementDetails = () => {
       if (currentRequirement.aiStatus === "Needs Clarification") {
         completeStep("requirement");
         navigateToStep("analysis");
-        return;
       }
 
       if (currentRequirement.aiStatus === "Clear") {
         completeStep("requirement");
         navigateToStep("analysis");
-        return;
       }
 
       if (currentRequirement.aiStatus === "Plan Generated") {
         completeStep("requirement");
         completeStep("analysis");
-        navigateToStep("plan");
+        completeStep("plan")
+        navigateToStep("review");
+      }
+
+      if (currentRequirement.aiStatus === "Approved") {
+        completeStep("requirement");
+        completeStep("analysis");
+        completeStep("plan");
+        completeStep("review");
+        navigateToStep("tasks");
       }
   }, [currentRequirement, navigateToStep, completeStep]);
 
@@ -175,6 +183,22 @@ const ProjectRequirementDetails = () => {
     }
   }
 
+  const handleApprovePlan = async (reviewedPlan) => {
+    try {
+      await approvePlan(
+        currentWorkspaceId,
+        projectId,
+        requirementId,
+        reviewedPlan,
+      );
+
+      setPlan(reviewedPlan);
+
+    } catch {
+      // store already handles the error state
+    }
+  }
+
   const handleBackToProject = () => {
     navigate(`/projects/${projectId}`);
   };
@@ -230,8 +254,9 @@ const ProjectRequirementDetails = () => {
       case "review":
         return (
           <ReviewStep
-            tasks={currentRequirement.plannedTasks}
+            plan={plan}
             onContinue={handleContinue}
+            onApprove={handleApprovePlan}
           />
         );
 

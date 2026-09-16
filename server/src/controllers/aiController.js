@@ -66,7 +66,6 @@ const aiAnalysis = async (req, res) => {
                 message: "AI analysis failed!",
             });
         }
-
         
         requirement.aiConfidence = analysis.confidence;
 
@@ -490,9 +489,124 @@ const generateAiTasks = async (req, res) => {
     }
 }
 
+const approvePlan = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const workspaceId = req.workspaceId;
+        const membership = req.membership;
+
+        const { projectId, requirementId } = req.params;
+        const { plan: reviewedPlan } = req.body;
+
+        if (!projectId || !requirementId) {
+            return res.status(400).json({
+                success: false,
+                message: "Project ID and requirement ID are required!",
+            });
+        }
+        if (!reviewedPlan) {
+            return res.status(400).json({
+                success: false,
+                message: "Reviewed plan is required!",
+            });
+        }
+
+        if (membership.role !== "Admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Only admins can approve AI plans",
+            });
+        }
+
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
+        });
+
+        if(!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found in the workspace",
+            });
+        }
+
+        const requirement = await Requirement.findOne({
+            _id: requirementId,
+            projectId,
+        });
+
+        if (!requirement) {
+            return res.status(404).json({
+                success: false,
+                message: "Requirement not found in the project",
+            });
+        }
+
+        const aiPlan = await AIPlan.findOne({
+            requirementId,
+        }).sort({  version: -1 });
+
+        if (!aiPlan) {
+            return res.status(404).json({
+                success: false,
+                message: "AI plan not found!",
+            });
+        }
+
+        if (aiPlan.status === "Approved") {
+            return res.status(400).json({
+                success: false,
+                message: "AI plan is already approved",
+            });
+        }
+
+        const session = await mongoose.startSession();
+        try {
+            session.startTransaction();
+
+            // save the admin-reviewed plan
+            aiPlan.content = reviewedPlan;
+            aiPlan.status = "Approved";
+            aiPlan.generatedBy = "User";
+            
+    
+            await aiPlan.save({ session });
+    
+            // update requiremt workflow state
+            requirement.aiStatus = "Approved";
+            requirement.updatedBy = userId;
+    
+            await requirement.save({ session });
+
+
+            await session.commitTransaction();
+
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            await session.endSession();
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "AI plan approved successfully!",
+            plan: aiPlan,
+            requirement,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error.",
+        });
+    }
+}
+
 export {
     aiAnalysis,
     answerClarification,
     generatePlan,
     generateAiTasks,
+    approvePlan,
 }

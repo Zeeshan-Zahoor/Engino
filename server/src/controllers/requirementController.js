@@ -176,7 +176,6 @@ const getRequirement = async (req, res) => {
         }
         const aiPlan = await AIPlan.findOne({
             requirementId,
-            status: "Generated",
         }).sort({ version: -1 });
 
         return res.status(200).json({

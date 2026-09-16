@@ -7,7 +7,7 @@ const StepHeader = ({
   badge,
 }) => {
   return (
-    <div className="mb-6">
+    <div className="mb-6 w-full">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <div className="flex items-center gap-1.5 rounded-full bg-primary-light px-3 py-1 text-xs font-semibold text-primary">
           <Sparkles size={13} />

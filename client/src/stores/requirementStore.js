@@ -150,7 +150,33 @@ const useRequirementStore = create((set) => ({
             console.log(error.response)
             throw error;
         }
-    }
+    },
+
+    approvePlan: async (workspaceId, projectId, requirementId, plan) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.patch(
+                `workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}/ai/plan/review`,
+                { plan }
+            );
+
+            set({ isLoading: false, error: null });
+
+            return response.data;
+
+        } catch (error) {
+            set({
+                isLoading: false,
+                error:
+                    error.response?.data?.message ||
+                    "Failed to approve AI plan. Try again.",
+            });
+
+            console.log(error.response)
+            throw error;
+        }
+    },
 }));
 
 export default useRequirementStore;

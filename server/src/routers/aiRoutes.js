@@ -5,6 +5,7 @@ import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
 import { 
     aiAnalysis,
     answerClarification,
+    approvePlan,
     generateAiTasks,
     generatePlan,
 } from '../controllers/aiController.js';
@@ -15,5 +16,6 @@ router.post('/analyze', authMiddleware, workspaceMiddleware, aiAnalysis);
 router.post('/clarify', authMiddleware, workspaceMiddleware, answerClarification);
 router.post('/plan', authMiddleware, workspaceMiddleware, generatePlan);
 router.post('/generate', authMiddleware, workspaceMiddleware, generateAiTasks);
+router.patch('/plan/review', authMiddleware, workspaceMiddleware, approvePlan)
 
 export default router;
