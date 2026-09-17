@@ -178,11 +178,17 @@ const getRequirement = async (req, res) => {
             requirementId,
         }).sort({ version: -1 });
 
+        const aiTasks = await Task.find({
+            requirementId,
+            generator: "assistant",
+        }).lean();
+
         return res.status(200).json({
             success: true,
             message: "Requirement fetched successfully!",
             requirement,
             aiPlan,
+            aiTasks,
         });
     } catch (error) {
         return res.status(500).json({

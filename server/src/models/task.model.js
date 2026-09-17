@@ -76,6 +76,13 @@ const taskSchema = mongoose.Schema(
             type: [String],
             default: [],
         },
+
+        generator: {
+            type: String,
+            enum: ["assistant", "user"],
+            default: "user",
+            required: true,
+        }
     }, 
     {
         timestamps: true,

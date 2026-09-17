@@ -18,11 +18,9 @@ function ProjectOverviewStats({ project }) {
 
   const completed = total ? (completedTasks?.length / total) * 100 : 0;
   const inProgress = total ? (inProgressTasks?.length / total) * 100 : 0;
-  const todo = total ? (todoTasks?.length / total) * 100 : 0;
   
   const completedEnd = completed;
   const inProgressEnd = completed + inProgress;
-  const todoEnd = inProgress + todo;
 
   const progress = ((completedTasks?.length) / total) * 100 || 0;
 
@@ -35,6 +33,8 @@ function ProjectOverviewStats({ project }) {
     extraMembers = project.team.length - 3;
   }
 
+  console.log("Complented Percentage: ", completedEnd)
+  console.log("In Progress Percentage: ", inProgressEnd)
 
   return (
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -53,10 +53,9 @@ function ProjectOverviewStats({ project }) {
             className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full"
             style={{
                background: `conic-gradient(
-                #10b981 0% ${completedEnd}%,
+                #16a34a 0% ${completedEnd}%,
                 #3b82f6 ${completedEnd}% ${inProgressEnd}%,
-                #f97316 ${inProgressEnd}% ${todoEnd}%,
-                #f2f2f6 ${todoEnd}% 100%
+                oklch(75% 0.183 55.934) ${inProgressEnd}% 100%
               )`,
             }}
           >
@@ -87,7 +86,7 @@ function ProjectOverviewStats({ project }) {
 
             <div className="flex items-center justify-between gap-8 text-sm">
               <span className="flex items-center gap-2 text-text-secondary">
-                <span className="h-2 w-2 rounded-full bg-gray-400" />
+                <span className="h-2 w-2 rounded-full bg-orange-400" />
                 To Do
               </span>
               <span className="font-semibold text-text-primary">{todoTasks?.length}</span>

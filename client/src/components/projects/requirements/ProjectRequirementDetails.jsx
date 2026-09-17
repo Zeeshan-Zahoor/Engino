@@ -57,17 +57,49 @@ const ProjectRequirementDetails = () => {
   }, [currentStep]);
 
   useEffect(() => {
-    if(!currentWorkspaceId || !projectId || !requirementId) return;
+    if (!currentWorkspaceId || !projectId || !requirementId) return;
 
-    if(currentRequirement) return;
+    if (currentRequirement?._id === requirementId) return;
 
     fetchRequirement(
       currentWorkspaceId,
       projectId,
-      requirementId,
+      requirementId
+    );
+  }, [
+    currentWorkspaceId,
+    projectId,
+    requirementId,
+    currentRequirement,
+    fetchRequirement,
+  ]);
+
+  useEffect(() => {
+    if (!currentRequirement) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAnalysis(
+      currentRequirement.aiAnalysis
+        ? {
+            status:
+              currentRequirement.aiStatus === "Clear"
+                ? "clear"
+                : "needs_clarification",
+            confidence: currentRequirement.aiConfidence,
+            summary: currentRequirement.aiAnalysis.summary,
+            questions: currentRequirement.aiAnalysis.questions || [],
+          }
+        : null
     );
 
-  }, [currentWorkspaceId, projectId, requirementId, fetchRequirement, currentRequirement]);
+    setPlan(
+      currentRequirement.aiPlan?.content || null
+    );
+
+    setTasks(
+      currentRequirement.aiTasks || []
+    );
+  }, [currentRequirement]);
   
 
   useEffect(() => {
@@ -102,27 +134,35 @@ const ProjectRequirementDetails = () => {
 
   }, [currentRequirement, navigateToStep, completeStep]);
 
-  useEffect(() => {
-    if(!currentRequirement?.aiAnalysis) return;
+  // useEffect(() => {
+  //   if(!currentRequirement?.aiAnalysis) return;
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAnalysis({
-      status: currentRequirement.aiStatus === "Clear"
-        ? "clear"
-        : "needs_clarification",
-      confidence: currentRequirement.aiConfidence,
-      summary: currentRequirement.aiAnalysis.summary,
-      questions: currentRequirement.aiAnalysis.questions || [],
-    });
-  }, [currentRequirement]);
+  //   // eslint-disable-next-line react-hooks/set-state-in-effect
+  //   setAnalysis({
+  //     status: currentRequirement.aiStatus === "Clear"
+  //       ? "clear"
+  //       : "needs_clarification",
+  //     confidence: currentRequirement.aiConfidence,
+  //     summary: currentRequirement.aiAnalysis.summary,
+  //     questions: currentRequirement.aiAnalysis.questions || [],
+  //   });
 
-  useEffect(() => {
-    if (!currentRequirement?.aiPlan) return;
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPlan(currentRequirement.aiPlan.content);
-  }, [currentRequirement]);
+  // }, [currentRequirement]);
 
+  // useEffect(() => {
+  //   if (!currentRequirement?.aiPlan) return;
+
+  //   // eslint-disable-next-line react-hooks/set-state-in-effect
+  //   setPlan(currentRequirement.aiPlan.content);
+  // }, [currentRequirement]);
+
+  // useEffect(() => {
+  //   if(!currentRequirement?.aiTasks) return;
+
+  //   // eslint-disable-next-line react-hooks/set-state-in-effect
+  //   setTasks(currentRequirement.aiTasks);
+  // }, [currentRequirement])
 
   const handleContinue = () => {
       const currentIndex = workflowSteps.findIndex(
@@ -296,7 +336,7 @@ const ProjectRequirementDetails = () => {
   };
 
 
-  if (isLoading && !currentRequirement) {
+  if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-sm text-text-secondary flex items-center justify-center gap-2">

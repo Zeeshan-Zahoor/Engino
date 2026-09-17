@@ -5,8 +5,13 @@ const useProjectStore = create((set, get) => ({
     projects: [],
     activeProject: null,
     selectedProjectId: null,
+    selectedTabIndex: 0,
     isLoading: false,
     error: null,
+
+    setTabIndex: (index) => set({
+        selectedTabIndex: index,
+    }),
 
     selectProject: (projectId) => set({
         selectedProjectId: projectId,

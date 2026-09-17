@@ -38,6 +38,7 @@ const useRequirementStore = create((set) => ({
                 currentRequirement: {
                     ...response.data.requirement,
                     aiPlan: response.data.aiPlan || null,
+                    aiTasks: response.data.aiTasks || [],
                 },
                 isLoading: false,
                 error: null,

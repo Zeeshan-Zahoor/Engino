@@ -29,10 +29,10 @@ function ProjectTasks({ project }) {
 
       {/* Task list */}
       <div className="divide-y divide-border">
-        {projectTasks.map((task) => (
+        {projectTasks.slice(0, 5).map((task) => (
           <div
             key={task._id}
-            className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 px-5 py-3.5 sm:grid-cols-[auto_minmax(0,1fr)_90px_75px_90px] sm:items-center"
+            className="grid grid-cols-[auto_minmax(0,1fr)] gap-5 px-5 py-3.5 sm:grid-cols-[auto_minmax(0,1fr)_90px_75px_90px] sm:items-center"
           >
             {/* Completion */}
             <div
@@ -55,15 +55,17 @@ function ProjectTasks({ project }) {
             </p>
 
             {/* Assignee */}
-            <div className="hidden items-center gap-2 sm:flex">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                <Avatar user={task?.assignee}/>
-              </div>
+            {task?.assignee && (
+              <div className="hidden items-center gap-2 sm:flex">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
+                  <Avatar user={task?.assignee}/>
+                </div>
 
-              <span className="truncate text-xs text-text-secondary">
-                {task?.assignee?.name}
-              </span>
-            </div>
+                <span className="truncate text-xs text-text-secondary">
+                  {task?.assignee?.name}
+                </span>
+              </div>
+            )}
 
             {/* Priority */}
             <span

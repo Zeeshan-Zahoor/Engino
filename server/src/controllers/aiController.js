@@ -462,6 +462,7 @@ const generateAiTasks = async (req, res) => {
                     projectId,
                     requirementId,
                     reporter: userId,
+                    generator: "assistant",
                 });
 
                 await newTask.save({ session });

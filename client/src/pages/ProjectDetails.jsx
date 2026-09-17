@@ -22,14 +22,14 @@ const tabs = ["Overview", "AI Requirements", "Tasks", "Team", "Activity"];
 
 function ProjectDetails() {
   const { projectId } = useParams();
-  const { activeProject, fetchProject } = useProjectStore();
+  const { activeProject, fetchProject, selectedTabIndex, setTabIndex } = useProjectStore();
   const { currentWorkspaceId } = useWorkspaceStore();
   const { user } = useAuthStore();
 
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeTab, setActiveTab] = useState(tabs[selectedTabIndex] || tabs[0]);
 
   useEffect(() => {
     fetchProject(currentWorkspaceId, projectId);
@@ -60,12 +60,13 @@ function ProjectDetails() {
         {/* tabs */}
         <div className="overflow-x-auto border-b border-border">
           <div className="flex min-w-max items-center gap-7">
-            {tabs.map((tab) => (
+            {tabs.map((tab, index) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => {
                   setActiveTab(tab)
+                  setTabIndex(index)
                 }}
                 className={`relative py-3 text-sm font-medium transition ${
                   activeTab === tab
