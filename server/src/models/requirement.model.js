@@ -23,7 +23,7 @@ const requirementSchema = new mongoose.Schema(
         status: {
             type: String,
             enum: ["Planned", "In Progress", "Completed"],
-            default: "Planned",
+            default: "In Progress",
         },
 
         aiStatus: {

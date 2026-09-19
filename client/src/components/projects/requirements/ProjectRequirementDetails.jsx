@@ -8,7 +8,7 @@ import RequirementStep from "./components/RequirementStep";
 import AnalysisStep from "./components/AnalysisStep";
 import PlanStep from "./components/PlanStep";
 import ReviewStep from "./components/ReviewStep";
-import Loader from "../../common/Loader";
+// import Loader from "../../common/Loader";
 
 import useWorkflowNavigation from "./hooks/useWorkflowNavigation";
 import useWorkspaceStore from "../../../stores/workspaceStore";
@@ -322,16 +322,16 @@ const ProjectRequirementDetails = () => {
   };
 
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-sm text-text-secondary flex items-center justify-center gap-2">
-          <Loader color="text-secondary"/>
-          Loading requirement...
-        </div>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex min-h-screen items-center justify-center bg-background">
+  //       <div className="text-sm text-text-secondary flex items-center justify-center gap-2">
+  //         <Loader color="text-secondary"/>
+  //         Loading requirement...
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (error && !currentRequirement) {
     return (
@@ -403,170 +403,11 @@ const ProjectRequirementDetails = () => {
             {renderCurrentStep()}
           </main>
 
-
-          {/* Right Sidebar */}
-          {/* <aside className="space-y-5"> */}
-            
-            {/* Requirement Details */}
-            {/* <RequirementDetailsPanel
-              requirement={currentRequirement}
-            /> */}
-
-            {/* AI Summary */}
-            {/* <AiSummaryPanel
-              requirement={currentRequirement}
-            /> */}
-
-            {/* Activity */}
-            {/* <ActivityPanel
-              activity={currentRequirement?.activity}
-            /> */}
-
-          {/* </aside> */}
         </div>
       </div>
     </div>
   );
 };
-
-
-/* ==================================================
-   RIGHT SIDEBAR COMPONENTS
-   ================================================== */
-
-
-// const RequirementDetailsPanel = ({
-//   requirement,
-// }) => {
-//   return (
-//     <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
-//       <h2 className="text-sm font-semibold text-text-primary">
-//         Requirement Details
-//       </h2>
-
-//       <div className="mt-4 space-y-4">
-//         <DetailItem
-//           label="ID"
-//           value={(requirement?._id.toString().toUpperCase().slice(requirement?._id.length-5, requirement?._id.length))}
-//         />
-
-//         <DetailItem
-//           label="Owner"
-//           value={requirement?.owner?.name}
-//         />
-
-//         <DetailItem
-//           label="Complexity"
-//           value={requirement?.complexity}
-//         />
-
-//         <DetailItem
-//           label="Created"
-//           value={requirement?.createdAt ? new Date(requirement.createdAt).toLocaleDateString() : ""}
-//         />
-
-//         <DetailItem
-//           label="Updated"
-//           value={requirement?.updatedAt ? new Date(requirement.updatedAt).toLocaleDateString() : ""}
-//         />
-//       </div>
-//     </section>
-//   );
-// };
-
-
-// const AiSummaryPanel = ({
-//   requirement,
-// }) => {
-//   const analysis = requirement?.aiAnalysis;
-
-//   return (
-//     <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
-//       <div className="flex items-center justify-between gap-3">
-//         <h2 className="text-sm font-semibold text-text-primary">
-//           AI Summary
-//         </h2>
-
-//         <span className="rounded-full bg-primary-light px-2.5 py-1 text-[11px] font-semibold text-primary">
-//           {analysis?.clarity ?? 0}% clear
-//         </span>
-//       </div>
-
-//       <p className="mt-4 text-sm leading-6 text-text-secondary">
-//         {analysis?.summary ||
-//           "No AI summary available."}
-//       </p>
-//     </section>
-//   );
-// };
-
-
-// const ActivityPanel = ({
-//   activity = [],
-// }) => {
-//   return (
-//     <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
-//       <h2 className="text-sm font-semibold text-text-primary">
-//         Activity
-//       </h2>
-
-//       <div className="mt-5 space-y-5">
-//         {activity.map((item, index) => (
-//           <div
-//             key={item.id}
-//             className="relative flex gap-3"
-//           >
-//             {!(
-//               index === activity.length - 1
-//             ) && (
-//               <div className="absolute left-[5px] top-5 h-full w-px bg-border" />
-//             )}
-
-//             <div className="relative z-10 mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
-
-//             <div className="min-w-0">
-//               <p className="text-xs font-semibold text-text-primary">
-//                 {item.title}
-//               </p>
-
-//               <p className="mt-1 text-xs leading-5 text-text-secondary">
-//                 {item.description}
-//               </p>
-
-//               <p className="mt-1.5 text-[11px] text-text-secondary">
-//                 {item.time}
-//               </p>
-//             </div>
-//           </div>
-//         ))}
-
-//         {activity.length === 0 && (
-//           <p className="text-sm text-text-secondary">
-//             No activity yet.
-//           </p>
-//         )}
-//       </div>
-//     </section>
-//   );
-// };
-
-
-// const DetailItem = ({
-//   label,
-//   value,
-// }) => {
-//   return (
-//     <div>
-//       <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-//         {label}
-//       </p>
-
-//       <p className="mt-1 text-sm font-medium text-text-primary">
-//         {value || "—"}
-//       </p>
-//     </div>
-//   );
-// };
 
 
 export default ProjectRequirementDetails;

@@ -14,74 +14,13 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import Avatar from "../../utils/Avatar";
 import CreateTaskModal from "../tasks/CreateTaskModal";
 
-const staticTasks = [
-  {
-    id: "TASK-001",
-    title: "Setup project repository",
-    description: "Initialize Git repository and configure the project structure.",
-    status: "Completed",
-    priority: "High",
-    assignee: {
-      name: "Zeeshan Zahoor",
-      initials: "ZZ",
-    },
-    dueDate: "9/5/2026",
-    estimated: "4h",
-  },
-  {
-    id: "TASK-002",
-    title: "Design database schema",
-    description: "Create database models and relationships for the application.",
-    status: "In Progress",
-    priority: "High",
-    assignee: {
-      name: "Zeeshan Member",
-      initials: "ZM",
-    },
-    dueDate: "9/12/2026",
-    estimated: "8h",
-  },
-  {
-    id: "TASK-003",
-    title: "Implement authentication",
-    description: "Implement registration, login and authentication middleware.",
-    status: "To Do",
-    priority: "Medium",
-    assignee: {
-      name: "Dilshada begum",
-      initials: "DB",
-    },
-    dueDate: "9/18/2026",
-    estimated: "12h",
-  },
-  {
-    id: "TASK-004",
-    title: "Create UI components",
-    description: "Build reusable UI components for the application.",
-    status: "To Do",
-    priority: "Medium",
-    assignee: {
-      name: "Queue Care",
-      initials: "QC",
-    },
-    dueDate: "9/20/2026",
-    estimated: "10h",
-  },
-  {
-    id: "TASK-005",
-    title: "Write unit tests",
-    description: "Create unit tests for core application functionality.",
-    status: "In Review",
-    priority: "Low",
-    assignee: null,
-    dueDate: "9/22/2026",
-    estimated: "6h",
-  },
-];
+import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 
 function Tasks({ project }) {
+
     const [openMenuId, setOpenMenuId] = useState(null);
     const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false);
 
@@ -100,9 +39,9 @@ function Tasks({ project }) {
         case "In Progress":
             return "bg-primary/10 text-primary";
 
-        case "To Do":
+        case "Todo":
         default:
-            return "bg-muted text-muted-foreground";
+            return "bg-surface text-text-secondary";
         }
     };
 
@@ -124,6 +63,8 @@ function Tasks({ project }) {
             return "bg-muted text-muted-foreground";
         }
     };
+
+    console.log(tasks);
 
   return (
     <div className="rounded-2xl border border-border bg-background p-5">
@@ -171,7 +112,7 @@ function Tasks({ project }) {
 
         {/* To Do */}
         <div className="flex items-center gap-3 rounded-lg border border-border px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-surface text-text-secondary">
             <Circle size={16} />
           </div>
 
@@ -299,9 +240,9 @@ function Tasks({ project }) {
 
           {/* Table Body */}
           <tbody>
-            {staticTasks.map((task, index) => (
+            {tasks.map((task, index) => (
               <tr
-                key={task.id}
+                key={task._id}
                 className="border-b border-border last:border-b-0 hover:bg-muted/30"
               >
                 {/* task number */}
@@ -347,7 +288,7 @@ function Tasks({ project }) {
                   {task.assignee ? (
                     <div className="flex items-center gap-2">
                       <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
-                        {task.assignee.initials}
+                        <Avatar user={task.assignee}/>
                       </div>
 
                       <span className="whitespace-nowrap text-sm text-foreground">
@@ -367,12 +308,16 @@ function Tasks({ project }) {
 
                 {/* Due Date */}
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-muted-foreground">
-                  {task.dueDate}
+                  {task.dueDate 
+                    ? (new Date(task.dueDate)) 
+                    : (
+                      <span className="text-text-secondary text-sm">Not Set</span>
+                    )}
                 </td>
 
                 {/* Estimated */}
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-muted-foreground">
-                  {task.estimated}
+                  {getRelativeEstimatedTime(task.estimatedEffortMinutes)}
                 </td>
 
                 {/* Actions */}
@@ -381,20 +326,20 @@ function Tasks({ project }) {
                     type="button"
                     onClick={() =>
                       setOpenMenuId(
-                        openMenuId === task.id ? null : task.id
+                        openMenuId === task._id ? null : task._id
                       )
                     }
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-surface hover:cursor-pointer"
                   >
                     <MoreHorizontal size={18} />
                   </button>
 
-                  {openMenuId === task.id && (
+                  {openMenuId === task._id && (
                     <div className="absolute right-4 top-12 z-30 w-44 rounded-lg border border-border bg-background p-1.5 text-left shadow-lg">
 
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
+                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
                       >
                         <Eye size={15} />
                         View Details
@@ -402,7 +347,7 @@ function Tasks({ project }) {
 
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
+                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
                       >
                         <Pencil size={15} />
                         Edit Task
@@ -410,7 +355,7 @@ function Tasks({ project }) {
 
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
+                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
                       >
                         <Clock3 size={15} />
                         Change Status
@@ -418,7 +363,7 @@ function Tasks({ project }) {
 
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
+                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
                       >
                         <UserRound size={15} />
                         Assign
@@ -428,7 +373,7 @@ function Tasks({ project }) {
 
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger hover:bg-danger/5"
+                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger cursor-pointer hover:bg-danger/10"
                       >
                         <Trash2 size={15} />
                         Delete

@@ -282,7 +282,9 @@ function Requirements({ project }) {
 
           {/* Table Body */}
           <tbody>
-            {requirements.map((requirement, index) => (
+            {requirements.map((requirement, index) => {
+              console.log("Requiment: ", requirement)
+              return (
                 <tr
                   key={requirement._id}
                   onClick={() => 
@@ -321,7 +323,7 @@ function Requirements({ project }) {
                   {/* Tasks */}
                   <td className="px-3 py-4">
                       <span className="text-sm text-text-secondary">
-                        —
+                        {requirement?.tasks?.length}
                       </span>
                   </td>
 
@@ -382,7 +384,8 @@ function Requirements({ project }) {
                     )}
                   </td>
                 </tr>
-            ))}
+              )
+            })}
           </tbody>
         </table>
       </div>

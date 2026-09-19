@@ -580,6 +580,7 @@ const approvePlan = async (req, res) => {
     
             // update requiremt workflow state
             requirement.aiStatus = "Approved";
+            requirement.status = "Planned";
             requirement.updatedBy = userId;
     
             await requirement.save({ session });

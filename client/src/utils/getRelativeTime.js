@@ -30,3 +30,16 @@ export const getRelativeTime = (date) => {
   const diffInYears = Math.floor(diffInMonths / 12);
   return diffInYears === 1 ? '1 year ago' : `${diffInYears} years ago`;
 };
+
+export const getRelativeEstimatedTime = (minutes) => {
+  if (minutes < 60) return `${minutes} min`;
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  if (remainingMinutes === 0) {
+    return `${hours}h`;
+  }
+
+  return `${hours}h ${remainingMinutes}m`;
+}
