@@ -8,7 +8,7 @@ const useRequirementStore = create((set) => ({
     currentRequirement: null,
 
     fetchRequirements: async (workspaceId, projectId) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, error: null, currentRequirement: null });
 
         try {
             const response = await api.get(`workspaces/${workspaceId}/projects/${projectId}/requirements`);
@@ -29,7 +29,7 @@ const useRequirementStore = create((set) => ({
     },
 
     fetchRequirement: async (workspaceId, projectId, requirementId) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, error: null, currentRequirement: null });
 
         try {
             const response = await api.get(`workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}`);

@@ -61,9 +61,9 @@ const useWorkflowNavigation = () => {
     return "locked";
   };
 
-  const resetWorkflow = () => {
+  const resetWorkflow = useCallback(() => {
     setWorkflow(initialWorkflow);
-  };
+  }, []);
 
   return {
     currentStep: workflow.current,
@@ -73,10 +73,8 @@ const useWorkflowNavigation = () => {
     navigateToStep,
     completeStep,
     completeCurrentStep,
-
     canAccessStep,
     getStepStatus,
-
     resetWorkflow,
   };
 };

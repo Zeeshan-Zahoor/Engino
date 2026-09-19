@@ -42,6 +42,7 @@ const ProjectRequirementDetails = () => {
     completeStep,
     canAccessStep,
     getStepStatus,
+    resetWorkflow,
   } = useWorkflowNavigation();
 
   const workflowInitiated = useRef(false);
@@ -57,9 +58,17 @@ const ProjectRequirementDetails = () => {
   }, [currentStep]);
 
   useEffect(() => {
-    if (!currentWorkspaceId || !projectId || !requirementId) return;
+    workflowInitiated.current = false;
+    resetWorkflow();
 
-    if (currentRequirement?._id === requirementId) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAnalysis(null);
+    setPlan(null);
+    setTasks([]);
+  }, [requirementId, resetWorkflow]);
+
+  useEffect(() => {
+    if (!currentWorkspaceId || !projectId || !requirementId) return;
 
     fetchRequirement(
       currentWorkspaceId,
@@ -70,7 +79,6 @@ const ProjectRequirementDetails = () => {
     currentWorkspaceId,
     projectId,
     requirementId,
-    currentRequirement,
     fetchRequirement,
   ]);
 
@@ -103,7 +111,11 @@ const ProjectRequirementDetails = () => {
   
 
   useEffect(() => {
-      if (!currentRequirement || workflowInitiated.current) return;
+      if (
+        !currentRequirement ||
+        currentRequirement._id !== requirementId ||
+        workflowInitiated.current
+      ) return;
 
       workflowInitiated.current = true;
 
@@ -132,7 +144,7 @@ const ProjectRequirementDetails = () => {
         navigateToStep("tasks");
       }
 
-  }, [currentRequirement, navigateToStep, completeStep]);
+  }, [currentRequirement, requirementId, navigateToStep, completeStep]);
 
   const handleContinue = () => {
       const currentIndex = workflowSteps.findIndex(
