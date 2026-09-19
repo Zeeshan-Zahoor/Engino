@@ -82,9 +82,9 @@ const ProjectRequirementDetails = () => {
       currentRequirement.aiAnalysis
         ? {
             status:
-              currentRequirement.aiStatus === "Clear"
-                ? "clear"
-                : "needs_clarification",
+              currentRequirement.aiStatus === "Needs Clarification"
+                ? "needs_clarification"
+                : "clear",
             confidence: currentRequirement.aiConfidence,
             summary: currentRequirement.aiAnalysis.summary,
             questions: currentRequirement.aiAnalysis.questions || [],
@@ -133,36 +133,6 @@ const ProjectRequirementDetails = () => {
       }
 
   }, [currentRequirement, navigateToStep, completeStep]);
-
-  // useEffect(() => {
-  //   if(!currentRequirement?.aiAnalysis) return;
-
-  //   // eslint-disable-next-line react-hooks/set-state-in-effect
-  //   setAnalysis({
-  //     status: currentRequirement.aiStatus === "Clear"
-  //       ? "clear"
-  //       : "needs_clarification",
-  //     confidence: currentRequirement.aiConfidence,
-  //     summary: currentRequirement.aiAnalysis.summary,
-  //     questions: currentRequirement.aiAnalysis.questions || [],
-  //   });
-
-
-  // }, [currentRequirement]);
-
-  // useEffect(() => {
-  //   if (!currentRequirement?.aiPlan) return;
-
-  //   // eslint-disable-next-line react-hooks/set-state-in-effect
-  //   setPlan(currentRequirement.aiPlan.content);
-  // }, [currentRequirement]);
-
-  // useEffect(() => {
-  //   if(!currentRequirement?.aiTasks) return;
-
-  //   // eslint-disable-next-line react-hooks/set-state-in-effect
-  //   setTasks(currentRequirement.aiTasks);
-  // }, [currentRequirement])
 
   const handleContinue = () => {
       const currentIndex = workflowSteps.findIndex(
@@ -294,8 +264,12 @@ const ProjectRequirementDetails = () => {
             error={error}
             onComplete={() => {
               completeStep("analysis");
+              if (currentRequirement.aiStatus === "Clear") {
+                handleGeneratePlan();
+                return;
+              }
+              // Requirement has already progressed beyond analysis
               navigateToStep("plan");
-              handleGeneratePlan()
             }}
           />
         );
