@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useEffect, useState } from "react";
 import {
   X,
   ChevronDown,
@@ -6,29 +6,14 @@ import {
   Tag,
   Plus,
 } from "lucide-react";
+import useWorkspaceStore from "../../stores/workspaceStore";
+import useProjecStore from "../../stores/projectStore";
+import useToastStore from "../../stores/toastStore";
+import useTaskStore from "../../stores/taskStore";
+import { useParams } from "react-router-dom";
 
-const projectMembers = [
-  {
-    id: "1",
-    name: "Zeeshan Zahoor",
-    initials: "ZZ",
-  },
-  {
-    id: "2",
-    name: "Zeeshan Member",
-    initials: "ZM",
-  },
-  {
-    id: "3",
-    name: "Dilshada begum",
-    initials: "DB",
-  },
-  {
-    id: "4",
-    name: "Queue Care",
-    initials: "QC",
-  },
-];
+import Loader from "../common/Loader";
+import Toast from "../common/Toast";
 
 const taskTypes = [
   "Feature",
@@ -51,22 +36,12 @@ const priorities = [
   "High",
 ];
 
-const requirements = [
-  {
-    id: "REQ-001",
-    title: "User Authentication",
-  },
-  {
-    id: "REQ-002",
-    title: "Project Management",
-  },
-  {
-    id: "REQ-003",
-    title: "Task Management",
-  },
-];
-
 function CreateTaskModal({ open, onClose }) {
+  const { currentWorkspaceId } = useWorkspaceStore();
+  const { activeProject, fetchProject } = useProjecStore();
+  const { createTask, isLoading } = useTaskStore();
+  const { showToast } = useToastStore();
+  const { projectId } = useParams();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -81,9 +56,49 @@ function CreateTaskModal({ open, onClose }) {
     tags: [],
   });
 
+  const [error, setError] = useState("");
   const [tagInput, setTagInput] = useState("");
 
+  useEffect(() => {
+    if(!currentWorkspaceId || projectId || activeProject) return;
+    fetchProject(projectId);
+
+  }, [currentWorkspaceId, projectId, fetchProject, activeProject]);
+
+
+  const requirements = activeProject?.requirements || [];
+  const projectMembers = activeProject?.team || [];
+
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      description: "",
+      type: "",
+      complexity: "",
+      priority: "Medium",
+      assignee: "",
+      dueDate: "",
+      estimatedEffortMinutes: "",
+      requirementId: "",
+      tags: [],
+    })
+  }
+
+  const handleCreateTask = async () => {
+      try {
+        await createTask(currentWorkspaceId, projectId, formData);
+        
+        onClose();
+        showToast("Task Created Successfully!", "success");
+        resetForm();
+
+      } catch (error) {
+          setError(error.response?.data?.message || "Failed to create task. Try again.");
+      }
+  }
+
   const handleChange = (field, value) => {
+    setError("");
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -115,6 +130,7 @@ function CreateTaskModal({ open, onClose }) {
     }));
   };
 
+  console.log(formData);
   if(!open) return null;
 
   return (
@@ -298,8 +314,8 @@ function CreateTaskModal({ open, onClose }) {
                     <option value="">Unassigned</option>
 
                     {projectMembers.map((member) => (
-                      <option key={member.id} value={member.id}>
-                        {member.name}
+                      <option key={member.userId._id} value={member.userId._id}>
+                        {member.userId.name}
                       </option>
                     ))}
                   </select>
@@ -391,12 +407,12 @@ function CreateTaskModal({ open, onClose }) {
                     No linked requirement
                   </option>
 
-                  {requirements.map((requirement) => (
+                  {requirements.map((requirement, index) => (
                     <option
-                      key={requirement.id}
-                      value={requirement.id}
+                      key={requirement._id}
+                      value={requirement._id}
                     >
-                      {requirement.id} — {requirement.title}
+                      {index + 1} — {requirement.name}
                     </option>
                   ))}
                 </select>
@@ -477,6 +493,10 @@ function CreateTaskModal({ open, onClose }) {
           </div>
         </div>
 
+        {error && (
+          <p className="text-xs text-center text-danger my-2">{error}</p>
+        )}
+
         {/* Footer */}
         <div className="flex shrink-0 items-center justify-end gap-3 border-t border-border px-6 py-4">
 
@@ -490,12 +510,21 @@ function CreateTaskModal({ open, onClose }) {
 
           <button
             type="button"
+            onClick={handleCreateTask}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-dark"
           >
-            Create Task
+            {isLoading ? (
+              <div className="flex justify-center items-center">
+                <Loader />
+              </div>
+            ) :
+            ("Create Task")
+            }
           </button>
         </div>
       </div>
+
+      <Toast />
     </div>
   );
 }

@@ -52,7 +52,7 @@ const createTask = async (req, res) => {
             }
         }
 
-        if (requirementId) {
+        if (requirementId !== "") {
             const requirement = await Requirement.findOne({
                 _id: requirementId,
                 projectId,
@@ -86,7 +86,7 @@ const createTask = async (req, res) => {
         return res.status(201).json({
             success: true,
             message: "Task created successfully!",
-            newTask,
+            task: newTask,
         });
 
     } catch (error) {

@@ -18,11 +18,13 @@ import Avatar from "../../utils/Avatar";
 import CreateTaskModal from "../tasks/CreateTaskModal";
 
 import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
+import TaskDetailsModal from "./tasks/TasksDetailsModal";
 
 function Tasks({ project }) {
 
     const [openMenuId, setOpenMenuId] = useState(null);
     const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
 
     const tasks = project?.tasks || [];
 
@@ -64,7 +66,6 @@ function Tasks({ project }) {
         }
     };
 
-    console.log(tasks);
 
   return (
     <div className="rounded-2xl border border-border bg-background p-5">
@@ -242,8 +243,12 @@ function Tasks({ project }) {
           <tbody>
             {tasks.map((task, index) => (
               <tr
+
                 key={task._id}
-                className="border-b border-border last:border-b-0 hover:bg-muted/30"
+                onClick={() => {
+                  setSelectedTask(task)}
+                }
+                className="border-b border-border last:border-b-0 hover:bg-surface"
               >
                 {/* task number */}
                 <td className="px-4 py-4">
@@ -308,8 +313,8 @@ function Tasks({ project }) {
 
                 {/* Due Date */}
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-muted-foreground">
-                  {task.dueDate 
-                    ? (new Date(task.dueDate)) 
+                  {task?.dueDate 
+                    ? (new Date(task.dueDate).toLocaleDateString()) 
                     : (
                       <span className="text-text-secondary text-sm">Not Set</span>
                     )}
@@ -324,10 +329,12 @@ function Tasks({ project }) {
                 <td className="relative px-4 py-4 text-right">
                   <button
                     type="button"
-                    onClick={() =>
-                      setOpenMenuId(
-                        openMenuId === task._id ? null : task._id
-                      )
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenuId(
+                          openMenuId === task._id ? null : task._id
+                        )
+                      }
                     }
                     className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-surface hover:cursor-pointer"
                   >
@@ -339,6 +346,10 @@ function Tasks({ project }) {
 
                       <button
                         type="button"
+                        onClick={() => {
+                          setSelectedTask(task);
+                          setOpenMenuId(null);
+                        }}
                         className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
                       >
                         <Eye size={15} />
@@ -391,6 +402,12 @@ function Tasks({ project }) {
       <CreateTaskModal 
         open={openCreateTaskModal}
         onClose={() => setOpenCreateTaskModal(false)}
+      />
+
+      <TaskDetailsModal 
+        task={selectedTask}
+        open={!!selectedTask}
+        onClose={() => setSelectedTask(null)}
       />
     </div>
   );
