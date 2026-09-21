@@ -1,9 +1,9 @@
 import { ArrowRight, FileText } from "lucide-react";
 
 const statusStyles = {
-  "Completed": "bg-green-50 text-success",
-  "In Progress": "bg-blue-50 text-info",
-  "Planned": "bg-surface text-text-secondary",
+  "Completed": "bg-success/10 text-success",
+  "In Progress": "bg-info/10 text-info",
+  "Planned": "bg-primary/10 text-primary",
 };
 
 function ProjectRequirements({ project }) {

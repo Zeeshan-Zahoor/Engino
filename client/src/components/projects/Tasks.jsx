@@ -25,6 +25,7 @@ function Tasks({ project }) {
     const [openMenuId, setOpenMenuId] = useState(null);
     const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
+    const [editMode, setEditMode] = useState(false);
 
     const tasks = project?.tasks || [];
 
@@ -358,6 +359,12 @@ function Tasks({ project }) {
 
                       <button
                         type="button"
+                        onClick={() => {
+                            setSelectedTask(task);
+                            setOpenMenuId(null);
+                            setEditMode(true);
+                          }
+                        }
                         className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
                       >
                         <Pencil size={15} />
@@ -407,8 +414,15 @@ function Tasks({ project }) {
       <TaskDetailsModal 
         task={selectedTask}
         open={!!selectedTask}
+        editMode={editMode}
+        cancelEditMode={() => setEditMode(false)}
+        onEdit={() => {
+          setSelectedTask(selectedTask);
+          setEditMode(true);
+        }}
         onClose={() => setSelectedTask(null)}
       />
+
     </div>
   );
 }

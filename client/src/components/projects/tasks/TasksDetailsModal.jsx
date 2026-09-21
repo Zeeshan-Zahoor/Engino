@@ -12,30 +12,49 @@ import {
   FileText,
   CheckCircle2,
 } from "lucide-react";
+
+import { useEffect, useState } from "react";
 import Avatar from "../../../utils/Avatar";
 
-const TaskDetailsModal = ({ task, onClose, onEdit }) => {
-  if (!task) return null;
+const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClose, }) => {
+  
+  const [editedTask, setEditedTast] = useState(task || {});
+  
+  useEffect(() => {
+    if (task) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setEditedTast(task);
+    }
+  }, [task, editMode]);
+  
+  if (!task || !open) return null;
 
+  const updateField = (field, value) => {
+    setEditedTast((prev) => ({
+      ...prev, 
+      [field]: value,
+    }));
+  }
+  
   const formatDate = (date) => {
     if (!date) return "Not set";
-
+    
     return new Date(date).toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
   };
-
+  
   const formatEffort = (minutes = 0) => {
     if (minutes < 60) return `${minutes}m`;
-
+    
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-
+    
     return mins ? `${hours}h ${mins}m` : `${hours}h`;
   };
-
+  
   const statusConfig = {
     Todo: {
       label: "To Do",
@@ -128,46 +147,90 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
                   </span>
                 </div>
 
-                <h1 className="mt-2 text-xl font-semibold leading-7 text-gray-900">
-                  {task.title}
-                </h1>
+                {editMode ? (
+                  <input
+                    type="text"
+                    value={editedTask.title || ""}
+                    onChange={(e) => updateField("title", e.target.value)}
+                    className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-xl font-semibold text-gray-900 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    placeholder="Task title"
+                  />
+                ) : (
+                  <h1 className="mt-2 text-xl font-semibold leading-7 text-gray-900">
+                    {task.title}
+                  </h1>
+                )}
 
-                <p className="mt-1.5 max-w-2xl text-sm leading-5 text-gray-500">
-                  {task.description || "No task description provided."}
-                </p>
+                {editMode ? (
+                  <textarea
+                    value={editedTask.description || ""}
+                    onChange={(e) => updateField("description", e.target.value)}
+                    rows={3}
+                    className="mt-2 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm leading-5 text-gray-600 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    placeholder="Task description"
+                  />
+                ) : (
+                  <p className="mt-1.5 max-w-2xl text-sm leading-5 text-gray-500">
+                    {task.description || "No task description provided."}
+                  </p>
+                )}
               </div>
 
-              <button
-                type="button"
-                onClick={onEdit}
-                className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50"
-              >
-                <Pencil size={15} />
-                Edit Task
-              </button>
+              {!editMode && (
+                <button
+                  type="button"
+                  onClick={onEdit}
+                  className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50"
+                >
+                  <Pencil size={15} />
+                  Edit Task
+                </button>
+              )}
+
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 
               {/* STATUS */}
               <PropertyBlock label="Status">
-                <div
-                  className={`flex h-11 items-center justify-between rounded-lg px-3.5 text-sm font-medium ${status.className}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`h-2.5 w-2.5 rounded-full ${status.dotClassName}`}
-                    />
-
-                    <span>{status.label}</span>
+                {editMode ? (
+                  <select
+                    value={editedTask.status || "Todo"}
+                    onChange={(e) => updateField("status", e.target.value)}
+                    className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  >
+                    <option value="Todo">To Do</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Done">Done</option>
+                  </select>
+                ) : (
+                  <div
+                    className={`flex h-11 items-center rounded-lg px-3.5 text-sm font-medium ${status.className}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${status.dotClassName}`}
+                      />
+                      <span>{status.label}</span>
+                    </div>
                   </div>
-
-                </div>
+                )}
               </PropertyBlock>
 
               {/* PRIORITY */}
               <PropertyBlock label="Priority">
-                <div
+                {editMode ? (
+                  <select
+                    value={editedTask.priority || "Medium"}
+                    onChange={(e) => updateField("priority", e.target.value)}
+                    className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                ) : (
+                  <div
                   className={`flex h-11 items-center justify-between rounded-lg px-3.5 text-sm font-medium ${priority.className}`}
                 >
                   <div className="flex items-center gap-2">
@@ -176,17 +239,33 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
                   </div>
 
                 </div>
+                )}
               </PropertyBlock>
 
               {/* TYPE */}
               <PropertyBlock label="Type">
-                <div className="flex h-11 items-center justify-between rounded-lg bg-violet-50 px-3.5 text-sm font-medium text-violet-600">
-                  <div className="flex items-center gap-2">
-                    <Code2 size={15} />
-                    <span>{task.type || "Development"}</span>
-                  </div>
+                {editMode ? (
+                  <select
+                    value={editedTask.type || "Development"}
+                    onChange={(e) => updateField("type", e.target.value)}
+                    className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  >
+                    <option value="Feature">Feature</option>
+                    <option value="Bug">Bug</option>
+                    <option value="Improvement">Improvement</option>
+                    <option value="Documentation">Documentation</option>
+                    <option value="Testing">Testing</option>
+                    <option value="Other">Other</option>
+                  </select>
+                ) : (
+                  <div className="flex h-11 items-center justify-between rounded-lg bg-violet-50 px-3.5 text-sm font-medium text-violet-600">
+                    <div className="flex items-center gap-2">
+                      <Code2 size={15} />
+                      <span>{task.type || "Development"}</span>
+                    </div>
 
-                </div>
+                  </div>
+                )}
               </PropertyBlock>
             </div>
 
@@ -205,7 +284,19 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
               />
 
               {/* DUE DATE */}
-              <InfoItem
+              {editMode ? (
+                <input
+                  type="date"
+                  value={
+                    editedTask.dueDate
+                      ? new Date(editedTask.dueDate).toISOString().slice(0, 10)
+                      : ""
+                  }
+                  onChange={(e) => updateField("dueDate", e.target.value)}
+                  className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                />
+              ) : (
+                <InfoItem
                 icon={
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-500">
                     <CalendarDays size={17} />
@@ -219,9 +310,24 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
                     : "No due date"
                 }
               />
+              )}
 
               {/* EFFORT */}
-              <InfoItem
+              {editMode ? (
+                <input
+                  type="number"
+                  min="0"
+                  value={editedTask.estimatedEffortMinutes || 0}
+                  onChange={(e) =>
+                    updateField(
+                      "estimatedEffortMinutes",
+                      Number(e.target.value)
+                    )
+                  }
+                  className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                />
+              ) : (
+                <InfoItem
                 icon={
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-500">
                     <Clock3 size={17} />
@@ -231,6 +337,7 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
                 value={formatEffort(task.estimatedEffortMinutes)}
                 secondary="Estimated"
               />
+              )}
 
               {/* COMPLEXITY */}
               <InfoItem
@@ -270,7 +377,34 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
             </section>
 
             {/* ================= TAGS ================= */}
-            <section>
+            {editMode ? (
+              <div className="mt-3 rounded-xl border border-gray-200 p-4">
+              <div className="flex flex-wrap gap-2">
+                {(editedTask.tags || []).map((tag, index) => (
+                  <span
+                    key={`${tag}-${index}`}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                  >
+                    {tag}
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateField(
+                          "tags",
+                          editedTask.tags.filter((_, i) => i !== index)
+                        )
+                      }
+                      className="text-gray-400 hover:text-red-500"
+                    >
+                      <X size={13} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+            ) : (
+              <section>
               <SectionLabel
                 icon={<Tags size={15} />}
                 label="Tags"
@@ -300,8 +434,8 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
                 </button>
               </div>
             </section>
+            )}
 
-            {/* ================= PROJECT / REQUIREMENT ================= */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 
               {/* PROJECT */}
@@ -361,22 +495,40 @@ const TaskDetailsModal = ({ task, onClose, onEdit }) => {
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
-          >
-            Close
-          </button>
+          <div className="flex items-center gap-2">
+            {editMode ? (
+              <>
+                <button
+                  type="button"
+                  onClick={cancelEditMode}
+                  className="rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  className="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-violet-700"
+                >
+                  Save Changes
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+              >
+                Close
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-/* ========================================================= */
-/* Helper Components                                          */
-/* ========================================================= */
 
 const PropertyBlock = ({ label, children }) => {
   return (
