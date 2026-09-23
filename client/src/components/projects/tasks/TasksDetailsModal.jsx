@@ -612,6 +612,7 @@ const PropertyBlock = ({ label, children }) => {
   );
 };
 
+
 const InfoItem = ({
   icon,
   label,

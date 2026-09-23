@@ -78,7 +78,7 @@ function ProjectTasks({ project }) {
 
             {/* Due date */}
             <span className="hidden text-right text-xs text-text-secondary sm:block">
-              {task?.dueDate ? new Date(task.dueDate) : ""}
+              {task?.dueDate ? new Date(task.dueDate).toLocaleDateString() : ""}
             </span>
 
             {/* Mobile metadata */}
@@ -96,7 +96,7 @@ function ProjectTasks({ project }) {
               </span>
 
               <span className="text-xs text-text-secondary">
-                {task?.dueDate ? new Date(task.dueDate) : ""}
+                {task?.dueDate ? new Date(task.dueDate).toLocaleDateString() : ""}
               </span>
             </div>
           </div>

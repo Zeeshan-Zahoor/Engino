@@ -274,11 +274,11 @@ function Tasks({ project }) {
           <tbody>
             {tasks.map((task, index) => (
               <tr
-
                 key={task._id}
                 onClick={() => {
-                  setSelectedTask(task)}
-                }
+                  setEditMode(false);
+                  setSelectedTask(task);
+                }}
                 className="border-b border-border last:border-b-0 hover:bg-surface"
               >
                 {/* task number */}
@@ -373,11 +373,14 @@ function Tasks({ project }) {
                   </button>
 
                   {openMenuId === task._id && (
-                    <div className="absolute right-4 top-12 z-30 w-44 rounded-lg border border-border bg-background p-1.5 text-left shadow-lg">
+                    <div 
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute right-4 top-12 z-30 w-44 rounded-lg border border-border bg-background p-1.5 text-left shadow-lg">
 
                       <button
                         type="button"
                         onClick={() => {
+                          setEditMode(false);
                           setSelectedTask(task);
                           setOpenMenuId(null);
                         }}
@@ -450,7 +453,10 @@ function Tasks({ project }) {
           setSelectedTask(selectedTask);
           setEditMode(true);
         }}
-        onClose={() => setSelectedTask(null)}
+        onClose={() => {
+          setSelectedTask(null);
+          setEditMode(false);
+        }}
         projectMembers={project?.team || []}
         onSave={handleUpdateTask}
         loading={isLoading}

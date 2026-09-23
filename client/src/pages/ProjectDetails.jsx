@@ -103,7 +103,6 @@ const TabBody = ({ tab, activeProject }) => {
           <div className="grid gap-4 lg:grid-cols-[1fr_1.8fr_0.9fr]">
               <ProjectRequirements project={activeProject}/>
               <ProjectTasks project={activeProject}/>
-              {/* <ProjectActivity project={activeProject}/> */}
           </div>
 
           <ProjectDescription project={activeProject}/>
