@@ -130,7 +130,6 @@ function CreateTaskModal({ open, onClose }) {
     }));
   };
 
-  console.log(formData);
   if(!open) return null;
 
   return (

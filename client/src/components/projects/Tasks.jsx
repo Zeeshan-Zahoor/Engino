@@ -14,14 +14,29 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import useTaskStore from "../../stores/taskStore";
+import useWorkspaceStore from "../../stores/workspaceStore";
+import useProjectStore from "../../stores/projectStore";
+import useToastStore from "../../stores/toastStore";
+import { useParams } from "react-router-dom";
+
 import Avatar from "../../utils/Avatar";
 import CreateTaskModal from "../tasks/CreateTaskModal";
+import Toast from "../common/Toast";
 
 import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 import TaskDetailsModal from "./tasks/TasksDetailsModal";
 
 function Tasks({ project }) {
-
+    const { currentWorkspaceId } = useWorkspaceStore();
+    const { projectId } = useParams();
+    const { fetchProject } = useProjectStore();
+    const { showToast } = useToastStore();
+    const {  
+      updateTask,
+      isLoading,
+      error, 
+    } = useTaskStore();
     const [openMenuId, setOpenMenuId] = useState(null);
     const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
@@ -67,6 +82,21 @@ function Tasks({ project }) {
         }
     };
 
+    const handleUpdateTask = async (updatedTask) => {
+      if (!currentWorkspaceId || !projectId || !updateTask) return;
+
+      try {
+        await updateTask(currentWorkspaceId, projectId, updatedTask._id, updatedTask);
+        await fetchProject(currentWorkspaceId, projectId);
+
+        setEditMode(false);
+        setSelectedTask(null);
+        showToast("Task Updated Successfully!", "success");
+
+      } catch  {
+          showToast("Failed to update task. Try again.", "error");
+      }
+    }
 
   return (
     <div className="rounded-2xl border border-border bg-background p-5">
@@ -421,7 +451,13 @@ function Tasks({ project }) {
           setEditMode(true);
         }}
         onClose={() => setSelectedTask(null)}
+        projectMembers={project?.team || []}
+        onSave={handleUpdateTask}
+        loading={isLoading}
+        error={error}
       />
+
+      <Toast />
 
     </div>
   );

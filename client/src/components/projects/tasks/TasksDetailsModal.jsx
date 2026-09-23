@@ -15,8 +15,9 @@ import {
 
 import { useEffect, useState } from "react";
 import Avatar from "../../../utils/Avatar";
+import Loader from "../../common/Loader";
 
-const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClose, }) => {
+const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClose, projectMembers = [], onSave, loading, error }) => {
   
   const [editedTask, setEditedTast] = useState(task || {});
   
@@ -272,29 +273,61 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
             <div className="grid grid-cols-2 gap-5 border-y border-gray-100 py-5 md:grid-cols-4">
 
               {/* ASSIGNEE */}
-              <InfoItem
-                icon={
-                  <div className="w-8">
-                    <Avatar user={task.assignee}/>
-                  </div>
-                }
-                label="Assignee"
-                value={task.assignee?.name || "Unassigned"}
-                secondary={task.assignee?.role || "No assignee"}
-              />
+              {editMode ? (
+                <PropertyBlock label="Assignee">
+                  <select
+                    value={editedTask.assignee?._id || editedTask.assignee || ""}
+                    onChange={(e) => {
+                      const selectedMember = projectMembers.find(
+                        (member) => member.userId?._id === e.target.value || member.userId === e.target.value
+                      );
+
+                      updateField("assignee", selectedMember?.userId || null);
+                    }}
+                    className="h-10 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  >
+                    <option value="">Unassigned</option>
+
+                    {projectMembers.map((member) => {
+                      const user = member.userId;
+
+                      return (
+                        <option key={user?._id} value={user?._id}>
+                          {user?.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </PropertyBlock>
+              ) : (
+                <InfoItem
+                  icon={
+                    <div className="w-8">
+                      <Avatar user={task.assignee} />
+                    </div>
+                  }
+                  label="Assignee"
+                  value={task.assignee?.name || "Unassigned"}
+                  secondary={task.assignee?.role || "No assignee"}
+                />
+              )}
 
               {/* DUE DATE */}
               {editMode ? (
-                <input
-                  type="date"
-                  value={
-                    editedTask.dueDate
-                      ? new Date(editedTask.dueDate).toISOString().slice(0, 10)
-                      : ""
-                  }
-                  onChange={(e) => updateField("dueDate", e.target.value)}
-                  className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
-                />
+                <PropertyBlock
+                  label="Due Date"
+                >
+                  <input
+                    type="date"
+                    value={
+                      editedTask.dueDate
+                        ? new Date(editedTask.dueDate).toISOString().slice(0, 10)
+                        : ""
+                    }
+                    onChange={(e) => updateField("dueDate", e.target.value)}
+                    className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  />
+                </PropertyBlock>
               ) : (
                 <InfoItem
                 icon={
@@ -314,18 +347,22 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
 
               {/* EFFORT */}
               {editMode ? (
-                <input
-                  type="number"
-                  min="0"
-                  value={editedTask.estimatedEffortMinutes || 0}
-                  onChange={(e) =>
-                    updateField(
-                      "estimatedEffortMinutes",
-                      Number(e.target.value)
-                    )
-                  }
-                  className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
-                />
+                <PropertyBlock
+                  label="Estimated Effort"
+                >
+                  <input
+                    type="number"
+                    min="0"
+                    value={editedTask.estimatedEffortMinutes || 0}
+                    onChange={(e) =>
+                      updateField(
+                        "estimatedEffortMinutes",
+                        Number(e.target.value)
+                      )
+                    }
+                    className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  />
+                </PropertyBlock>
               ) : (
                 <InfoItem
                 icon={
@@ -340,25 +377,41 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
               )}
 
               {/* COMPLEXITY */}
-              <InfoItem
-                icon={
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
-                    <BarChart3 size={17} />
-                  </div>
-                }
-                label="Complexity"
-                value={
-                  <span
-                    className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-                      complexityConfig[task.complexity] ||
-                      complexityConfig.Medium
-                    }`}
+              {editMode ? (
+                <PropertyBlock
+                  label="Complexity"
+                >
+                  <select
+                    value={editedTask.complexity || "Medium"}
+                    onChange={(e) => updateField("complexity", e.target.value)}
+                    className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   >
-                    {task.complexity || "Medium"}
-                  </span>
-                }
-                secondary=""
-              />
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </PropertyBlock>
+              ) : (
+                <InfoItem
+                  icon={
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
+                      <BarChart3 size={17} />
+                    </div>
+                  }
+                  label="Complexity"
+                  value={
+                    <span
+                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+                        complexityConfig[task.complexity] ||
+                        complexityConfig.Medium
+                      }`}
+                    >
+                      {task.complexity || "Medium"}
+                    </span>
+                  }
+                  secondary=""
+                />
+              )}
             </div>
 
             {/* ================= DESCRIPTION ================= */}
@@ -368,12 +421,22 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                 label="Description"
               />
 
-              <div className="mt-3 rounded-xl bg-gray-50 px-4 py-4">
+              {editMode ? (
+                <textarea
+                  value={editedTask.description || ""}
+                  onChange={(e) => updateField("description", e.target.value)}
+                  rows={5}
+                  className="mt-3 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-600 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  placeholder="Task description"
+                />
+              ) : (
+                <div className="mt-3 rounded-xl bg-gray-50 px-4 py-4">
                 <p className="text-sm leading-6 text-gray-600">
                   {task.description ||
                     "No description has been provided for this task."}
                 </p>
               </div>
+              )}
             </section>
 
             {/* ================= TAGS ================= */}
@@ -484,6 +547,10 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
           </div>
         </div>
 
+        {error && (
+          <p className="text-center text-sm text-danger my-2">{error}</p>
+        )}
+
         {/* ================= FOOTER ================= */}
         <div className="flex shrink-0 items-center justify-between gap-4 border-t border-gray-100 bg-white px-6 py-4">
 
@@ -508,9 +575,12 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
 
                 <button
                   type="button"
+                  onClick={() => onSave(editedTask)}
                   className="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-violet-700"
                 >
-                  Save Changes
+                  {loading ? (
+                    <Loader />                   
+                  ) : ("Save Changes")}
                 </button>
               </>
             ) : (

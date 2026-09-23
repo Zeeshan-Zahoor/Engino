@@ -53,6 +53,32 @@ const useTaskStore = create((set) => ({
             console.log(error.response);
             throw error;
         }
+    },
+
+    updateTask: async (workspaceId, projectId, taskId, updatedTask) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.patch(
+                `workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`, 
+                updatedTask,
+            );
+
+            set(({
+                isLoading: false,
+                error: null,
+            }));
+
+            return response.data;
+
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.message || "Failed to update task. Try again.",
+            });
+            console.log(error.response);
+            throw error;
+        }
     }
 }));
 
