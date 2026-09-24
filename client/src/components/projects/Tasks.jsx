@@ -34,9 +34,11 @@ function Tasks({ project }) {
     const { showToast } = useToastStore();
     const {  
       updateTask,
+      deleteTask,
       isLoading,
       error, 
     } = useTaskStore();
+
     const [openMenuId, setOpenMenuId] = useState(null);
     const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
@@ -95,6 +97,20 @@ function Tasks({ project }) {
 
       } catch  {
           showToast("Failed to update task. Try again.", "error");
+      }
+    }
+
+    const handleDeleteTask = async (taskId) => {
+      try {
+        setOpenMenuId(null);
+
+        await deleteTask(currentWorkspaceId, projectId, taskId);
+        await fetchProject(currentWorkspaceId, projectId);
+        
+        showToast("Task Deleted Successfully!", "success");
+
+      } catch {
+        showToast("Error Deleting Task!", "error");
       }
     }
 
@@ -404,26 +420,11 @@ function Tasks({ project }) {
                         Edit Task
                       </button>
 
-                      <button
-                        type="button"
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
-                      >
-                        <Clock3 size={15} />
-                        Change Status
-                      </button>
-
-                      <button
-                        type="button"
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
-                      >
-                        <UserRound size={15} />
-                        Assign
-                      </button>
-
                       <div className="my-1 border-t border-border" />
 
                       <button
                         type="button"
+                        onClick={() => handleDeleteTask(task._id)}
                         className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger cursor-pointer hover:bg-danger/10"
                       >
                         <Trash2 size={15} />

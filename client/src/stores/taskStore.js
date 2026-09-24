@@ -79,6 +79,29 @@ const useTaskStore = create((set) => ({
             console.log(error.response);
             throw error;
         }
+    },
+
+    deleteTask: async (workspaceId, projectId, taskId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.delete(
+                `workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`
+            );
+
+            set({
+                isLoading: false,
+                error: null,
+            });
+
+            return response.data;
+            
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.message || "Failed to delete task. Try again.",
+            });
+        }
     }
 }));
 
