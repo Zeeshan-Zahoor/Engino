@@ -17,8 +17,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import useWorkspaceStore from "../../stores/workspaceStore";
 import useRequirementStore from "../../stores/requirementStore";
-
 import CreateRequirementModal from "./requirements/CreateRequirementModal";
+
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 function Requirements({ project }) {
     const navigate = useNavigate();
@@ -46,6 +47,7 @@ function Requirements({ project }) {
             window.removeEventListener("resize", close);
         };
     }, [openMenuId]);
+    const isAdmin = isWorkspaceAdmin();
 
     const projectMembers = project?.team || [];
 
@@ -109,7 +111,8 @@ function Requirements({ project }) {
           </p>
         </div>
 
-        <button
+        {isAdmin && (
+          <button
           type="button"
           onClick={() => setOpenCreateModal(true)}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary-dark"
@@ -117,6 +120,7 @@ function Requirements({ project }) {
           <Plus size={18} />
           New Requirement
         </button>
+        )}
       </div>
 
       {/* Stats */}

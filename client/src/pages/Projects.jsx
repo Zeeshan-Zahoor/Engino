@@ -16,6 +16,8 @@ import useProjectStore from "../stores/projectStore"
 import useWorkspaceStore from "../stores/workspaceStore"
 import useAuthStore from "../stores/authStore"
 
+import { isWorkspaceAdmin } from "../utils/isWorkspaceAdmin"
+
 function Projects() {
     const [searchInput, setSearchInput] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("All")
@@ -42,6 +44,8 @@ function Projects() {
         setEditingProject(null);
     };
 
+    const isAdmin = isWorkspaceAdmin();
+
     useEffect(() => {
         if(projects.length === 0) {
             fetchProjects(currentWorkspaceId);
@@ -61,6 +65,8 @@ function Projects() {
 
         return nameMatches || projectCodeMatches;
      })
+
+     
 
      const sortedProjects = [...filteredProjects]?.sort((a, b) => {
         switch (sortBy) {
@@ -147,7 +153,8 @@ function Projects() {
                     value={`${avgProgress()}%`}
                 />
             </div>
-            <button
+            {isAdmin && (
+                <button
                 type="button"
                 onClick={handleCreateProject}
                 className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark"
@@ -155,6 +162,7 @@ function Projects() {
                 <Plus size={17} strokeWidth={2.8} />
                 New Project
             </button>
+            )}
         </div>
 
         <ProjectFilters 

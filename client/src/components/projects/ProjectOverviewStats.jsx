@@ -22,7 +22,7 @@ function ProjectOverviewStats({ project }) {
   const completedEnd = completed;
   const inProgressEnd = completed + inProgress;
 
-  const progress = ((completedTasks?.length) / total) * 100 || 0;
+  const progress = Math.floor(((completedTasks?.length) / total) * 100) || 0;
 
   // team members display
   let team = project?.team.map(member => member.userId);

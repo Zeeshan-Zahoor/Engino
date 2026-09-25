@@ -8,11 +8,13 @@ import {
 } from "lucide-react";
 
 import StepHeader from "./StepHeader";
+import { isWorkspaceAdmin } from "../../../../utils/isWorkspaceAdmin";
 
 const RequirementStep = ({
   requirement,
   onContinue,
 }) => {
+  const isAdmin = isWorkspaceAdmin();
   return (
     <div className="w-full">
       <StepHeader
@@ -122,8 +124,18 @@ const RequirementStep = ({
         </section>
 
         {/* Footer action */}
+        {!isAdmin && (
+          <div>
+            <span className="font-semibold">Note: </span>
+            <div className="p-5 bg-orange-100 rounded-2xl">
+              <h5 className="text-sm">Only workspace admins can use Engino AI for requirement Analysis.</h5>
+              <span className="text-xs text-text-secondary">You can see the requirements overview here.</span>
+            </div>
+          </div>
+        )}
         <div className="flex items-center justify-end border-t border-border pt-5">
-          <button
+          {isAdmin && (
+            <button
             type="button"
             onClick={onContinue}
             className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
@@ -131,6 +143,7 @@ const RequirementStep = ({
             Continue to AI Analysis
             <ArrowRight size={17} />
           </button>
+          )}
         </div>
       </div>
     </div>

@@ -321,18 +321,6 @@ const ProjectRequirementDetails = () => {
     }
   };
 
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="flex min-h-screen items-center justify-center bg-background">
-  //       <div className="text-sm text-text-secondary flex items-center justify-center gap-2">
-  //         <Loader color="text-secondary"/>
-  //         Loading requirement...
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   if (error && !currentRequirement) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">

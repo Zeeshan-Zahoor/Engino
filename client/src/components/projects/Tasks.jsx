@@ -26,6 +26,7 @@ import Toast from "../common/Toast";
 
 import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 import TaskDetailsModal from "./tasks/TasksDetailsModal";
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 function Tasks({ project }) {
     const { currentWorkspaceId } = useWorkspaceStore();
@@ -43,6 +44,8 @@ function Tasks({ project }) {
     const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [editMode, setEditMode] = useState(false);
+
+    const isAdmin = isWorkspaceAdmin();
 
     const tasks = project?.tasks || [];
 
@@ -129,14 +132,16 @@ function Tasks({ project }) {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOpenCreateTaskModal(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90"
-        >
-          <Plus size={18} />
-          Add Task
-        </button>
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={() => setOpenCreateTaskModal(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90"
+          >
+            <Plus size={18} />
+            Add Task
+          </button>
+        )}
       </div>
 
       {/* Stats */}
@@ -406,7 +411,8 @@ function Tasks({ project }) {
                         View Details
                       </button>
 
-                      <button
+                      {isAdmin && (
+                        <button
                         type="button"
                         onClick={() => {
                             setSelectedTask(task);
@@ -419,17 +425,22 @@ function Tasks({ project }) {
                         <Pencil size={15} />
                         Edit Task
                       </button>
+                      )}
 
-                      <div className="my-1 border-t border-border" />
 
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteTask(task._id)}
-                        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger cursor-pointer hover:bg-danger/10"
-                      >
-                        <Trash2 size={15} />
-                        Delete
-                      </button>
+                      {isAdmin && (
+                        <>
+                          <div className="my-1 border-t border-border" />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteTask(task._id)}
+                            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger cursor-pointer hover:bg-danger/10"
+                          >
+                            <Trash2 size={15} />
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </td>

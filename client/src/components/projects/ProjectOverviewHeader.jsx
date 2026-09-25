@@ -8,9 +8,10 @@ import {
 
 import { getInitials } from "../../utils/getInitials";
 import { getRelativeTime } from "../../utils/getRelativeTime";
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 function ProjectOverviewHeader({ project, onEdit }) {
-
+  const isAdmin = isWorkspaceAdmin();
   return (
     <section className="rounded-2xl border border-border bg-white p-4">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -59,7 +60,8 @@ function ProjectOverviewHeader({ project, onEdit }) {
 
         {/* Actions */}
         <div className="flex shrink-0 items-center gap-2">
-          <button
+          {isAdmin && (
+            <button
             type="button"
             onClick={onEdit}
             className="flex items-center gap-2 rounded-lg border border-border px-3.5 py-2 text-xs font-semibold text-text-primary transition hover:bg-surface"
@@ -67,6 +69,7 @@ function ProjectOverviewHeader({ project, onEdit }) {
             <Pencil size={14} />
             Edit Project
           </button>
+          )}
 
           <button
             type="button"

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from "../../utils/Avatar";
 import { getRelativeTime } from "../../utils/getRelativeTime";
 import Loader from "../common/Loader";
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 const avatarClasses = [
   "bg-purple-100 text-primary",
@@ -41,6 +42,8 @@ function ProjectsList({
   const handleProjectClick = (projectId) => {
     navigate(`${projectId}`);
   }
+
+  const isAdmin = isWorkspaceAdmin();
 
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-white">
@@ -78,7 +81,7 @@ function ProjectsList({
 
                     const todoTasks = tasks.filter(task => task.status === "Todo");
 
-                    const progress = ((completedTasks.length / tasks.length) * 100 ) || 0;
+                    const progress = Math.floor((completedTasks.length / tasks.length) * 100) || 0;
 
                     const extraMembers = project?.team?.length - team?.length;
                   return (
@@ -210,7 +213,8 @@ function ProjectsList({
                             e.stopPropagation();
                             onEditProject(project);
                           }}
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition hover:bg-surface hover:text-text-primary"
+                          disabled={!isAdmin}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition hover:bg-surface hover:text-text-primary disabled:cursor-not-allowed"
                         >
                           <MoreVertical size={17} />
                         </button>

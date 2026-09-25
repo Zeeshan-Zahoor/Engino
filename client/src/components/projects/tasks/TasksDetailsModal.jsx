@@ -16,11 +16,13 @@ import {
 import { useEffect, useState } from "react";
 import Avatar from "../../../utils/Avatar";
 import Loader from "../../common/Loader";
+import { isWorkspaceAdmin } from "../../../utils/isWorkspaceAdmin";
 
 const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClose, projectMembers = [], onSave, loading, error }) => {
   
   const [editedTask, setEditedTast] = useState(task || {});
-  
+  const isAdmin = isWorkspaceAdmin();
+
   useEffect(() => {
     if (task) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -177,7 +179,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                 )}
               </div>
 
-              {!editMode && (
+              {!editMode && isAdmin && (
                 <button
                   type="button"
                   onClick={onEdit}
