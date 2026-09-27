@@ -3,6 +3,10 @@ import Invitation from "../models/invitation.model.js";
 import User from "../models/user.model.js";
 import Workspace from "../models/workspace.model.js";
 import WorkspaceMember from "../models/workspaceMember.model.js";
+import Requirement from "../models/requirement.model.js";
+import AIPlan from "../models/aiPlan.model.js";
+import Project from "../models/project.model.js";
+import Task from "../models/task.model.js";
 import transporter from "../utils/mail.js";
 
 import mongoose from "mongoose";
@@ -430,6 +434,61 @@ const getWorkspaceMembers = async (req, res) => {
     }
 }
 
+const getAllAIPlans = async (req, res) => {
+    try {
+        const workspaceId = req.workspaceId;
+        
+        const projectIds = await Project.distinct("_id", { workspaceId });
+        const requirementIds = await Requirement.distinct("_id", { 
+            projectId: { $in: projectIds },
+         })
+
+        const aiPlans = await AIPlan.find({
+            requirementId: { $in: requirementIds },
+        })
+        .sort({ createdAt: -1 })
+        .lean();
+
+        return res.status(200).json({
+            success: true,
+            aiPlans,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+            message: "Internal server error."
+        });
+    }
+}
+
+const getAllTasks = async (req, res) => {
+    try {
+        const workspaceId = req.workspaceId;
+        
+        const projectIds = await Project.distinct("_id", { workspaceId });
+
+        const allTasks = await Task.find({
+            projectId: { $in: projectIds },
+        })
+        .sort({ createdAt: -1 })
+        .lean();
+
+        return res.status(200).json({
+            success: true,
+            allTasks,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+            message: "Internal server error."
+        });
+    }
+}
+
 export {
     getWorkspace,
     getWorkspaces,
@@ -438,4 +497,6 @@ export {
     acceptInvitation,
     declineInvitation,
     getWorkspaceMembers,
+    getAllAIPlans,
+    getAllTasks,
 }

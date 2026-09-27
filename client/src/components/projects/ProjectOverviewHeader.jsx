@@ -1,7 +1,6 @@
 import {
   CalendarDays,
   Clock3,
-  MoreHorizontal,
   Pencil,
   Share2,
 } from "lucide-react";
@@ -77,14 +76,6 @@ function ProjectOverviewHeader({ project, onEdit }) {
           >
             <Share2 size={14} />
             Share
-          </button>
-
-          <button
-            type="button"
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white transition hover:bg-primary-dark"
-            aria-label="More project actions"
-          >
-            <MoreHorizontal size={17} />
           </button>
         </div>
       </div>

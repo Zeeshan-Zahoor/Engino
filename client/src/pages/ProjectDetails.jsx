@@ -18,7 +18,7 @@ import useAuthStore from "../stores/authStore"
 import Requirements from "../components/projects/Requirements"
 
 
-const tabs = ["Overview", "AI Requirements", "Tasks", "Team", "Activity"];
+const tabs = ["Overview", "AI Requirements", "Tasks", "Team"];
 
 function ProjectDetails() {
   const { projectId } = useParams();
@@ -122,9 +122,6 @@ const TabBody = ({ tab, activeProject }) => {
         return <ProjectTeam 
             project={activeProject}
         />; 
-       
-      case "Activity":
-        return null; 
 
       default:
         break;

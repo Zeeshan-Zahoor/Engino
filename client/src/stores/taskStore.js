@@ -2,9 +2,33 @@ import { create } from 'zustand';
 import api from '../lib/api';
 
 const useTaskStore = create((set) => ({
-    tasks: null,
+    tasks: [],
+    allTasks: [],
     isLoading: false,
     error: null,
+
+    fetchAllTasks: async (workspaceId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await api.get(`workspaces/${workspaceId}/allTasks`);
+
+            set({
+                allTasks: response.data.allTasks,
+                isLoading: false,
+                error: null,
+            });
+
+            return response.data;
+
+        } catch (error) {
+            console.log(error.response);
+            set({
+                error: error.response?.data?.message || "Failed to fetch all tasks. Try Again.",
+            });
+
+            throw error;
+        }
+    },
 
     fetchTasks: async (workspaceId, projectId) => {
         set({ isLoading: true, error: null });

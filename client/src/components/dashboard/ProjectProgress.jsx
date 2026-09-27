@@ -2,15 +2,14 @@ import { ArrowRight, CheckCircle2, FolderKanban } from "lucide-react";
 import useProjectStore from "../../stores/projectStore";
 
 const statusStyles = {
-  "Not Started": "bg-gray-50 text-gray-600",
-  Planning: "bg-yellow-50 text-warning",
+  "Planned": "bg-yellow-50 text-warning",
   "In Progress": "bg-blue-50 text-info",
   "On Hold": "bg-orange-50 text-orange-600",
-  Completed: "bg-green-50 text-success",
+  "Completed": "bg-green-50 text-success",
 };
 
 function ProjectProgress() {
-  const projects = useProjectStore(state => state.projects);
+  const { projects } = useProjectStore();
 
   return (
     <section className="rounded-2xl border border-border bg-white">
@@ -37,9 +36,9 @@ function ProjectProgress() {
 
       {/* Projects */}
       <div className="grid gap-4 p-5 sm:grid-cols-2">
-        {(projects.slice(0, 4)).map((project) => (
+        {(projects.slice(0, 2)).map((project) => (
           <button
-            key={project.id}
+            key={project._id}
             type="button"
             className="rounded-xl border border-border p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
           >

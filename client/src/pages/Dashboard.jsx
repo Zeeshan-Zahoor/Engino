@@ -12,28 +12,40 @@ import StatsCard from "../components/dashboard/StatsCard";
 import RequirementsOverview from "../components/dashboard/RequirementsOverview";
 import MyTasks from "../components/dashboard/MyTasks";
 import ProjectProgress from "../components/dashboard/ProjectProgress";
-import TeamActivity from "../components/dashboard/TeamActivity";
 import QuickActions from "../components/dashboard/QuickActions";
 import RepositoryStatus from "../components/dashboard/RepositoryStatus";
+
 import useProjectStore from "../stores/projectStore";
-import { tasks } from "../data/tasks";
+import useTaskStore from "../stores/taskStore";
 import useAuthStore from '../stores/authStore';
+import useWorkspaceStore from "../stores/workspaceStore";
+
+import { useEffect } from "react";
+import useAIPlanStore from "../stores/aiPlanStore";
 
 function Dashboard() {
     const { user } = useAuthStore();
-    const projects = useProjectStore(state => state.projects);
-    const activeProjects = projects.filter((project) => project.status === "In Progress");
-    
-    const inProgressTasks = () =>
-        tasks.filter((task) => task.status === "In Progress").length;
+    const { allTasks, fetchAllTasks } = useTaskStore();
+    const { currentWorkspaceId } = useWorkspaceStore();
+    const { allAIPlans,  fetchAllPlans } = useAIPlanStore();
+    const { projects, fetchProjects } = useProjectStore();
 
-    const completedTasks = () =>
-        tasks.filter((task) => task.status === "Completed").length;
+    useEffect(() => {
+        fetchProjects(currentWorkspaceId);
+        fetchAllPlans(currentWorkspaceId);
+        fetchAllTasks(currentWorkspaceId);
+    }, [currentWorkspaceId, fetchProjects, fetchAllPlans, fetchAllTasks]);
+
+    const activeProjects = projects?.filter((project) => project.status === "In Progress");
+    
+    const inProgressTasks = allTasks?.filter((task) => task.status === "In Progress");
+
+    const completedTasks = allTasks?.filter((task) => task.status === "Done");
 
     const dueTodayTasks = () => {
         const today = new Date();
 
-        return tasks.filter((task) => {
+        return allTasks?.filter((task) => {
             const dueDate = new Date(task.dueDate);
 
             return (
@@ -41,7 +53,7 @@ function Dashboard() {
                 dueDate.getMonth() === today.getMonth() &&
                 dueDate.getDate() === today.getDate()
             );
-        }).length;
+        });
     };
 
   return (
@@ -63,7 +75,7 @@ function Dashboard() {
                 icon={FolderKanban}
                 iconClassName="bg-purple-50 text-primary"
                 title="Projects"
-                value={projects.length}
+                value={projects?.length}
                 description={`${activeProjects.length} active`}
             />
 
@@ -71,36 +83,32 @@ function Dashboard() {
                 icon={Sparkles}
                 iconClassName="bg-orange-50 text-warning"
                 title="AI Plans"
-                value="12"  // keep it static for now
-                description="3 pending review"
+                value={allAIPlans?.length} 
+                description="Workspace AI plans"
             />
 
             <StatsCard
                 icon={ListChecks}
                 iconClassName="bg-blue-50 text-info"
                 title="Tasks In Progress"
-                value={inProgressTasks()}
-                description="8 more than yesterday" // keep it static for now
-                trend="8"
+                value={inProgressTasks?.length}
+                description={`${allTasks.length} Total`}
             />
 
             <StatsCard
                 icon={CircleCheck}
                 iconClassName="bg-green-50 text-success"
                 title="Tasks Completed"
-                value={completedTasks()}
-                description="12 more than yesterday" // keep it static for now
-                trend="12"
+                value={completedTasks?.length}
+                description={`${allTasks.length} Total`}
             />
 
             <StatsCard
                 icon={Clock3}
                 iconClassName="bg-red-50 text-danger"
                 title="Tasks Due Today"
-                value={dueTodayTasks()}
-                description="2 high priority" // keep it static for now
-                trend="2"
-                trendType="negative"
+                value={dueTodayTasks().length}
+                description={`${dueTodayTasks().filter(task => task.priority === "High").length} high priority`}
             />
         </div>
 
@@ -109,11 +117,8 @@ function Dashboard() {
             <MyTasks />
 
             <ProjectProgress />
-            <TeamActivity />
-
-            <div className="lg:col-span-2">
-                <RepositoryStatus />
-            </div>
+            <RepositoryStatus />
+            
         </div>
 
         <QuickActions />
