@@ -1,5 +1,5 @@
 import { ArrowRight, CheckCircle2, FolderKanban } from "lucide-react";
-import useProjectStore from "../../stores/projectStore";
+import { useNavigate } from "react-router-dom";
 
 const statusStyles = {
   "Planned": "bg-yellow-50 text-warning",
@@ -8,8 +8,9 @@ const statusStyles = {
   "Completed": "bg-green-50 text-success",
 };
 
-function ProjectProgress() {
-  const { projects } = useProjectStore();
+function ProjectProgress({ projects }) {
+
+  const navigate = useNavigate();
 
   return (
     <section className="rounded-2xl border border-border bg-white">
@@ -27,6 +28,7 @@ function ProjectProgress() {
 
         <button
           type="button"
+          onClick={() => navigate('/projects')}
           className="flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-dark"
         >
           View all
@@ -36,8 +38,13 @@ function ProjectProgress() {
 
       {/* Projects */}
       <div className="grid gap-4 p-5 sm:grid-cols-2">
-        {(projects.slice(0, 2)).map((project) => (
-          <button
+        {(projects.slice(0, 4)).map((project) => {
+          const tasks = project.tasks;
+          const completedTasks = tasks.filter(task => task.status === "Done");
+          const progress = Math.floor((completedTasks.length / tasks.length) * 100) || 0;
+
+          return (
+            <button
             key={project._id}
             type="button"
             className="rounded-xl border border-border p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
@@ -46,7 +53,7 @@ function ProjectProgress() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex min-w-0 items-center gap-3">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary">
-                  {project.progress === 100 ? (
+                  {progress === 100 ? (
                     <CheckCircle2 size={18} strokeWidth={1.8} />
                   ) : (
                     <FolderKanban size={18} strokeWidth={1.8} />
@@ -79,19 +86,20 @@ function ProjectProgress() {
                 </span>
 
                 <span className="text-xs font-semibold text-text-primary">
-                  {project.progress}%
+                  {progress}%
                 </span>
               </div>
 
               <div className="h-2 overflow-hidden rounded-full bg-primary-light">
                 <div
                   className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${project.progress}%` }}
+                  style={{ width: `${progress}%` }}
                 />
               </div>
             </div>
           </button>
-        ))}
+          )
+        })}
       </div>
     </section>
   );

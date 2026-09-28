@@ -116,10 +116,10 @@ function Dashboard() {
             <RequirementsOverview />
             <MyTasks />
 
-            <ProjectProgress />
-            <RepositoryStatus />
-            
         </div>
+
+        <ProjectProgress projects={projects || []}/>
+        <RepositoryStatus />
 
         <QuickActions />
 
