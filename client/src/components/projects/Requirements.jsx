@@ -24,18 +24,26 @@ import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 function Requirements({ project }) {
     const navigate = useNavigate();
     const { currentWorkspaceId } = useWorkspaceStore();
-    const { requirements, fetchRequirements } = useRequirementStore();
+    const {
+        requirements: storedRequirements,
+        requirementsProjectId,
+        fetchRequirements,
+    } = useRequirementStore();
 
     const [openMenuId, setOpenMenuId] = useState(null);
     const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
     const [openCreateModal, setOpenCreateModal] = useState(false);
 
+    const requirements = String(requirementsProjectId) === String(project?._id)
+        ? storedRequirements
+        : [];
+
     useEffect(() => {
-        if(requirements?.length === 0) {
+        if (currentWorkspaceId && project?._id) {
             fetchRequirements(currentWorkspaceId, project?._id);
         }
-    }, [fetchRequirements, currentWorkspaceId, project._id, requirements.length]);
+    }, [fetchRequirements, currentWorkspaceId, project?._id]);
 
     useEffect(() => {
         if (!openMenuId) return;
