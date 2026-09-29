@@ -7,6 +7,11 @@ import {
 } from "lucide-react";
 import { tasks } from "../../data/tasks";
 import useProjectStore from "../../stores/projectStore";
+import useTaskStore from "../../stores/taskStore";
+import useWorkspaceStore from "../../stores/workspaceStore";
+
+import { useEffect } from "react";
+import Avatar from "../../utils/Avatar";
 
 const priorityStyles = {
   High: "bg-red-50 text-danger",
@@ -17,7 +22,7 @@ const priorityStyles = {
 const statusStyles = {
   "In Progress": "bg-blue-50 text-info",
   Todo: "bg-surface text-text-secondary",
-  Completed: "bg-green-50 text-success",
+  Done: "bg-green-50 text-success",
   Review: "bg-orange-50 text-warning",
 };
 
@@ -29,7 +34,15 @@ const dueStyles = {
 
 
 function MyTasks() {
-  const projects = useProjectStore(state => state.projects);
+  const { currentWorkspaceId } = useWorkspaceStore();
+  const { projects } = useProjectStore();
+  const { allTasks, fetchAllTasks } = useTaskStore();
+  
+  useEffect(() => {
+    if(allTasks.length === 0) {
+      fetchAllTasks(currentWorkspaceId);
+    }
+  }, [currentWorkspaceId, fetchAllTasks, allTasks.length]);
 
   return (
     <section className="rounded-2xl border border-border bg-white">
@@ -49,6 +62,7 @@ function MyTasks() {
 
         <button
           type="button"
+          onClick={() => navigate('/tasks')}
           className="flex items-center gap-1 text-xs font-semibold text-primary transition hover:text-primary-dark"
         >
           View all
@@ -58,7 +72,7 @@ function MyTasks() {
 
       {/* Tasks */}
       <div className="divide-y divide-border">
-        {(tasks.slice(0, 5)).map((task) => {
+        {(allTasks.slice(0, 5)).map((task) => {
           const dueDate = new Date(task.dueDate);
           const today =  new Date();
 
@@ -81,7 +95,7 @@ function MyTasks() {
                   : dueStyles.today;
           return (
             <button
-              key={task.id}
+              key={task._id}
               type="button"
               className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-surface"
             >
@@ -109,7 +123,7 @@ function MyTasks() {
                 </p>
 
                 <p className="mt-1 truncate text-xs text-text-secondary">
-                  {(projects.find(project => project.id === task.projectId))?.name}
+                  {(projects.find(project => project._id === task.projectId))?.name}
                 </p>
               </div>
 
@@ -118,7 +132,7 @@ function MyTasks() {
                 {task.assignee ? (
                   <>
                     <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-semibold text-primary">
-                      {task.assignee.initials}
+                      <Avatar user={task?.assignee}/>
                     </div>
 
                     <span className="hidden text-xs text-text-secondary xl:block">
@@ -152,12 +166,20 @@ function MyTasks() {
               </div>
 
               {/* Due Date */}
-              <div className={`flex w-24 items-center gap-1 ${dueClass}`}>
-                <CalendarDays size={13} />
-                <span className="text-xs font-medium">
-                  {task.dueDate}
-                </span>
-              </div>
+              {task.dueDate ? (
+                <div className={`flex w-24 items-center gap-1 ${dueClass}`}>
+                  <CalendarDays size={13} />
+                  <span className="text-xs font-medium">
+                    {new Date(task.dueDate).toLocaleDateString()}
+                  </span>
+                </div>
+              ) : (
+                <div className={`flex w-24 items-center gap-1 text-primary`}>
+                  <span className="text-xs font-medium">
+                    Not Set
+                  </span>
+                </div>
+              )}
 
               <ArrowRight
                 size={15}
