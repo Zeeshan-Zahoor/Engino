@@ -489,6 +489,32 @@ const getAllTasks = async (req, res) => {
     }
 }
 
+const getAllRequirements = async (req, res) => {
+    try {
+        const workspaceId = req.workspaceId;
+        
+        const projectIds = await Project.distinct("_id", { workspaceId });
+
+        const requirements = await Requirement.find({
+            projectId: { $in: projectIds },
+        })
+        .sort({ createdAt: -1 })
+        .lean();
+
+        return res.status(200).json({
+            success: true,
+            requirements,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+            message: "Internal server error."
+        });
+    }
+}
+
 export {
     getWorkspace,
     getWorkspaces,
@@ -499,4 +525,5 @@ export {
     getWorkspaceMembers,
     getAllAIPlans,
     getAllTasks,
+    getAllRequirements,
 }

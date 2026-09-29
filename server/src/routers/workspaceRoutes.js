@@ -9,6 +9,7 @@ import {
     getAllAIPlans,
     getAllTasks,
     sendInvitation,
+    getAllRequirements,
  } from '../controllers/workspaceController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
@@ -20,6 +21,7 @@ router.get('/:workspaceId', authMiddleware, workspaceMiddleware, getWorkspace);
 router.get('/:workspaceId/team', authMiddleware, workspaceMiddleware, getWorkspaceMembers);
 router.get('/:workspaceId/aiPlans', authMiddleware, workspaceMiddleware, getAllAIPlans);
 router.get('/:workspaceId/allTasks', authMiddleware, workspaceMiddleware, getAllTasks);
+router.get('/:workspaceId/requirements', authMiddleware, workspaceMiddleware, getAllRequirements);
 router.get('/invitations/:token', getInvitation);
 
 router.post('/:workspaceId/invite', authMiddleware, workspaceMiddleware, sendInvitation);

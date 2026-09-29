@@ -5,8 +5,31 @@ const useRequirementStore = create((set) => ({
     isLoading: false,
     error: null,
     requirements: [],
+    workspaceRequirements: [],
     requirementsProjectId: null,
     currentRequirement: null,
+
+    fetchWorkspaceRequirements: async (workspaceId) => {
+        set({ isLoading: true, error: null, workspaceRequirements: [] });
+        try {
+            const response = await api.get(`workspaces/${workspaceId}/requirements`);
+            set({
+                isLoading: false,
+                error: null,
+                workspaceRequirements: response?.data?.requirements,
+            });
+
+            return response.data;
+            
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Failed to fetch workspace requirements.",
+                isLoading: false,
+            });
+            console.log(error.response);
+            throw error;
+        }
+    },
 
     fetchRequirements: async (workspaceId, projectId) => {
         set({
