@@ -202,8 +202,6 @@ const ProjectRequirementDetails = () => {
       );
 
       setPlan(response.plan.content);
-
-      console.log("Ai Plan: ", response.plan)
     } catch {
       // store already contains the error.
     }

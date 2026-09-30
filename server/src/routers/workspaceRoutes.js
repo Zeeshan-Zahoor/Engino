@@ -10,6 +10,7 @@ import {
     getAllTasks,
     sendInvitation,
     getAllRequirements,
+    extractRequirementData,
  } from '../controllers/workspaceController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
@@ -25,6 +26,7 @@ router.get('/:workspaceId/requirements', authMiddleware, workspaceMiddleware, ge
 router.get('/invitations/:token', getInvitation);
 
 router.post('/:workspaceId/invite', authMiddleware, workspaceMiddleware, sendInvitation);
+router.post('/:workspaceId/ai/extract-requirement', authMiddleware, workspaceMiddleware, extractRequirementData);
 
 router.post('/accept-invite', acceptInvitation);
 router.post('/decline-invite', declineInvitation);

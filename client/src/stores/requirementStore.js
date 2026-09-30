@@ -229,6 +229,28 @@ const useRequirementStore = create((set) => ({
             console.log(error.response);
             throw error;
         }
+    },
+
+    extractRequirement: async (workspaceId, prompt) => {
+        set({isLoading: true, error: null});
+
+        try {
+            const response = await api.post(`workspaces/${workspaceId}/ai/extract-requirement`, { prompt });
+
+            set({
+                isLoading: false,
+                error: null,
+            })
+
+            return response.data;
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.message || "Failed to extract requirement. Try again.",
+            });
+            console.log(error.response)
+            throw error;
+        }
     }
 }));
 

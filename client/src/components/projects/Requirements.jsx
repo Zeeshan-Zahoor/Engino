@@ -295,7 +295,6 @@ function Requirements({ project }) {
           {/* Table Body */}
           <tbody>
             {requirements.map((requirement, index) => {
-              console.log("Requiment: ", requirement)
               return (
                 <tr
                   key={requirement._id}

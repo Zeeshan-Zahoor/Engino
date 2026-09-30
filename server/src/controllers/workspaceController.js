@@ -13,6 +13,7 @@ import mongoose from "mongoose";
 
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import { extractRequirement } from "../services/ai/requirementExtraction.service.js";
 
 const getWorkspace = async (req, res) => {
     try {
@@ -472,6 +473,7 @@ const getAllTasks = async (req, res) => {
         const allTasks = await Task.find({
             projectId: { $in: projectIds },
         })
+        .populate("assignee")
         .sort({ createdAt: -1 })
         .lean();
 
@@ -515,6 +517,41 @@ const getAllRequirements = async (req, res) => {
     }
 }
 
+const extractRequirementData = async (req, res) => {
+    try {
+        const membership = req.membership;
+        const { prompt } = req.body;
+
+        if(membership.role !== "Admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Admin only action.",
+            });
+        }
+
+        const extractedRequirement = await extractRequirement(prompt);
+
+        if(!extractedRequirement) {
+            return res.status(400).json({
+                success: false,
+                message: "Failed to extract requirement data. Try again.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            requirementData: extractedRequirement,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal server error.",
+            success: false,
+            error: error.message,
+        });
+    }
+}
+
 export {
     getWorkspace,
     getWorkspaces,
@@ -526,4 +563,5 @@ export {
     getAllAIPlans,
     getAllTasks,
     getAllRequirements,
+    extractRequirementData,
 }

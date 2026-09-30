@@ -273,7 +273,6 @@ function CreateProjectModal({ isOpen, onClose, project }) {
 
     } catch (error) {
       setError(error.response?.data?.message || `Failed to ${isEditMode ? "update" : "create"} project.`);
-      console.log(error?.response)
     }
   }
 

@@ -50,7 +50,6 @@ const Login = () => {
 
             navigate("/");
         } catch (error) {
-            console.log(error)
             setError(error.response?.data?.message || "Failed to login user. Try again.");
         } finally {
             setLoading(false);

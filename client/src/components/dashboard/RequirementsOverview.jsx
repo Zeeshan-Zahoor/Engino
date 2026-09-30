@@ -31,8 +31,7 @@ function RequirementsOverview() {
       fetchAllTasks(currentWorkspaceId);
     }
   }, [fetchWorkspaceRequirements, fetchAllTasks, currentWorkspaceId, workspaceRequirements.length, allTasks.length]);
-
-  console.log("All Tasks: ", allTasks)
+  
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}

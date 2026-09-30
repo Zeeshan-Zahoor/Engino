@@ -5,11 +5,10 @@ import {
   Clock3,
   UserRound,
 } from "lucide-react";
-import { tasks } from "../../data/tasks";
 import useProjectStore from "../../stores/projectStore";
 import useTaskStore from "../../stores/taskStore";
 import useWorkspaceStore from "../../stores/workspaceStore";
-
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Avatar from "../../utils/Avatar";
 
@@ -34,6 +33,7 @@ const dueStyles = {
 
 
 function MyTasks() {
+  const navigate = useNavigate();
   const { currentWorkspaceId } = useWorkspaceStore();
   const { projects } = useProjectStore();
   const { allTasks, fetchAllTasks } = useTaskStore();
@@ -43,7 +43,6 @@ function MyTasks() {
       fetchAllTasks(currentWorkspaceId);
     }
   }, [currentWorkspaceId, fetchAllTasks, allTasks.length]);
-
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}

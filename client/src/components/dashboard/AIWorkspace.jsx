@@ -1,4 +1,15 @@
+import { useState } from "react";
 import { Sparkles, WandSparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
+import useWorkspaceStore from "../../stores/workspaceStore";
+import useProjectStore from "../../stores/projectStore";
+import useRequirementStore from "../../stores/requirementStore";
+import useToastStore from "../../stores/toastStore";
+
+import Loader from "../common/Loader";
+import Toast from "../common/Toast";
 
 const examples = [
   "Student Portal",
@@ -7,6 +18,74 @@ const examples = [
 ];
 
 function AIWorkspace() {
+  const navigate = useNavigate();
+  const isAdmin = isWorkspaceAdmin();
+  const { currentWorkspaceId } = useWorkspaceStore();
+  const { fetchProjects } = useProjectStore();
+  const { extractRequirement, createRequirement } = useRequirementStore();
+
+  const { showToast } = useToastStore();
+  
+  const [prompt, setPrompt] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleGeneratePlan = async () => {
+    if (!prompt.trim()) return;
+
+    try {
+      setIsSubmitting(true);
+
+      // get the latest accessible projexts
+      const projectResponse = await fetchProjects(currentWorkspaceId);
+      const projects = projectResponse?.projects || [];
+
+      if (projects.length !== 1) {
+        console.log("Project selection required:", projects);
+        return;
+      }
+
+      const project = projects[0];
+
+      const extractionResponse = await extractRequirement(
+        currentWorkspaceId, 
+        prompt.trim()
+      );
+
+      const requirementData = extractionResponse?.requirementData;
+      if(!requirementData) {
+        showToast("Failed to extract requirement data.", "error");
+        throw new Error("Failed to extract requirement data.");
+      }
+
+      // create the requirement
+      const requirementResponse = await createRequirement(
+        currentWorkspaceId,
+        project._id,
+        requirementData
+      );
+
+      const requirement = requirementResponse?.requirement;
+
+      if(!requirement) {
+        showToast("Failed to create requirement.", "error");
+        throw new Error("Failed to create requirement.");
+      }
+
+      // continue through the existing AI requirement workflow
+      navigate(`/projects/${project._id}/requirements/${requirement._id}`);
+
+    } catch (error) {
+
+      showToast(error.response?.data?.message || "AI Workflow Error!", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleExampleClick = (example) => {
+    setPrompt(example);
+  }
+
   return (
     <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#5b2eff] via-[#4b24c9] to-[#17105c] p-6 text-white">
       {/* Background decoration */}
@@ -35,16 +114,30 @@ function AIWorkspace() {
           <div className="rounded-xl bg-white p-2 shadow-xl">
             <textarea
               rows={3}
+              value={prompt}
+              onChange={(e) =>  setPrompt(e.target.value)}
               placeholder="E.g. Build Student Portal with attendance, assignments and notifications"
               className="w-full resize-none bg-transparent px-3 py-2 text-sm text-text-primary outline-none placeholder:text-gray-400"
+              disabled={isSubmitting}
             />
 
             <div className="flex justify-end">
               <button
                 type="button"
+                onClick={isAdmin ? handleGeneratePlan : undefined}
+                disabled={isSubmitting || (isAdmin && !prompt.trim())}
                 className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
               >
-                Generate Plan
+                {isSubmitting
+                  ? (
+                    <>
+                      <Loader />
+                      <span> Processing...</span>
+                    </>
+                  )
+                  : isAdmin
+                    ? "Generate Plan"
+                    : "Explore with AI"}
                 <WandSparkles size={16} />
               </button>
             </div>
@@ -60,6 +153,8 @@ function AIWorkspace() {
               <button
                 key={example}
                 type="button"
+                onClick={() => handleExampleClick(example)}
+                disabled={isSubmitting}
                 className="rounded-md bg-white/90 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-white"
               >
                 {example}
@@ -68,7 +163,7 @@ function AIWorkspace() {
           </div>
         </div>
 
-        {/* Illustration placeholder */}
+        {/* Illustration */}
         <div className="hidden w-64 shrink-0 items-center justify-center lg:flex">
           <div className="relative flex h-48 w-48 items-center justify-center">
             <div className="absolute h-32 w-32 rounded-full bg-white/10 blur-2xl" />
@@ -83,6 +178,8 @@ function AIWorkspace() {
           </div>
         </div>
       </div>
+
+      <Toast />
     </section>
   );
 }

@@ -5,6 +5,8 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import CreateProjectModal from "../projects/CreateProjectModal";
+import { useState } from "react";
 
 const actions = [
   {
@@ -34,6 +36,9 @@ const actions = [
 ];
 
 function QuickActions() {
+
+  const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
+
   return (
     <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
@@ -56,6 +61,11 @@ function QuickActions() {
             <button
               key={action.title}
               type="button"
+              onClick={() => {
+                if(action.title === "Create Project") {
+                  setOpenCreateProjectModal(true);
+                }
+              }}
               className={`group flex items-center gap-3 border-r border-border p-4 text-left transition-colors hover:bg-surface ${
                 index % 2 === 0 ? "sm:border-r" : ""
               } border-border`}
@@ -84,6 +94,11 @@ function QuickActions() {
           );
         })}
       </div>
+
+      <CreateProjectModal 
+        isOpen={openCreateProjectModal}
+        onClose={() => setOpenCreateProjectModal(false)}
+      />
     </section>
   );
 }

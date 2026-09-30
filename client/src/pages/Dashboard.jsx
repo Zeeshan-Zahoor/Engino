@@ -12,7 +12,7 @@ import StatsCard from "../components/dashboard/StatsCard";
 import RequirementsOverview from "../components/dashboard/RequirementsOverview";
 import MyTasks from "../components/dashboard/MyTasks";
 import ProjectProgress from "../components/dashboard/ProjectProgress";
-import QuickActions from "../components/dashboard/QuickActions";
+// import QuickActions from "../components/dashboard/QuickActions";
 import RepositoryStatus from "../components/dashboard/RepositoryStatus";
 
 import useProjectStore from "../stores/projectStore";
@@ -121,7 +121,7 @@ function Dashboard() {
         <ProjectProgress projects={projects || []}/>
         <RepositoryStatus />
 
-        <QuickActions />
+        {/* <QuickActions /> */}
 
     </div>
   )
