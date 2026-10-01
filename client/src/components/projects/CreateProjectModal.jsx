@@ -10,7 +10,7 @@ import useToastStore from "../../stores/toastStore";
 import useWorkspaceStore from "../../stores/workspaceStore";
 import Avatar from "../../utils/Avatar";
 
-function CreateProjectModal({ isOpen, onClose, project }) {
+function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIWorkspaceAction }) {
 
   const isEditMode = Boolean(project);
 
@@ -245,14 +245,18 @@ function CreateProjectModal({ isOpen, onClose, project }) {
  }
 
   const handleSubmit = async () => {
-    if(!validateRequiredFields()) {
+    if (!validateRequiredFields()) {
         setError("The required fields can not be empty!");
         return;
-    } else if (!validateTeam()) {
+    }
+
+    if (!validateTeam()) {
         setError("Please select team members for this project!");
         return;
-    } else if (!dateValidation()) {
-        setError("Target date must be after start date")
+    }
+
+    if (!dateValidation()) {
+        setError("Target date must be after start date");
         return;
     }
 
@@ -262,14 +266,26 @@ function CreateProjectModal({ isOpen, onClose, project }) {
             await updateProject(currentWorkspaceId, project._id, formData);
 
             showToast("Project updated successfully!", "success");
-        } else {
-            await addProject(currentWorkspaceId, formData);
 
-            showToast("Project created successfully!", "success");
-        }
+            resetForm();
+            onClose();
+
+            return;
+        } 
+
+        const response = await addProject(currentWorkspaceId, formData);
+        showToast("Project created successfully!", "success");
 
         resetForm();
         onClose();
+
+        if(AIWorkspace && AIWorkspaceAction) {
+          const createdProject = response?.newProject;
+
+          if(createdProject) {
+            await AIWorkspaceAction(createdProject);
+          }
+        }
 
     } catch (error) {
       setError(error.response?.data?.message || `Failed to ${isEditMode ? "update" : "create"} project.`);

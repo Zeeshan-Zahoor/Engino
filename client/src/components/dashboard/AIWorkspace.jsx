@@ -10,6 +10,8 @@ import useToastStore from "../../stores/toastStore";
 
 import Loader from "../common/Loader";
 import Toast from "../common/Toast";
+import SelectProjectModal from "./SelectProjectModal";
+import CreateProjectModal from "../projects/CreateProjectModal";
 
 const examples = [
   "Student Portal",
@@ -29,39 +31,32 @@ function AIWorkspace() {
   const [prompt, setPrompt] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleGeneratePlan = async () => {
-    if (!prompt.trim()) return;
+  const [showProjectSelection, setShowProjectSelection] = useState(false);
+  const [showProjectCreation, setShowProjectCreation] = useState(false);
+  const [availableProjects, setAvailableProjects] = useState([]);
 
+  const handleCreateRequirement = async (project) => {
     try {
       setIsSubmitting(true);
-
-      // get the latest accessible projexts
-      const projectResponse = await fetchProjects(currentWorkspaceId);
-      const projects = projectResponse?.projects || [];
-
-      if (projects.length !== 1) {
-        console.log("Project selection required:", projects);
-        return;
-      }
-
-      const project = projects[0];
+      setShowProjectSelection(false);
+      setShowProjectCreation(false);
 
       const extractionResponse = await extractRequirement(
-        currentWorkspaceId, 
+        currentWorkspaceId,
         prompt.trim()
       );
 
       const requirementData = extractionResponse?.requirementData;
+
       if(!requirementData) {
         showToast("Failed to extract requirement data.", "error");
-        throw new Error("Failed to extract requirement data.");
+        throw new Error("Failed to extract requirement data.")
       }
 
-      // create the requirement
-      const requirementResponse = await createRequirement(
+      const requirementResponse =await createRequirement(
         currentWorkspaceId,
         project._id,
-        requirementData
+        requirementData,
       );
 
       const requirement = requirementResponse?.requirement;
@@ -71,14 +66,49 @@ function AIWorkspace() {
         throw new Error("Failed to create requirement.");
       }
 
-      // continue through the existing AI requirement workflow
       navigate(`/projects/${project._id}/requirements/${requirement._id}`);
 
     } catch (error) {
-
-      showToast(error.response?.data?.message || "AI Workflow Error!", "error");
+      showToast(error.response?.data?.message || "AI Workspace Error.", "error");
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  const handleGeneratePlan = async () => {
+    if (!prompt.trim()) return;
+
+    try {
+      setIsSubmitting(true);
+      // get the latest accessible projexts
+      const projectResponse = await fetchProjects(currentWorkspaceId);
+      const projects = projectResponse?.projects || [];
+
+      // no project yet
+      if (projects.length === 0) {
+        setShowProjectCreation(true);
+        return;
+      }
+
+      // exactly one projet
+      if(projects.length === 1) {
+        await handleCreateRequirement(projects[0]);
+        return;
+      }
+
+      // multiple projects
+      setAvailableProjects(projects);
+      setShowProjectSelection(true);
+
+      
+    } catch (error) {
+
+      showToast(error.response?.data?.message || "Failed to fetch projects.", "error");
+
+    } finally {
+        if (showProjectSelection) {
+            setIsSubmitting(false);
+        }
     }
   };
 
@@ -180,6 +210,19 @@ function AIWorkspace() {
       </div>
 
       <Toast />
+      <SelectProjectModal 
+        isOpen={showProjectSelection}
+        onClose={() => setShowProjectSelection(false)}
+        projects={availableProjects}
+        onSelect={handleCreateRequirement}
+      />
+
+      <CreateProjectModal 
+        isOpen={showProjectCreation}
+        onClose={() => setShowProjectCreation(false)}
+        AIWorkspace={showProjectCreation}
+        AIWorkspaceAction={handleCreateRequirement}
+      />
     </section>
   );
 }
