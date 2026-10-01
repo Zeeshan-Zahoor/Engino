@@ -1,22 +1,38 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Sparkles, WandSparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import enginoAiLogo from "../../assets/images/engino-ai-logo.png";
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 import useWorkspaceStore from "../../stores/workspaceStore";
 import useProjectStore from "../../stores/projectStore";
 import useRequirementStore from "../../stores/requirementStore";
 import useToastStore from "../../stores/toastStore";
+import useAIStore from "../../stores/aiStore";
 
 import Loader from "../common/Loader";
 import Toast from "../common/Toast";
 import SelectProjectModal from "./SelectProjectModal";
 import CreateProjectModal from "../projects/CreateProjectModal";
 
+import ReactMarkdown from "react-markdown";
+
 const examples = [
-  "Student Portal",
-  "LMS Dashboard",
-  "Notification System",
+  {
+    label: "Student Portal",
+    prompt:
+      "Build a student portal where students can view their courses, assignments, attendance, and academic notifications.",
+  },
+  {
+    label: "LMS Dashboard",
+    prompt:
+      "Build an LMS dashboard where students can view enrolled courses, upcoming assignments, learning progress, and recent announcements.",
+  },
+  {
+    label: "Notification System",
+    prompt:
+      "Build a notification system that allows users to receive and manage important application notifications, including unread and read states.",
+  },
 ];
 
 function AIWorkspace() {
@@ -25,15 +41,25 @@ function AIWorkspace() {
   const { currentWorkspaceId } = useWorkspaceStore();
   const { fetchProjects } = useProjectStore();
   const { extractRequirement, createRequirement } = useRequirementStore();
+  const { exploreWithAI } = useAIStore();
 
   const { showToast } = useToastStore();
   
   const [prompt, setPrompt] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isExploring, setIsExploring] = useState(false);
+  const [conversation, setConversation] = useState([]);
+  const conversationRef = useRef(null);
 
   const [showProjectSelection, setShowProjectSelection] = useState(false);
   const [showProjectCreation, setShowProjectCreation] = useState(false);
   const [availableProjects, setAvailableProjects] = useState([]);
+
+  useEffect(() => {
+    if(conversationRef.current) {
+      conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
+    }
+  }, [conversation]);
 
   const handleCreateRequirement = async (project) => {
     try {
@@ -113,7 +139,47 @@ function AIWorkspace() {
   };
 
   const handleExampleClick = (example) => {
-    setPrompt(example);
+    setPrompt(example.prompt);
+  }
+
+  const handleExploreWithAI = async () => {
+    if (!prompt.trim()) return;
+
+    try {
+      setIsExploring(true);
+
+      const userMessage = {
+        role: "user",
+        content: prompt.trim(),
+      };
+
+      const response = await exploreWithAI(
+        currentWorkspaceId,
+        prompt.trim(),
+        conversation
+      );
+
+      const aiMessage = {
+        role: "assistant",
+        content: response?.aiResponse,
+      };
+
+      setConversation((prev) => [
+        ...prev,
+        userMessage,
+        aiMessage,
+      ]);
+
+      setPrompt("");
+
+    } catch (error) {
+      showToast(
+        error.response?.data?.message || "Failed to explore with AI.",
+        "error"
+      );
+    } finally {
+      setIsExploring(false);
+    }
   }
 
   return (
@@ -136,40 +202,96 @@ function AIWorkspace() {
           </div>
 
           <p className="mb-5 max-w-xl text-sm leading-6 text-white/80">
-            Describe what you want to build. Our AI will break it down
-            into a clear execution plan.
+            Explore ideas with AI or turn your idea into an execution plan.
           </p>
 
           {/* Requirement input */}
-          <div className="rounded-xl bg-white p-2 shadow-xl">
+          <div className={`rounded-xl bg-white p-2 shadow-xl`}>
+            {conversation.length > 0 && (
+                  <div
+                    ref={conversationRef} 
+                    className="mb-2 max-w-200 max-h-72 space-y-3 overflow-auto px-3 pt-2 scrollbar-none overfl">
+                    {conversation.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`flex ${
+                          message.role === "user" ? "justify-end" : "justify-start"
+                        }`}
+                      >
+                        <div
+                          className={`max-w-[85%] rounded-xl px-4 py-2.5 text-sm ${
+                            message.role === "user"
+                              ? "bg-primary text-white"
+                              : "bg-surface text-text-primary"
+                          }`}
+                        >
+                          {message.role === "assistant" ? (
+                            <div className="space-y-2 leading-6 text-text-primary [&_h1]:mb-2 [&_h1]:text-lg [&_h1]:font-semibold [&_h2]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:font-semibold [&_p]:mb-2 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_li]:mb-1 [&_strong]:font-semibold [&_code]:rounded [&_code]:bg-gray-200 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs [&_pre]:my-2 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-gray-900 [&_pre]:p-3 [&_pre]:text-xs [&_pre]:text-white">
+                              <ReactMarkdown>
+                                {message.content}
+                              </ReactMarkdown>
+                            </div>
+                          ) : (
+                            message.content
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
             <textarea
               rows={3}
               value={prompt}
               onChange={(e) =>  setPrompt(e.target.value)}
-              placeholder="E.g. Build Student Portal with attendance, assignments and notifications"
-              className="w-full resize-none bg-transparent px-3 py-2 text-sm text-text-primary outline-none placeholder:text-gray-400"
-              disabled={isSubmitting}
+              placeholder={
+                isAdmin
+                  ? "Describe what you want to build or explore..."
+                  : "Ask anything about software engineering..."
+              }
+              className={`${conversation.length > 0 ? "py-2 h-10 border-t border-surface" : "py-2"} w-full resize-none bg-transparent px-3  text-sm text-text-primary outline-none placeholder:text-gray-400`}
+              disabled={isSubmitting || isExploring}
             />
 
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
               <button
                 type="button"
-                onClick={isAdmin ? handleGeneratePlan : undefined}
-                disabled={isSubmitting || (isAdmin && !prompt.trim())}
-                className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+                onClick={handleExploreWithAI}
+                disabled={isSubmitting || isExploring || !prompt.trim()}
+                className="flex items-center gap-2 rounded-lg border border-primary px-5 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary-light"
               >
-                {isSubmitting
-                  ? (
+                {isExploring ? (
+                  <>
+                    <Loader color="primary"/>
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={16} />
+                    Explore with AI
+                  </>
+                )}
+              </button>
+
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={handleGeneratePlan}
+                  disabled={isSubmitting || isExploring || !prompt.trim()}
+                  className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+                >
+                  {isSubmitting ? (
                     <>
                       <Loader />
-                      <span> Processing...</span>
+                      <span>Processing...</span>
                     </>
-                  )
-                  : isAdmin
-                    ? "Generate Plan"
-                    : "Explore with AI"}
-                <WandSparkles size={16} />
-              </button>
+                  ) : (
+                    <>
+                      Generate Plan
+                      <WandSparkles size={16} />
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
 
@@ -181,13 +303,13 @@ function AIWorkspace() {
 
             {examples.map((example) => (
               <button
-                key={example}
+                key={example.label}
                 type="button"
                 onClick={() => handleExampleClick(example)}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isExploring}
                 className="rounded-md bg-white/90 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-white"
               >
-                {example}
+                {example.label}
               </button>
             ))}
           </div>
@@ -195,16 +317,14 @@ function AIWorkspace() {
 
         {/* Illustration */}
         <div className="hidden w-64 shrink-0 items-center justify-center lg:flex">
-          <div className="relative flex h-48 w-48 items-center justify-center">
-            <div className="absolute h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+          <div className="relative flex h-70 w-70 items-center justify-center">
+            <div className="absolute h-40 w-40 rounded-full bg-white/10 blur-3xl" />
 
-            <div className="relative flex h-28 w-28 items-center justify-center rounded-[2rem] border border-white/20 bg-white/10 shadow-2xl backdrop-blur-sm">
-              <Sparkles
-                size={52}
-                strokeWidth={1.3}
-                className="text-white"
-              />
-            </div>
+            <img
+              src={enginoAiLogo}
+              alt="AI assistant"
+              className="relative h-70 w-70 object-contain drop-shadow-2xl"
+            />
           </div>
         </div>
       </div>
