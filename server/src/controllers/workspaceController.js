@@ -14,6 +14,7 @@ import mongoose from "mongoose";
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { extractRequirement } from "../services/ai/requirementExtraction.service.js";
+import { exploreWithAI } from "../services/ai/exploreAI.service.js";
 
 const getWorkspace = async (req, res) => {
     try {
@@ -552,6 +553,40 @@ const extractRequirementData = async (req, res) => {
     }
 }
 
+const exploreWithAIWorkspace = async (req, res) => {
+    try {
+        const { prompt, conversation } = req.body;
+
+        if(!prompt || !prompt.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Prompt is required!",
+            });
+        }
+
+        const exploreResponse = await exploreWithAI(prompt.trim(), conversation || []);
+
+        if(!exploreResponse) {
+            return res.status(400).json({
+                success: false,
+                message: "AI exploration failed. Try again!",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            aiResponse: exploreResponse,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+            message: "Internal server error.",
+        });
+    }
+}
+
 export {
     getWorkspace,
     getWorkspaces,
@@ -564,4 +599,5 @@ export {
     getAllTasks,
     getAllRequirements,
     extractRequirementData,
+    exploreWithAIWorkspace,
 }

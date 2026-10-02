@@ -264,11 +264,17 @@ function AIWorkspace() {
                     <Loader color="primary"/>
                     <span>Processing...</span>
                   </>
+                ) : conversation.length > 0 ? (
+                  <>
+                    Send
+                  </>
                 ) : (
+                  (
                   <>
                     <Sparkles size={16} />
                     Explore with AI
                   </>
+                )
                 )}
               </button>
 

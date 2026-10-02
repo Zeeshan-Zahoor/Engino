@@ -11,6 +11,7 @@ import {
     sendInvitation,
     getAllRequirements,
     extractRequirementData,
+    exploreWithAIWorkspace,
  } from '../controllers/workspaceController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
@@ -27,6 +28,7 @@ router.get('/invitations/:token', getInvitation);
 
 router.post('/:workspaceId/invite', authMiddleware, workspaceMiddleware, sendInvitation);
 router.post('/:workspaceId/ai/extract-requirement', authMiddleware, workspaceMiddleware, extractRequirementData);
+router.post('/:workspaceId/ai/explore', authMiddleware, workspaceMiddleware, exploreWithAIWorkspace);
 
 router.post('/accept-invite', acceptInvitation);
 router.post('/decline-invite', declineInvitation);
