@@ -8,6 +8,7 @@ import AIPlan from "../models/aiPlan.model.js";
 import Project from "../models/project.model.js";
 import Task from "../models/task.model.js";
 import transporter from "../utils/mail.js";
+import getDashboardInsights from "../services/dashboardInsights.service.js";
 
 import mongoose from "mongoose";
 
@@ -587,6 +588,32 @@ const exploreWithAIWorkspace = async (req, res) => {
     }
 }
 
+const getInsights = async (req, res) => {
+    try {
+        const workspaceId = req.workspaceId;
+        const userId = req.user.userId;
+        const role = req.membership.role;
+
+        const insights = await getDashboardInsights(
+            workspaceId,
+            userId,
+            role  
+        );
+        
+        return res.status(200).json({
+            success: true,
+            insights,
+        });
+ 
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to load dashboard insights.",
+            error: error.message,
+        });
+    }
+}
+
 export {
     getWorkspace,
     getWorkspaces,
@@ -598,6 +625,7 @@ export {
     getAllAIPlans,
     getAllTasks,
     getAllRequirements,
+    getInsights,
     extractRequirementData,
     exploreWithAIWorkspace,
 }

@@ -1,41 +1,70 @@
 import {
   AlertCircle,
-  ArrowRight,
   CheckCircle2,
-  CircleAlert,
+  Info,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
+import useDashboardStore from "../../stores/dashboardStore";
+import useWorkspaceStore from "../../stores/workspaceStore";
+import { useEffect } from "react";
+import Loader from "../common/Loader";
 
-const insights = [
-  {
-    icon: CircleAlert,
-    iconClass: "bg-purple-50 text-primary",
-    title: "2 requirements need clarification",
-    description: "Attendance Module, LMS Platform",
-  },
-  {
-    icon: CheckCircle2,
-    iconClass: "bg-green-50 text-success",
-    title: "Student Portal estimated",
-    description: "28 hours · Medium Complexity",
-  },
-  {
-    icon: AlertCircle,
-    iconClass: "bg-red-50 text-danger",
-    title: "3 tasks are blocked",
-    description: "Waiting for dependencies",
-  },
-  {
-    icon: CheckCircle2,
-    iconClass: "bg-green-50 text-success",
-    title: "You have 5 tasks due this week",
-    description: "Stay on track!",
-  },
-];
+const getInsightStyle = (severity) => {
+  switch (severity) {
+    case "error":
+      return {
+        icon: AlertCircle,
+        iconClass: "text-red-500",
+        bgClass: "bg-red-50",
+      };
+
+    case "warning":
+      return {
+        icon: AlertCircle,
+        iconClass: "text-primary",
+        bgClass: "bg-primary-light",
+      };
+
+    case "info":
+      return {
+        icon: Info,
+        iconClass: "text-blue-500",
+        bgClass: "bg-blue-50",
+      };
+
+    case "success":
+    default:
+      return {
+        icon: CheckCircle2,
+        iconClass: "text-green-500",
+        bgClass: "bg-green-50",
+      };
+  }
+};
 
 function AIInsights() {
+  const { currentWorkspaceId } = useWorkspaceStore();
+
+  const fetchInsights = useDashboardStore(
+    (state) => state.fetchInsights
+  );
+
+  const insights = useDashboardStore(
+    (state) => state.insights
+  );
+
+  const isInsightsLoading = useDashboardStore(
+    (state) => state.isLoading
+  ); 
+
+  useEffect(() => {
+    if(!currentWorkspaceId) return;
+
+    fetchInsights(currentWorkspaceId);
+  }, [currentWorkspaceId, fetchInsights]);
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-white">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-2">
@@ -55,39 +84,63 @@ function AIInsights() {
       </div>
 
       {/* Insights */}
-      <div className="divide-y divide-border">
-        {insights.map((insight) => {
-          const Icon = insight.icon;
+      <div className="divide-y divide-border max-h-70 overflow-y-scroll scrollbar-thin scrollbar-thumb-surface">
+        {isInsightsLoading ? (
+          <div className="flex h-64 items-center justify-center">
+            <Loader color="text-primary"/>
+          </div>
+        ) : insights.length === 0 ? (
+          <div className="flex h-64 flex-col items-center justify-center px-6 text-center">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
+              <CheckCircle2 className="text-green-500" size={22} />
+            </div>
 
-          return (
-            <button
-              key={insight.title}
-              type="button"
-              className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-surface"
-            >
-              <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${insight.iconClass}`}
+            <p className="text-sm font-semibold text-text-primary">
+              Everything looks good
+            </p>
+
+            <p className="mt-1 text-sm text-text-secondary">
+              There are no important issues requiring your attention right now.
+            </p>
+          </div>
+        ) : (
+          insights.map((insight) => {
+            const {
+              icon: Icon,
+              iconClass,
+              bgClass,
+            } = getInsightStyle(insight.severity);
+
+            return (
+              <button
+                key={insight.type}
+                type="button"
+                className="flex w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-surface"
               >
-                <Icon size={17} strokeWidth={1.8} />
-              </div>
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${bgClass}`}
+                >
+                  <Icon size={18} className={iconClass} />
+                </div>
 
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-text-primary">
-                  {insight.title}
-                </p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-text-primary">
+                    {insight.title}
+                  </p>
 
-                <p className="mt-0.5 text-xs text-text-secondary">
-                  {insight.description}
-                </p>
-              </div>
+                  <p className="mt-0.5 truncate text-sm text-text-secondary">
+                    {insight.description}
+                  </p>
+                </div>
 
-              <ArrowRight
-                size={15}
-                className="shrink-0 text-text-secondary"
-              />
-            </button>
-          );
-        })}
+                <ArrowRight
+                  size={18}
+                  className="shrink-0 text-text-secondary"
+                />
+              </button>
+            );
+          })
+        )}
       </div>
     </section>
   );

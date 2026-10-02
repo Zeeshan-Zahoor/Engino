@@ -12,7 +12,8 @@ import {
     getAllRequirements,
     extractRequirementData,
     exploreWithAIWorkspace,
- } from '../controllers/workspaceController.js';
+    getInsights,
+} from '../controllers/workspaceController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
 
@@ -23,6 +24,7 @@ router.get('/:workspaceId', authMiddleware, workspaceMiddleware, getWorkspace);
 router.get('/:workspaceId/team', authMiddleware, workspaceMiddleware, getWorkspaceMembers);
 router.get('/:workspaceId/aiPlans', authMiddleware, workspaceMiddleware, getAllAIPlans);
 router.get('/:workspaceId/allTasks', authMiddleware, workspaceMiddleware, getAllTasks);
+router.get('/:workspaceId/insights', authMiddleware, workspaceMiddleware, getInsights);
 router.get('/:workspaceId/requirements', authMiddleware, workspaceMiddleware, getAllRequirements);
 router.get('/invitations/:token', getInvitation);
 
