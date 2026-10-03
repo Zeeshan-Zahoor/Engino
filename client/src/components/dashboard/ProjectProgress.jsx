@@ -2,7 +2,7 @@ import { ArrowRight, CheckCircle2, FolderKanban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const statusStyles = {
-  "Planned": "bg-yellow-50 text-warning",
+  "Planning": "bg-yellow-50 text-warning",
   "In Progress": "bg-blue-50 text-info",
   "On Hold": "bg-orange-50 text-orange-600",
   "Completed": "bg-green-50 text-success",
