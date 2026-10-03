@@ -2,6 +2,8 @@ import {
   CalendarDays,
   Circle,
   MoreVertical,
+  Edit2,
+  Trash,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +24,7 @@ function ProjectsList({
   loading,
   error,
   onEditProject,
+  onDeleteProject,
 }) {
 
   const navigate = useNavigate();
@@ -29,6 +32,7 @@ function ProjectsList({
   
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
 
   const totalPages = Math.ceil(filteredProjects?.length / pageSize) || 0;
@@ -88,7 +92,7 @@ function ProjectsList({
                     <div 
                       key={project._id}
                       role="button"
-                      className="transition hover:bg-surface cursor-default active:scale-[1.005]"
+                      className="transition hover:bg-surface cursor-default"
                       onClick={() => handleProjectClick(project._id)}
                     >
                     
@@ -207,17 +211,52 @@ function ProjectsList({
                         </div>
 
                         {/* Actions */}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onEditProject(project);
-                          }}
-                          disabled={!isAdmin}
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition hover:bg-surface hover:text-text-primary disabled:cursor-not-allowed"
-                        >
-                          <MoreVertical size={17} />
-                        </button>
+                       <div className="relative">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenMenuId((current) =>
+                                current === project._id ? null : project._id
+                              );
+                            }}
+                            disabled={!isAdmin}
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition hover:bg-surface hover:text-text-primary disabled:cursor-not-allowed"
+                          >
+                            <MoreVertical size={17} />
+                          </button>
+
+                          {openMenuId === project._id && (
+                            <div
+                              className="absolute right-0 top-full z-30 mt-1 w-40 overflow-hidden rounded-lg border border-border bg-white py-1 shadow-lg"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  onEditProject(project);
+                                }}
+                                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-text-primary  hover:bg-surface"
+                              >
+                                <Edit2 size={14}/>
+                                Edit Project
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  onDeleteProject(project);
+                                }}
+                                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-danger hover:bg-red-50"
+                              >
+                                <Trash size={14}/>
+                                Delete Project
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* Mobile Card */}

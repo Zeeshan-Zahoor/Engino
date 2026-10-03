@@ -11,23 +11,32 @@ import {
 import ProjectFilters from "../components/projects/ProjectFilters"
 import ProjectsList from "../components/projects/ProjectsList"
 import CreateProjectModal from "../components/projects/CreateProjectModal"
+import Toast from  "../components/common/Toast";
+import DeleteProjectModal from "../components/projects/DeleteProjectModal"
 
 import useProjectStore from "../stores/projectStore"
 import useWorkspaceStore from "../stores/workspaceStore"
 import useAuthStore from "../stores/authStore"
 
 import { isWorkspaceAdmin } from "../utils/isWorkspaceAdmin"
-
 function Projects() {
+    const { projects, fetchProjects, isLoading, error } = useProjectStore();
+    const { currentWorkspaceId } = useWorkspaceStore();
+    const { user } = useAuthStore();
+
     const [searchInput, setSearchInput] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("All")
     const [sortBy, setSortBy] = useState("Recently Updated");
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
 
-    const { projects, fetchProjects, isLoading, error } = useProjectStore();
-    const { currentWorkspaceId } = useWorkspaceStore();
-    const { user } = useAuthStore();
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const handleDeleteProject = (project) => {
+        setSelectedProject(project);
+        setShowDeleteModal(true);
+    }
 
     const handleCreateProject = () => {
         setEditingProject(null);
@@ -180,8 +189,8 @@ function Projects() {
             loading={isLoading}
             error={error}
             onEditProject={handleEditProject}
+            onDeleteProject={handleDeleteProject}
         />
-
 
         {/* Render Modal */}
         <CreateProjectModal 
@@ -189,6 +198,19 @@ function Projects() {
             isOpen={isCreateModalOpen}
             onClose={handleCloseProjectModal}
             project={editingProject}
+        />
+
+        <Toast />
+
+        {/* Delete Project Confirmation Modal */}
+        <DeleteProjectModal 
+            isOpen={showDeleteModal && selectedProject}
+            onClose={() => {
+                setShowDeleteModal(false);
+                setSelectedProject(null);
+            }}
+            selectedProject={selectedProject}
+            loading={isLoading}
         />
     </div>
   )

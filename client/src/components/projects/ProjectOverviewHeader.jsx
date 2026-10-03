@@ -2,14 +2,14 @@ import {
   CalendarDays,
   Clock3,
   Pencil,
-  Share2,
+  Trash2,
 } from "lucide-react";
 
 import { getInitials } from "../../utils/getInitials";
 import { getRelativeTime } from "../../utils/getRelativeTime";
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
-function ProjectOverviewHeader({ project, onEdit }) {
+function ProjectOverviewHeader({ project, onEdit, onDelete }) {
   const isAdmin = isWorkspaceAdmin();
   return (
     <section className="rounded-2xl border border-border bg-white p-4">
@@ -58,26 +58,27 @@ function ProjectOverviewHeader({ project, onEdit }) {
         </div>
 
         {/* Actions */}
-        <div className="flex shrink-0 items-center gap-2">
-          {isAdmin && (
+        {isAdmin && (
+          <div className="flex shrink-0 items-center gap-2">
             <button
-            type="button"
-            onClick={onEdit}
-            className="flex items-center gap-2 rounded-lg border border-border px-3.5 py-2 text-xs font-semibold text-text-primary transition hover:bg-surface"
-          >
-            <Pencil size={14} />
-            Edit Project
-          </button>
-          )}
+              type="button"
+              onClick={onEdit}
+              className="flex items-center gap-2 rounded-lg border border-border px-3.5 py-2 text-xs font-semibold text-text-primary transition hover:bg-surface"
+            >
+              <Pencil size={14} />
+              Edit Project
+            </button>
+            
 
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-lg border border-border px-3.5 py-2 text-xs font-semibold text-text-primary transition hover:bg-surface"
-          >
-            <Share2 size={14} />
-            Share
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={onDelete}
+              className="flex items-center gap-2 bg-primary rounded-lg border border-border p-2 text-white transition hover:bg-primary-dark"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

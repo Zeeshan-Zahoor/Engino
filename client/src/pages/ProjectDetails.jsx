@@ -16,7 +16,8 @@ import useWorkspaceStore from "../stores/workspaceStore"
 import useProjectStore from '../stores/projectStore'
 import useAuthStore from "../stores/authStore"
 import Requirements from "../components/projects/Requirements"
-
+import DeleteProjectModal from "../components/projects/DeleteProjectModal"
+import { useNavigate } from "react-router-dom"
 
 const tabs = ["Overview", "AI Requirements", "Tasks", "Team"];
 
@@ -25,9 +26,11 @@ function ProjectDetails() {
   const { activeProject, fetchProject, selectedTabIndex, setTabIndex } = useProjectStore();
   const { currentWorkspaceId } = useWorkspaceStore();
   const { user } = useAuthStore();
+  const navigate = useNavigate();
 
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState(tabs[selectedTabIndex] || tabs[0]);
 
@@ -39,6 +42,10 @@ function ProjectDetails() {
   const handleEditProject = () => {
     setIsEditModalOpen(true);
   };
+
+  const handleDeleteProject = () => {
+    setIsDeleteModalOpen(true);
+  }
 
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
@@ -55,6 +62,7 @@ function ProjectDetails() {
         <ProjectOverviewHeader 
           project={activeProject}
           onEdit={handleEditProject}
+          onDelete={handleDeleteProject}
         />
 
         {/* tabs */}
@@ -87,6 +95,13 @@ function ProjectDetails() {
           isOpen={isEditModalOpen}
           onClose={handleCloseEditModal}
           project={activeProject}
+        />
+
+        <DeleteProjectModal 
+          selectedProject={activeProject}
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          navigateBack={() => navigate(-1)}
         />
     </div>
   )

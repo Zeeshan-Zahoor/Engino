@@ -196,6 +196,30 @@ const useProjectStore = create((set, get) => ({
 
             throw error;
         }
+    },
+
+    deleteProject: async (workspaceId, projectId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.delete(`/workspaces/${workspaceId}/projects/${projectId}`);
+
+            set(state => ({
+                projects: state.projects.filter(project => project._id !== projectId),
+                isLoading: false,
+                error: null,
+            }));
+
+            return response.data;
+            
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.message || "Failed to delete project. Try again.",
+            });
+            console.log(error.response);
+            throw error;
+        }
     }
 }));
 
