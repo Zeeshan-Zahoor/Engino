@@ -7,9 +7,13 @@ import TaskToolbar from "../components/tasks/TaskToolbar";
 import TaskList from "../components/tasks/TaskList";
 import TaskDetailsPanel from "../components/tasks/TaskDetailsPanel";
 import { tasks } from "../data/tasks";
+import {  useSearchParams } from "react-router-dom";
 
 function Tasks() {
   const [selectedTask, setSelectedTask] = useState(tasks[0]);
+  
+  const [searchParams] = useSearchParams();
+  const insightFilter = searchParams.get("filter");
 
   return (
     <div className="space-y-6 px-8">
@@ -38,6 +42,7 @@ function Tasks() {
             <TaskList 
               selectedTask={selectedTask}
               setSelectedTask={setSelectedTask}
+              insightFilter={insightFilter}
             />
         </div>
 

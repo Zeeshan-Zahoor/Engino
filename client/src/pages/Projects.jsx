@@ -121,6 +121,7 @@ function Projects() {
         <Header 
             title="Projects"
             description="Manage all your projects and their progress."
+            showBack={true}
             user={user}
         />
 

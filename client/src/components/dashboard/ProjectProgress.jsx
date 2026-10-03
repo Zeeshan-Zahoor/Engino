@@ -45,10 +45,10 @@ function ProjectProgress({ projects }) {
 
           return (
             <button
-            key={project._id}
-            type="button"
-            className="rounded-xl border border-border p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
-          >
+              key={project._id}
+              type="button"
+              className="rounded-xl border border-border p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
+            >
             {/* Project heading */}
             <div className="flex items-start justify-between gap-3">
               <div className="flex min-w-0 items-center gap-3">

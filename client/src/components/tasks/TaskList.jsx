@@ -3,6 +3,7 @@ import { tasks } from "../../data/tasks";
 import useProjectStore from '../../stores/projectStore';
 import { requirements } from '../../data/requirements';
 import { getInitials } from '../../utils/getInitials';
+import { useEffect } from "react";
 
 function StatusBadge({ status }) {
   const styles = {
@@ -64,10 +65,81 @@ function ProgressBar({ progress }) {
   );
 }
 
-function TaskList({ selectedTask, setSelectedTask }) {
+function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
   const projects = useProjectStore(state => state.projects);
+
+  const isDueThisWeek = (date) => {
+    if (!date) return false;
+
+    const taskDate = new Date(date);
+
+    if (Number.isNaN(taskDate.getTime())) {
+      return false;
+    }
+
+    const now = new Date();
+
+    const day = now.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() + diff);
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    return taskDate >= startOfWeek && taskDate <= endOfWeek;
+  };
+
+  const filteredTasks = tasks.filter((task) => {
+    switch (insightFilter) {
+      case "high-priority":
+        return (
+          task.priority === "High" &&
+          task.status !== "Done"
+        );
+
+      case "overdue":
+        return (
+          task.status !== "Done" &&
+          task.dueDate &&
+          new Date(task.dueDate) < new Date()
+        );
+
+      case "unassigned":
+        return (
+          task.status !== "Done" &&
+          !task.assignee
+        );
+
+      case "due-this-week":
+        return (
+          task.status !== "Done" &&
+          isDueThisWeek(task.dueDate)
+        );
+
+      default:
+        return true;
+    }
+  });
+
+  useEffect(() => {
+    const visibleTasks = filteredTasks.slice(0, 8);
+
+    if (
+      visibleTasks.length > 0 &&
+      !visibleTasks.some((task) => task.id === selectedTask?.id)
+    ) {
+      setSelectedTask(visibleTasks[0]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [insightFilter, selectedTask, setSelectedTask]);
+
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-white">
+
       {/* Header */}
       <div className="hidden border-b border-border bg-surface px-4 py-3 lg:grid lg:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] lg:items-center lg:gap-3">
         <div />
@@ -110,7 +182,7 @@ function TaskList({ selectedTask, setSelectedTask }) {
       </div>
 
       {/* Rows */}
-      {(tasks.slice(0, 8)).map((task) => (
+      {(filteredTasks.slice(0, 8)).map((task) => (
         <div
           role="button"
           onClick={() => setSelectedTask(task)}
@@ -175,10 +247,6 @@ function TaskList({ selectedTask, setSelectedTask }) {
 
             {/* Due Date */}
             <div>
-              <p className="text-xs font-medium text-text-primary">
-                {task.dueDate}
-              </p>
-
               <p className="text-xs font-medium text-text-primary">
                 {task.dueDate}
               </p>

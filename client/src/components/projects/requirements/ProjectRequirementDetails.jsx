@@ -238,10 +238,6 @@ const ProjectRequirementDetails = () => {
       // store already handles error state
     }
   }
-  
-  const handleBackToProject = () => {
-    navigate(`/projects/${projectId}`);
-  };
 
 
   const renderCurrentStep = () => {
@@ -338,7 +334,7 @@ const ProjectRequirementDetails = () => {
           <div className="flex min-w-0 items-center gap-4">
             <button
               type="button"
-              onClick={handleBackToProject}
+              onClick={() => navigate(-1)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-background text-text-secondary transition hover:bg-surface hover:text-text-primary"
             >
               <ArrowLeft size={18} />
