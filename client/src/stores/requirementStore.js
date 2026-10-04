@@ -279,6 +279,50 @@ const useRequirementStore = create((set) => ({
         }
     },
 
+    updateRequirement: async (workspaceId, projectId, requirementId, requirementData) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.patch(
+                `workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}`,
+                requirementData
+            );
+
+            set((state) => ({
+                isLoading: false,
+                error: null,
+                requirements: state.requirements.map((requirement) =>
+                    requirement._id === requirementId
+                        ? {
+                            ...requirement,
+                            ...response.data.requirement,
+                        }
+                        : requirement
+                ),
+                workspaceRequirements: state.workspaceRequirements.map(
+                    (requirement) =>
+                        requirement._id === requirementId
+                            ? {
+                                ...requirement,
+                                ...response.data.requirement,
+                            }
+                            : requirement
+                ),
+            }));
+
+            return response.data;
+        } catch (error) {
+            set({
+                isLoading: false,
+                error:
+                    error.response?.data?.message ||
+                    "Failed to update requirement. Try again.",
+            });
+            console.log(error.response);
+            throw error;
+        }
+    },
+
     deleteRequirement: async (workspaceId, projectId, requirementId) => {
         set({ isLoading: true, error: null });
         try {

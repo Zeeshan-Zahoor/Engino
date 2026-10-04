@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   X,
   ChevronDown,
@@ -16,9 +16,11 @@ const complexities = [
   "High",
 ];
 
-function CreateRequirementModal({ open, onClose, workspaceId, projectId, projectMembers }) {
+function CreateRequirementModal({ open, onClose, workspaceId, projectId, projectMembers, requirement = null }) {
 
-    const { isLoading, createRequirement } = useRequirementStore();
+   const isEditMode = Boolean(requirement);
+
+    const { isLoading, createRequirement, updateRequirement } = useRequirementStore();
     const { showToast } = useToastStore();
 
     const [formData, setFormData] = useState({
@@ -30,6 +32,39 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
     });
 
     const [error, setError] = useState("");
+
+    const resetForm = () => {
+        setFormData({
+            name: "",
+            description: "",
+            owner: "",
+            complexity: "",
+            acceptanceCriteria: [""],
+        })
+    }
+
+    useEffect(() => {
+      if(requirement) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setFormData({
+            name: requirement.name || "",
+            description: requirement.description || "",
+            owner:
+                typeof requirement.owner === "object"
+                    ? requirement.owner?._id || ""
+                    : requirement.owner || "",
+            complexity: requirement.complexity || "",
+            acceptanceCriteria:
+                requirement.acceptanceCriteria?.length > 0
+                    ? requirement.acceptanceCriteria
+                    : [""],
+        });
+      } else {
+        resetForm();
+      }
+
+      setError("");
+    }, [requirement, open]);
 
     if (!open) return null;
 
@@ -77,26 +112,43 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
         });
     };
 
-    const resetForm = () => {
-        setFormData({
-            name: "",
-            description: "",
-            owner: "",
-            complexity: "",
-            acceptanceCriteria: [""],
-        })
-    }
+    
 
-    const handleCreateRequirement = async () => {
-        try {
-            await createRequirement(workspaceId, projectId, formData);
-            onClose();
-            showToast("Requirement Created Successfully!", "success");
-            resetForm();
-        } catch {
-            setError(error.response?.data?.message || "Failed to create requirement. Try again.");
-        }
-    }
+    const handleSubmit = async () => {
+      try {
+          if (isEditMode) {
+              await updateRequirement(
+                  workspaceId,
+                  projectId,
+                  requirement._id,
+                  formData
+              );
+
+              onClose();
+              showToast("Requirement updated successfully!", "success");
+              resetForm();
+
+              return;
+          }
+
+          await createRequirement(
+              workspaceId,
+              projectId,
+              formData
+          );
+
+          onClose();
+          showToast("Requirement created successfully!", "success");
+          resetForm();
+      } catch (error) {
+          setError(
+              error.response?.data?.message ||
+              `Failed to ${
+                  isEditMode ? "update" : "create"
+              } requirement. Try again.`
+          );
+      }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-[2px]">
@@ -109,11 +161,13 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
 
           <div>
             <h2 className="text-lg font-semibold text-text-primary">
-              Create Requirement
+                {isEditMode ? "Edit Requirement" : "Create Requirement"}
             </h2>
 
             <p className="mt-1 text-sm text-text-secondary">
-              Define what this project needs to accomplish.
+                {isEditMode
+                    ? "Update the requirement details."
+                    : "Define what this project needs to accomplish."}
             </p>
           </div>
 
@@ -369,12 +423,17 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
 
           <button
             type="button"
-            onClick={handleCreateRequirement}
+            onClick={handleSubmit}
+            disabled={isLoading}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-dark"
           >
             {isLoading ? (
                 <Loader />
-            ) : ("Create Requirement")}
+            ) : (
+                isEditMode
+                    ? "Save Changes"
+                    : "Create Requirement"
+            )}
           </button>
         </div>
       </div>

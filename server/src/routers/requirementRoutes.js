@@ -17,7 +17,8 @@ router.get('/', authMiddleware, workspaceMiddleware, getAllRequirements);
 router.get('/:requirementId', authMiddleware, workspaceMiddleware, getRequirement);
 
 router.post('/', authMiddleware, workspaceMiddleware, createRequirement);
-router.post('/:requirementId', authMiddleware, workspaceMiddleware, updateRequirement);
+
+router.patch('/:requirementId', authMiddleware, workspaceMiddleware, updateRequirement);
 
 router.delete('/:requirementId', authMiddleware, workspaceMiddleware, deleteRequirement);
 

@@ -36,6 +36,8 @@ function Requirements({ project }) {
     const [openCreateModal, setOpenCreateModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
+    const [editingRequirement, setEditingRequirement] = useState(null);
+
     const [selectedRequirement, setSelectedRequirement] = useState(null);
 
     const requirements = String(requirementsProjectId) === String(project?._id)
@@ -58,6 +60,22 @@ function Requirements({ project }) {
             window.removeEventListener("resize", close);
         };
     }, [openMenuId]);
+
+    const handleCreateRequirement = () => {
+        setEditingRequirement(null);
+        setOpenCreateModal(true);
+    };
+
+    const handleEditRequirement = (requirement) => {
+        setEditingRequirement(requirement);
+        setOpenCreateModal(true);
+    };
+
+    const handleCloseRequirementModal = () => {
+        setOpenCreateModal(false);
+        setEditingRequirement(null);
+    };
+
     const isAdmin = isWorkspaceAdmin();
 
     const projectMembers = project?.team || [];
@@ -125,7 +143,7 @@ function Requirements({ project }) {
         {isAdmin && (
           <button
           type="button"
-          onClick={() => setOpenCreateModal(true)}
+          onClick={handleCreateRequirement}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary-dark"
         >
           <Plus size={18} />
@@ -388,7 +406,8 @@ function Requirements({ project }) {
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  console.log("Edit Requirement");
+                                  setOpenMenuId(null);
+                                  handleEditRequirement(requirement);
                                 }}
                                 className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary transition hover:bg-surface"
                             >
@@ -428,10 +447,11 @@ function Requirements({ project }) {
 
       <CreateRequirementModal 
         open={openCreateModal}
-        onClose={() => setOpenCreateModal(false)}
+        onClose={handleCloseRequirementModal}
         workspaceId={currentWorkspaceId}
         projectId={project?._id}
         projectMembers={projectMembers}
+        requirement={editingRequirement}
       />
 
       <DeleteRequirementModal 
