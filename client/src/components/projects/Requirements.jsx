@@ -20,6 +20,7 @@ import useRequirementStore from "../../stores/requirementStore";
 import CreateRequirementModal from "./requirements/CreateRequirementModal";
 
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
+import DeleteRequirementModal from "./requirements/DeleteRequirementModal";
 
 function Requirements({ project }) {
     const navigate = useNavigate();
@@ -32,8 +33,10 @@ function Requirements({ project }) {
 
     const [openMenuId, setOpenMenuId] = useState(null);
     const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-
     const [openCreateModal, setOpenCreateModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+    const [selectedRequirement, setSelectedRequirement] = useState(null);
 
     const requirements = String(requirementsProjectId) === String(project?._id)
         ? storedRequirements
@@ -295,6 +298,9 @@ function Requirements({ project }) {
           {/* Table Body */}
           <tbody>
             {requirements.map((requirement, index) => {
+              const allTasks = project.tasks || [];
+              const tasks = allTasks.filter(task => task.requirementId === requirement._id);
+
               return (
                 <tr
                   key={requirement._id}
@@ -334,7 +340,7 @@ function Requirements({ project }) {
                   {/* Tasks */}
                   <td className="px-3 py-4">
                       <span className="text-sm text-text-secondary">
-                        {requirement?.tasks?.length}
+                        {tasks.length}
                       </span>
                   </td>
 
@@ -348,9 +354,10 @@ function Requirements({ project }) {
 
                     <button
                       type="button"
-                      onClick={(e) =>
+                      onClick={(e) => {
+                        e.stopPropagation();
                         handleMenuToggle(e, requirement._id)
-                      }
+                      }}
                       className="inline-flex h-8 w-8 items-center justify-center rounded-md text-text-secondary transition hover:bg-surface hover:text-text-primary"
                     >
                       <MoreHorizontal size={18} />
@@ -365,29 +372,46 @@ function Requirements({ project }) {
 
                           <button
                               type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/projects/${project._id}/requirements/${requirement._id}`)
+                              }}
                               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary transition hover:bg-surface"
                           >
                               <Eye size={15} />
                               Open Requirement
                           </button>
 
-                          <button
-                              type="button"
-                              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary transition hover:bg-surface"
-                          >
-                              <Pencil size={15} />
-                              Edit Requirement
-                          </button>
+                          {isAdmin && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log("Edit Requirement");
+                                }}
+                                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary transition hover:bg-surface"
+                            >
+                                <Pencil size={15} />
+                                Edit Requirement
+                            </button>
 
-                          <div className="my-1 border-t border-border" />
+                            <div className="my-1 border-t border-border" />
 
-                          <button
-                              type="button"
-                              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger transition hover:bg-danger/5"
-                          >
-                              <Trash2 size={15} />
-                              Delete Requirement
-                          </button>
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setOpenDeleteModal(true);
+                                  setSelectedRequirement(requirement)
+                                }}
+                                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger transition hover:bg-danger/5"
+                            >
+                                <Trash2 size={15} />
+                                Delete Requirement
+                            </button>
+                            </>
+                          )}
                           </div>,
 
                           document.body
@@ -408,6 +432,16 @@ function Requirements({ project }) {
         workspaceId={currentWorkspaceId}
         projectId={project?._id}
         projectMembers={projectMembers}
+      />
+
+      <DeleteRequirementModal 
+        isOpen={openDeleteModal && selectedRequirement}
+        onClose={() => {
+          setOpenDeleteModal(false);
+          setSelectedRequirement(null);
+        }}
+        projectId={project._id}
+        requirement={selectedRequirement}
       />
     </div>
   );

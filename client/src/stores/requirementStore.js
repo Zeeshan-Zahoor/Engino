@@ -278,6 +278,29 @@ const useRequirementStore = create((set) => ({
             throw error;
         }
     },
+
+    deleteRequirement: async (workspaceId, projectId, requirementId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await api.delete(`workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}`);
+
+            set(state => ({
+                isLoading: false,
+                error: null,
+                requirements: state.requirements.filter(requirement => requirement._id !== requirementId),
+            }));
+
+            return response.data;
+            
+        } catch (error) {
+            set({
+                isLoading: false,
+                error: error.response?.data?.message || "Failed to delete requirement. Try again.",
+            });
+            console.log(error.response);
+            throw error;
+        }
+    }
 }));
 
 export default useRequirementStore;

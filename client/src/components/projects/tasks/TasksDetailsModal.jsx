@@ -23,6 +23,8 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
   const [editedTask, setEditedTast] = useState(task || {});
   const isAdmin = isWorkspaceAdmin();
 
+  console.log(task)
+
   useEffect(() => {
     if (task) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -514,11 +516,11 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                 label="Project"
                 title={
                   task.projectId?.name ||
-                  "User Authentication for Queuecare"
+                  "Unknown"
                 }
                 secondary={
                   task.projectId?.code ||
-                  "Third project"
+                  "No code"
                 }
               />
 
@@ -533,12 +535,12 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                 label="Requirement"
                 title={
                   task.requirementId?.name ||
-                  "User Authentication"
+                  "No Requirement"
                 }
                 secondary={
-                  <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-green-600">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-primary">
                     <CheckCircle2 size={11} />
-                    Approved
+                    {task.requirementId?.aiStatus}
                   </span>
                 }
               />

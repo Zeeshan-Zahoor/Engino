@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   UserPlus,
   MoreHorizontal,
-  Pencil,
   Trash2,
 } from "lucide-react";
 
@@ -173,18 +172,7 @@ function ProjectTeam({ project }) {
 
                       {openMenuId === membership._id && (
                         <div className="absolute right-0 top-10 z-20 w-44 overflow-hidden rounded-xl border border-border bg-white py-1 shadow-lg">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setOpenMenuId(null);
-                              // Change role logic later
-                            }}
-                            className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-text-primary transition hover:bg-surface"
-                          >
-                            <Pencil size={15} />
-                            Change Role
-                          </button>
-
+                          
                           <button
                             type="button"
                             onClick={() => handleRemoveProjectMember(member._id)}

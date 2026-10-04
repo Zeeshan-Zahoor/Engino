@@ -166,7 +166,8 @@ const getTask = async (req, res) => {
             })
             .populate("requirementId")
             .populate("assignee", "-password")
-            .populate("reporter", "-password");
+            .populate("reporter", "-password")
+            .populate("projectId");
 
         if (!task) {
             return res.status(404).json({

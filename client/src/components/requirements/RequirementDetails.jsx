@@ -32,7 +32,8 @@ function RequirementDetails({ requirement, setSelectedRequirement, isLoading }) 
     if (
         activeTab !== "AI Conversation" ||
         !requirement?._id ||
-        !currentWorkspaceId
+        !currentWorkspaceId ||
+        conversation
     ) {
         return;
     }
@@ -66,6 +67,7 @@ function RequirementDetails({ requirement, setSelectedRequirement, isLoading }) 
     requirement?.projectId,
     currentWorkspaceId,
     fetchAIConversation,
+    conversation
 ]);
 
   useEffect(() => {

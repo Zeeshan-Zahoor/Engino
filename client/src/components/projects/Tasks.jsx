@@ -36,6 +36,7 @@ function Tasks({ project }) {
     const {  
       updateTask,
       deleteTask,
+      fetchTask,
       isLoading,
       error, 
     } = useTaskStore();
@@ -86,6 +87,16 @@ function Tasks({ project }) {
             return "bg-muted text-muted-foreground";
         }
     };
+
+    const handleFetchTask = async (taskId) => {
+      try {
+        const response = await fetchTask(currentWorkspaceId, projectId, taskId);
+        setSelectedTask(response?.task);
+
+      } catch  {
+        showToast(error || "Error fetching task.", "error");
+      }
+    }
 
     const handleUpdateTask = async (updatedTask) => {
       if (!currentWorkspaceId || !projectId || !updateTask) return;
@@ -402,7 +413,7 @@ function Tasks({ project }) {
                         type="button"
                         onClick={() => {
                           setEditMode(false);
-                          setSelectedTask(task);
+                          handleFetchTask(task._id);
                           setOpenMenuId(null);
                         }}
                         className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-text-primary cursor-pointer hover:bg-surface"
@@ -415,7 +426,7 @@ function Tasks({ project }) {
                         <button
                         type="button"
                         onClick={() => {
-                            setSelectedTask(task);
+                            handleFetchTask(task._id);
                             setOpenMenuId(null);
                             setEditMode(true);
                           }

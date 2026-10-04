@@ -30,6 +30,27 @@ const useTaskStore = create((set) => ({
         }
     },
 
+    fetchTask: async (workspaceId, projectId, taskId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await api.get(`workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`);
+
+            set({
+                isLoading: false,
+                error: null,
+            });
+
+            return response.data;
+
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Failed to fetch task. Try Again.",
+            });
+            console.log(error.response);
+            throw error;
+        }
+    },
+
     fetchTasks: async (workspaceId, projectId) => {
         set({ isLoading: true, error: null });
         try {
