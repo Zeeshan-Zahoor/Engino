@@ -60,7 +60,7 @@ const useRequirementStore = create((set) => ({
     },
 
     fetchRequirement: async (workspaceId, projectId, requirementId) => {
-        set({ isLoading: true, error: null, currentRequirement: null });
+        set({ isLoading: true, error: null });
 
         try {
             const response = await api.get(`workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}`);
@@ -251,7 +251,33 @@ const useRequirementStore = create((set) => ({
             console.log(error.response)
             throw error;
         }
-    }
+    },
+
+    fetchAIConversation: async (workspaceId, projectId, requirementId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.get(
+                `workspaces/${workspaceId}/projects/${projectId}/requirements/${requirementId}/ai/conversation`
+            );
+
+            set({
+                isLoading: false,
+                error: null,
+            });
+
+            return response.data;
+        } catch (error) {
+            set({
+                isLoading: false,
+                error:
+                    error.response?.data?.message ||
+                    "Failed to fetch AI conversation.",
+            });
+            console.log(error.response)
+            throw error;
+        }
+    },
 }));
 
 export default useRequirementStore;

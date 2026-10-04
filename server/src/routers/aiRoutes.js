@@ -8,9 +8,12 @@ import {
     approvePlan,
     generateAiTasks,
     generatePlan,
+    getAIConversation,
 } from '../controllers/aiController.js';
 
 const router = express.Router({ mergeParams: true });
+
+router.get('/conversation', authMiddleware, workspaceMiddleware, getAIConversation);
 
 router.post('/analyze', authMiddleware, workspaceMiddleware, aiAnalysis);
 router.post('/clarify', authMiddleware, workspaceMiddleware, answerClarification);

@@ -502,6 +502,7 @@ const getAllRequirements = async (req, res) => {
         const requirements = await Requirement.find({
             projectId: { $in: projectIds },
         })
+        .populate("owner updatedBy")
         .sort({ createdAt: -1 })
         .lean();
 

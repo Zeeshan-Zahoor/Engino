@@ -1,30 +1,149 @@
 import {
-  Check,
-  Eye,
   Rocket,
   X,
 } from "lucide-react";
 import { getInitials } from '../../utils/getInitials';
 import useProjectStore from "../../stores/projectStore";
+import { useEffect, useState } from "react";
+import useWorkspaceStore from "../../stores/workspaceStore";
+import useRequirementStore from "../../stores/requirementStore";
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
+import Loader from "../../components/common/Loader";
+import OverviewContent from "./OverviewContent";
+import PlanContent from "./PlanContent";
+import TasksContent from "./TasksContent";
+import ConversationContent from "./ConversationContent";
+import { useNavigate } from "react-router-dom";
 
-// const acceptanceCriteria = [
-//   "Admin can create and manage classes",
-//   "Admin can mark attendance for each student",
-//   "Students can view their attendance percentage",
-//   "Admin can generate monthly attendance reports",
-//   "Low attendance alerts are sent to students",
-// ];
 
-const complexityStyles = {
-  High: "text-danger",
-  Medium: "text-warning",
-  Low: "text-success",
-};
+function RequirementDetails({ requirement, setSelectedRequirement, isLoading }) {
+  const { projects, fetchProjects } = useProjectStore();
+  const { currentWorkspaceId } = useWorkspaceStore();
+  const { fetchAIConversation } = useRequirementStore();
+  const isAdmin = isWorkspaceAdmin();
+  const navigate = useNavigate();
 
-function RequirementDetails({ requirement }) {
-  const projects = useProjectStore(state => state.projects);
+  const [activeTab, setActiveTab] = useState("Overview");
+  const [conversation, setConversation] = useState(null);
+  const [conversationLoading, setConversationLoading] = useState(false);
+
+  
+  useEffect(() => {
+    if (
+        activeTab !== "AI Conversation" ||
+        !requirement?._id ||
+        !currentWorkspaceId
+    ) {
+        return;
+    }
+
+    const loadConversation = async () => {
+        try {
+            setConversationLoading(true);
+            const projectId =
+              typeof requirement.projectId === "object"
+                  ? requirement.projectId?._id
+                  : requirement.projectId;
+
+            const response = await fetchAIConversation(
+                currentWorkspaceId,
+                projectId,
+                requirement._id
+            );
+
+            setConversation(response?.conversation || null);
+        } catch {
+            setConversation(null);
+        } finally {
+            setConversationLoading(false);
+        }
+    };
+
+    loadConversation();
+}, [
+    activeTab,
+    requirement?._id,
+    requirement?.projectId,
+    currentWorkspaceId,
+    fetchAIConversation,
+]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveTab("Overview");
+  }, [requirement?._id]);
+
+
+  useEffect(() => {
+    if(!currentWorkspaceId) return;
+    if(projects.length === 0) {
+      fetchProjects(currentWorkspaceId);
+    }
+  }, [currentWorkspaceId, fetchProjects, projects.length]);
+
+  const handleNextAction = () => {
+    if (!requirement?.projectId._id || !requirement?._id) return;
+
+    navigate(`/projects/${requirement?.projectId._id}/requirements/${requirement._id}`);
+  };
+
+  if(!requirement) return null;
+
+  if(isLoading) {
+    return <div className="w-full h-full flex justify-center  items-center">
+          <Loader color="text-primary" size={30}/>
+        </div>
+  }
+
+  const nextActionConfig = {
+      Pending: {
+        title: "Start AI Analysis",
+        description:
+          "Analyze this requirement to identify ambiguity and determine whether it is ready for planning.",
+        button: "Start AI Analysis",
+      },
+
+      "Needs Clarification": {
+        title: "Answer Clarification",
+        description:
+          "AI needs additional information before this requirement can move to planning.",
+        button: "Answer Clarification",
+      },
+
+      Clear: {
+        title: "Generate Engineering Plan",
+        description:
+          "The requirement is clear and ready to be converted into an engineering plan.",
+        button: "Generate Plan",
+      },
+
+      "Plan Generated": {
+        title: "Review AI Plan",
+        description:
+          "The engineering plan has been generated and is ready for review.",
+        button: "Review Plan",
+      },
+
+      "AI Plan Ready": {
+        title: "Review AI Plan",
+        description:
+          "The AI-generated engineering plan is ready for your review.",
+        button: "Review Plan",
+      },
+
+      Approved: {
+        title: "Manage Generated Tasks",
+        description:
+          "The AI plan has been approved. Review and manage the generated engineering tasks.",
+        button: "View Tasks",
+      },
+    };
+
+    const nextAction =
+      nextActionConfig[requirement?.aiStatus] || nextActionConfig.Pending;
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-white">
+    <section className="overflow-hidden rounded-xl border border-border bg-white transition-all">
+   
       {/* Requirement Header */}
       <div className="border-b border-border px-4 pt-4">
         <div className="flex items-start justify-between gap-3">
@@ -39,7 +158,7 @@ function RequirementDetails({ requirement }) {
               </h2>
 
               <p className="mt-1 text-xs text-text-secondary">
-                · {projects.find(project => project.id === requirement.projectId)?.name}
+                · {projects.find(project => project._id === requirement.projectId._id)?.name}
               </p>
             </div>
           </div>
@@ -51,6 +170,7 @@ function RequirementDetails({ requirement }) {
 
             <button
               type="button"
+              onClick={() => setSelectedRequirement(null)}
               className="flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition hover:bg-surface hover:text-text-primary"
               aria-label="Close"
             >
@@ -65,14 +185,14 @@ function RequirementDetails({ requirement }) {
             "Overview",
             "AI Conversation",
             "Plan",
-            "Tasks (24)",
-            "History",
-          ].map((tab, index) => (
+            "Tasks",
+          ].map((tab) => (
             <button
               key={tab}
               type="button"
+              onClick={() => setActiveTab(tab)}
               className={`relative shrink-0 px-2 pb-3 text-xs font-medium ${
-                index === 0
+                activeTab === tab
                   ? "text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
                   : "text-text-secondary hover:text-text-primary"
               }`}
@@ -83,211 +203,66 @@ function RequirementDetails({ requirement }) {
         </div>
       </div>
 
-      {/* Overview */}
-      <div className="px-4 py-4">
-        {/* Requirement Description */}
-        <div>
-          <h3 className="text-sm font-bold text-text-primary">
-            Requirement Description
-          </h3>
+      {/* Tab Contents */}
+      {activeTab === "Overview" && (
+        <OverviewContent 
+          requirement={requirement}
+          projects={projects}
+        />
+      )}
+      
+      {activeTab === "AI Conversation" && (
+        <ConversationContent 
+          conversation={conversation}
+          conversationLoading={conversationLoading}
+        />
+      )}
 
-          <p className="mt-2 text-sm leading-5 text-text-secondary">
-            {requirement.description}
-          </p>
-        </div>
+      {activeTab === "Plan" && (
+        <PlanContent requirement={requirement}/>
+      )}
 
-        {/* Acceptance Criteria */}
-        <div className="mt-5">
-          <h3 className="text-sm font-bold text-text-primary">
-            Acceptance Criteria
-          </h3>
-
-          <div className="mt-3 space-y-2">
-            {requirement.acceptanceCriteria.map((criteria) => (
-              <div
-                key={criteria}
-                className="flex items-start gap-2"
-              >
-                <div className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-50 text-success">
-                  <Check size={9} strokeWidth={3} />
-                </div>
-
-                <span className="text-sm leading-4 text-text-secondary">
-                  {criteria}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Metrics */}
-        <div className="mt-5 grid grid-cols-3 gap-1.5">
-          <MetricCard
-            title="Complexity"
-            value={`${requirement.complexity}`}
-            valueClassName={`${complexityStyles[requirement.complexity]}`}
-            complexity
-            complexityType={requirement.complexity}
-          />
-
-          <MetricCard
-            title="Estimated Effort"
-            value={requirement.estimatedEffort}
-          />
-
-          <MetricCard
-            title="AI Confidence"
-            value={`${requirement.aiConfidence}%`}
-            valueClassName="text-text-primary"
-          />
-        </div>
-
-        {/* Metadata */}
-        <div className="mt-1.5 grid grid-cols-3 gap-1.5">
-          <div className="min-h-[72px] rounded-lg border border-border p-2.5">
-            <p className="text-xs font-medium text-text-secondary">
-              Project
-            </p>
-
-            <span className="mt-2 inline-flex rounded-md bg-primary-light px-2 py-1 text-xs font-semibold text-primary">
-              {projects.find(project => project.id === requirement.projectId)?.name}
-            </span>
-          </div>
-
-          <div className="min-h-[72px] rounded-lg border border-border p-2.5">
-            <p className="text-xs font-medium text-text-secondary">
-              Created By
-            </p>
-
-            <div className="mt-2 flex items-center gap-2">
-              <Avatar initials={getInitials(requirement.owner.name)} />
-
-              <div>
-                <p className="text-xs font-semibold text-text-primary">
-                  {requirement.owner.name}
-                </p>
-
-                <p className="mt-0.5 text-xs text-text-secondary">
-                  {requirement.createdAt}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="min-h-[72px] rounded-lg border border-border p-2.5">
-            <p className="text-xs font-medium text-text-secondary">
-              Last Updated
-            </p>
-
-            <div className="mt-2 flex items-center gap-2">
-              <Avatar initials={getInitials(requirement.updatedBy.name)} />
-
-              <div>
-                <p className="text-xs font-semibold text-text-primary">
-                  {requirement.updatedAt}
-                </p>
-
-                <p className="mt-0.5 text-xs text-text-secondary">
-                  {requirement.updated}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {activeTab === "Tasks" && (
+        <TasksContent requirement={requirement}/>
+      )}
 
       {/* Next Action */}
-      <div className="border-t border-border px-4 py-4">
-        <h3 className="text-sm font-bold text-text-primary">
-          Next Action
-        </h3>
+      {isAdmin && (
+        <div className="border-t border-border px-4 py-4">
+          <div>
+            <h3 className="text-sm font-semibold text-text-primary">
+              Next Action
+            </h3>
 
-        <p className="mt-2 text-xs leading-4 text-text-secondary">
-          Review the generated engineering plan and publish tasks.
-        </p>
+            <div className="mt-3 rounded-xl border border-border bg-surface p-4">
+              <h4 className="text-sm font-semibold text-text-primary">
+                {nextAction.title}
+              </h4>
 
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            className="flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border text-xs font-semibold text-text-primary transition hover:bg-surface"
-          >
-            <Eye size={12} />
-            View Plan
-          </button>
+              <p className="mt-1.5 text-sm leading-5 text-text-secondary">
+                {nextAction.description}
+              </p>
 
-          <button
-            type="button"
-            className="flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary text-xs font-semibold text-white transition hover:bg-primary-dark"
-          >
-            <Rocket size={12} />
-            Review & Publish
-          </button>
+              <button
+                type="button"
+                onClick={handleNextAction}
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-hover"
+              >
+                <Rocket size={15} />
+                {nextAction.button}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
 
-function MetricCard({
-  title,
-  value,
-  valueClassName = "text-text-primary",
-  complexity = false,
-  complexityType,
-}) {
-  return (
-    <div className="min-h-[58px] rounded-lg border border-border p-2.5">
-      <p className="text-xs font-medium text-text-secondary">
-        {title}
-      </p>
 
-      {complexity && 
-        ( complexityType === "Medium"
-          ? (
-            <div className="mt-2 flex gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
-              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
-              <span className="h-1.5 w-1.5 rounded-full bg-warning" />
-              <span className="h-1.5 w-1.5 rounded-full bg-border" />
-              <span className="h-1.5 w-1.5 rounded-full bg-border" />
-            </div>
-          )
-          : complexityType === "High"
-                ? (
-                  <div className="mt-2 flex gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-danger" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
-                  </div>
-                )
-                : (
-                  <div className="mt-2 flex gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-border" />
-                  </div>
-                )
-    
-    )}
-      <p
-        className={`mt-1 text-sm font-semibold ${valueClassName}`}
-      >
-        {value}
-      </p>
-    </div>
-  );
-}
 
-function Avatar({ initials }) {
-  return (
-    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-bold text-primary">
-      {initials}
-    </div>
-  );
-}
+
+
+
 
 export default RequirementDetails;

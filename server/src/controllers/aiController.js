@@ -604,10 +604,65 @@ const approvePlan = async (req, res) => {
     }
 }
 
+const getAIConversation = async (req, res) => {
+    try {
+        const { projectId, requirementId } = req.params;
+        const workspaceId = req.workspaceId;
+
+        if (!projectId || !requirementId) {
+            return res.status(400).json({
+                success: false,
+                message: "Project ID and requirement ID are required!",
+            });
+        }
+
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
+        });
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project is not in the workspace.",
+            });
+        }
+
+        const requirement = await Requirement.findOne({
+            _id: requirementId,
+            projectId,
+        });
+
+        if (!requirement) {
+            return res.status(404).json({
+                success: false,
+                message: "Requirement does not belong to this project.",
+            });
+        }
+
+        const conversation = await AIConversation.findOne({
+            requirementId,
+        }).lean();
+
+        return res.status(200).json({
+            success: true,
+            conversation: conversation || null,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error.",
+            error: error.message,
+        });
+    }
+};
+
 export {
     aiAnalysis,
     answerClarification,
     generatePlan,
     generateAiTasks,
     approvePlan,
+    getAIConversation,
 }

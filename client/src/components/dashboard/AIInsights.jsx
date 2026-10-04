@@ -157,7 +157,7 @@ function AIInsights() {
                     {insight.title}
                   </p>
 
-                  <p className="mt-0.5 truncate text-sm text-text-secondary">
+                  <p className="mt-0.5 truncate text-xs text-text-secondary">
                     {insight.description}
                   </p>
                 </div>

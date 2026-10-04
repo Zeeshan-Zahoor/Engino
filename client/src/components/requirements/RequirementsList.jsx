@@ -1,5 +1,6 @@
 import { Clock3, FileText } from "lucide-react";
 import useProjectStore from "../../stores/projectStore";
+import Avatar from "../../utils/Avatar";
 
 const statusStyles = {
   "Plan Generated": "bg-green-50 text-success",
@@ -20,9 +21,11 @@ function RequirementsList({
   selectedRequirement,
   setSelectedRequirement,
  }) {
+
   const projects = useProjectStore(state => state.projects);
+  console.log("Requirements: ", requirements)
   return (
-    <section className="min-w-0 overflow-hidden rounded-2xl border border-border bg-white">
+    <section className="min-w-0 overflow-hidden rounded-2xl border border-border bg-white transition-all">
       {/* Header */}
       <div className="border-b border-border px-5 py-4">
         <div className="flex items-center justify-between">
@@ -49,14 +52,14 @@ function RequirementsList({
 
       {/* List */}
       <div className="divide-y divide-border">
-        {(requirements.slice(0, 7)).map((requirement) => (
+        {requirements.map((requirement) => (
           <button
-            key={requirement.id}
+            key={requirement._id}
             onClick={() => setSelectedRequirement(requirement)}
             type="button"
             // no need to worry for selected state right now
             className={`w-full text-left transition ${
-              requirement.id === selectedRequirement?.id
+              requirement._id === selectedRequirement?._id
                 ? "bg-primary-light/40"
                 : "hover:bg-surface"
             }`}
@@ -67,7 +70,7 @@ function RequirementsList({
               <div className="flex min-w-0 items-center gap-3">
                 <div
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                    requirement.id === selectedRequirement?.id
+                    requirement._id === selectedRequirement?._id
                       ? "bg-primary text-white"
                       : "bg-surface text-text-secondary"
                   }`}
@@ -82,14 +85,14 @@ function RequirementsList({
 
                   <p className="mt-1 flex items-center gap-1 text-xs text-text-secondary">
                     <Clock3 size={10} />
-                    Updated {requirement.updated}
+                    Updated {requirement.updatedAt ? new Date(requirement.updatedAt).toLocaleDateString() : ""}
                   </p>
                 </div>
               </div>
 
               {/* Project */}
               <span className="truncate text-xs text-text-secondary">
-                {projects.find(project => project.id === requirement.projectId)?.name}
+                {projects.find(project => project._id === requirement.projectId)?.name}
               </span>
 
               {/* Status */}
@@ -113,7 +116,7 @@ function RequirementsList({
               {/* Owner */}
               <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                  {requirement.owner.initials}
+                  <Avatar user={requirement.owner}/>
                 </div>
 
                 <span className="truncate text-xs text-text-secondary">
@@ -126,7 +129,7 @@ function RequirementsList({
             <div className="flex items-start gap-3 px-4 py-4 xl:hidden">
               <div
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                  requirement.id === selectedRequirement?.id
+                  requirement._id === selectedRequirement?._id
                     ? "bg-primary text-white"
                     : "bg-surface text-text-secondary"
                 }`}
@@ -141,12 +144,12 @@ function RequirementsList({
                   </p>
 
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                    {requirement.owner.initials}
+                    <Avatar user={requirement.owner}/>
                   </div>
                 </div>
 
                 <p className="mt-1 text-xs text-text-secondary">
-                  {projects.find(project => project.id === requirement.projectId)?.name}
+                  {projects.find(project => project._id === requirement.projectId)?.name}
                 </p>
 
                 <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -167,7 +170,7 @@ function RequirementsList({
                   </span>
 
                   <span className="text-xs text-text-secondary">
-                    Updated {requirement.updated}
+                    Updated {requirement.updatedAt ? new Date(requirement.updatedAt).toLocaleDateString() : ""}
                   </span>
                 </div>
               </div>
@@ -176,43 +179,6 @@ function RequirementsList({
         ))}
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-border px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-xs text-text-secondary">
-                Showing 1 to 7 of 12 requirements
-            </span>
-
-            <div className="flex items-center gap-1">
-                <button
-                type="button"
-                aria-label="Previous page"
-                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-text-secondary transition hover:bg-surface"
-                >
-                ‹
-                </button>
-
-                <button
-                type="button"
-                className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-semibold text-white"
-                >
-                1
-                </button>
-
-                <button
-                type="button"
-                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-xs font-medium text-text-primary transition hover:bg-surface"
-                >
-                2
-                </button>
-
-                <button
-                type="button"
-                aria-label="Next page"
-                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-text-secondary transition hover:bg-surface"
-                >
-                ›
-                </button>
-            </div>
-        </div>
     </section>
   );
 }
