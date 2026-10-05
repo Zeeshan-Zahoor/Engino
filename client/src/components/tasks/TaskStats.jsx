@@ -7,12 +7,11 @@ import {
 } from "lucide-react";
 
 import StatsCard from "../dashboard/StatsCard";
-import { tasks } from '../../data/tasks';
 
-function TaskStats() {
+function TaskStats({ tasks }) {
   const todoTasks = tasks.filter(task => task.status === "Todo");
   const inProgressTasks = tasks.filter(task => task.status === "In Progress");
-  const completedTasks = tasks.filter(task => task.status === "Completed");
+  const completedTasks = tasks.filter(task => task.status === "Done");
   const overdueTasks = tasks.filter(task => task.dueDate < new Date());
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

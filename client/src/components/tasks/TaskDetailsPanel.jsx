@@ -5,14 +5,16 @@ import {
   Clock3,
   CheckCircle2,
 } from "lucide-react";
-import { requirements } from "../../data/requirements";
-import { getInitials } from "../../utils/getInitials";
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
+import useAuthStore from "../../stores/authStore";
+import Avatar from "../../utils/Avatar";
+import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 
 const statusStyles = {
     "In Progress": "bg-blue-50 text-info",
     Todo: "bg-blue-50 text-info",
     // "In Review": "bg-purple-50 text-primary",
-    Completed: "bg-green-50 text-success",
+    Done: "bg-green-50 text-success",
   };
 
 const complexityStyles = {
@@ -41,7 +43,13 @@ function DetailRow({ label, children }) {
   );
 }
 
-function TaskDetailsPanel({ task }) {
+function TaskDetailsPanel({ task, requirements, setSelectedTask }) {
+  if(!task) return null;
+  
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { user } = useAuthStore();
+  const isAdmin = isWorkspaceAdmin();
+ 
   return (
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-white">
       {/* Header */}
@@ -49,7 +57,7 @@ function TaskDetailsPanel({ task }) {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-xs font-semibold text-text-secondary">
-              {task.id.toUpperCase()}
+              {task._id.slice(task._id.length-4).toUpperCase()}
             </p>
 
             <h2 className="mt-1 text-lg font-semibold leading-6 text-text-primary">
@@ -58,12 +66,13 @@ function TaskDetailsPanel({ task }) {
 
             <div className="mt-2 flex items-center gap-2 text-xs text-text-secondary">
               <span className="text-primary text-lg">▣</span>
-              <span>{requirements.find(requirement => requirement.id === task.requirementId).name}</span>
+              <span>{requirements.find(requirement => requirement._id === task.requirementId)?.name || "No Linked Requirement"}</span>
             </div>
           </div>
 
           <button
             type="button"
+            onClick={() => setSelectedTask(null)}
             className="shrink-0 text-text-secondary transition hover:text-text-primary"
             aria-label="Close details"
           >
@@ -83,39 +92,6 @@ function TaskDetailsPanel({ task }) {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="shrink-0 border-b border-border px-4">
-        <div className="flex gap-5 overflow-x-auto">
-          <button
-            type="button"
-            className="relative whitespace-nowrap py-3 text-sm font-semibold text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
-          >
-            Details
-          </button>
-
-          <button
-            type="button"
-            className="whitespace-nowrap py-3 text-sm text-text-secondary"
-          >
-            Subtasks (6)
-          </button>
-
-          <button
-            type="button"
-            className="whitespace-nowrap py-3 text-sm text-text-secondary"
-          >
-            Comments (3)
-          </button>
-
-          <button
-            type="button"
-            className="whitespace-nowrap py-3 text-sm text-text-secondary"
-          >
-            Activity
-          </button>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="min-h-0 flex-1 overflow-y-auto">
         {/* Description */}
@@ -126,14 +102,8 @@ function TaskDetailsPanel({ task }) {
 
           <p className="mt-3 text-sm leading-5 text-text-secondary">
             {task.description}
-          </p>
-
-          <button
-            type="button"
-            className="mt-1 text-sm font-medium text-primary"
-          >
-            Show more
-          </button>
+          </p> 
+        
         </section>
 
         {/* Details */}
@@ -141,18 +111,18 @@ function TaskDetailsPanel({ task }) {
           <DetailRow label="Assignee">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                {getInitials(task.assignee.name)}
+                <Avatar user={task.assignee}/>
               </div>
-              {task.assignee.name}
+              {task.assignee?.name || "Unassigned"}
             </div>
           </DetailRow>
 
           <DetailRow label="Reporter">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                {getInitials(task.reporter.name)}
+                <Avatar user={task.reporter}/>
               </div>
-              {task.reporter.name}
+              {task.reporter?.name || "Unknown"}
             </div>
           </DetailRow>
 
@@ -164,16 +134,16 @@ function TaskDetailsPanel({ task }) {
 
           <DetailRow label="Due Date">
             <div>
-              <span>{task.dueDate}</span>
+              <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-- -- --"}</span>
             </div>
           </DetailRow>
 
           <DetailRow label="Estimated Effort">
-            {task.effort}
+            {getRelativeEstimatedTime(task.estimatedEffortMinutes)}
           </DetailRow>
 
           <DetailRow label="Time Spent">
-            {task.timeSpent}
+            {task.timeSpent || "Yet to implement"} 
           </DetailRow>
 
           <DetailRow label="Task Type">
@@ -210,40 +180,10 @@ function TaskDetailsPanel({ task }) {
               ),
             )}
 
-            <button
-              type="button"
-              className="flex h-6 w-6 items-center justify-center rounded-md border border-border text-text-secondary"
-            >
-              +
-            </button>
           </div>
         </section>
 
-        {/* Progress */}
         <section className="border-b border-border p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-text-primary">
-              Progress
-            </h3>
-
-            <span className="text-sm font-semibold text-text-primary">
-              {task.progress}%
-            </span>
-          </div>
-
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface">
-            <div
-              className={`h-full rounded-full transition-all ${
-              task.progress === 100
-                ? "bg-success"
-                : task.progress > 0
-                  ? "bg-primary"
-                  : "bg-border"
-            }`}
-              style={{ width: `${task.progress}%` }}
-            />
-          </div>
-
           <div className="mt-2 flex items-center justify-end gap-1 text-xs text-text-secondary">
             <Clock3 size={13} />
             {task.timeSpent} of {task.effort}
@@ -264,11 +204,11 @@ function TaskDetailsPanel({ task }) {
 
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-text-primary">
-                  {requirements.find(requirement => requirement.id === task.requirementId).name}
+                  {requirements.find(requirement => requirement._id === task.requirementId)?.name || "No Linked Requirement"}
                 </p>
 
                 <p className="mt-1 text-xs text-text-secondary">
-                  {requirements.find(requirement => requirement.id === task.requirementId).id.toUpperCase()}
+                  {requirements.find(requirement => requirement._id === task.requirementId)?._id.slice(task.requirementId.length-4).toUpperCase() || ""}
                 </p>
               </div>
             </div>
@@ -278,7 +218,8 @@ function TaskDetailsPanel({ task }) {
 
       {/* Footer */}
       <div className="shrink-0 border-t border-border p-3">
-        <div className="flex gap-2">
+        {(isAdmin || task.assignee?._id === user?._id) && (
+          <div className="flex gap-2">
           <button
             type="button"
             className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-border px-3 py-2.5 text-sm font-semibold text-text-primary transition hover:bg-surface"
@@ -295,6 +236,7 @@ function TaskDetailsPanel({ task }) {
             <ChevronDown size={15} />
           </button>
         </div>
+        )}
       </div>
     </aside>
   );

@@ -1,9 +1,6 @@
 import { CheckSquare, MoreVertical } from "lucide-react";
-import { tasks } from "../../data/tasks";
-import useProjectStore from '../../stores/projectStore';
-import { requirements } from '../../data/requirements';
-import { getInitials } from '../../utils/getInitials';
-import { useEffect } from "react";
+import Avatar from "../../utils/Avatar";
+import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 
 function StatusBadge({ status }) {
   const styles = {
@@ -42,31 +39,7 @@ function PriorityBadge({ priority }) {
   );
 }
 
-function ProgressBar({ progress }) {
-  return (
-    <div className="flex items-center gap-2">
-      <div className="h-1.5 w-14 overflow-hidden rounded-full bg-surface">
-        <div
-          className={`h-full rounded-full ${
-            progress === 100
-              ? "bg-success"
-              : progress > 0
-                ? "bg-primary"
-                : "bg-border"
-          }`}
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      <span className="text-xs text-text-secondary">
-        {progress}%
-      </span>
-    </div>
-  );
-}
-
-function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
-  const projects = useProjectStore(state => state.projects);
+function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask, insightFilter }) {
 
   const isDueThisWeek = (date) => {
     if (!date) return false;
@@ -93,7 +66,7 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
     return taskDate >= startOfWeek && taskDate <= endOfWeek;
   };
 
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = tasks?.filter((task) => {
     switch (insightFilter) {
       case "high-priority":
         return (
@@ -124,24 +97,11 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
         return true;
     }
   });
-
-  useEffect(() => {
-    const visibleTasks = filteredTasks.slice(0, 8);
-
-    if (
-      visibleTasks.length > 0 &&
-      !visibleTasks.some((task) => task.id === selectedTask?.id)
-    ) {
-      setSelectedTask(visibleTasks[0]);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [insightFilter, selectedTask, setSelectedTask]);
-
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-white">
+    <div className="max-h-220 overflow-auto scrollbar-thin scrollbar-thumb-surface rounded-xl border border-border bg-white">
 
       {/* Header */}
-      <div className="hidden border-b border-border bg-surface px-4 py-3 lg:grid lg:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] lg:items-center lg:gap-3">
+      <div className="hidden border-b border-border bg-surface px-5 py-3 lg:grid lg:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] lg:items-center lg:gap-3">
         <div />
 
         <span className="text-xs font-medium text-text-secondary">
@@ -149,7 +109,7 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
         </span>
 
         <span className="text-xs font-medium text-text-secondary">
-          Project / Requirement
+          Project/Requirement
         </span>
 
         <span className="text-xs font-medium text-text-secondary">
@@ -172,40 +132,33 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
           Est. Effort
         </span>
 
-        <span className="text-xs font-medium text-text-secondary">
-          Progress
-        </span>
-
-        <span className="text-xs font-medium text-text-secondary">
+        <span className="text-xs font-medium text-text-secondary mr-3">
           Actions
         </span>
       </div>
 
       {/* Rows */}
-      {(filteredTasks.slice(0, 8)).map((task) => (
-        <div
+      {filteredTasks?.map((task) => {
+        return (
+          <div
           role="button"
           onClick={() => setSelectedTask(task)}
-          key={task.id}
+          key={task._id}
           className="border-b border-border px-4 py-3 last:border-b-0 hover:bg-surface/40"
         >
           <div className="hidden lg:grid lg:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] lg:items-center lg:gap-3">
             {/* Checkbox */}
-            <button
-              type="button"
-              className="flex items-center justify-center"
-            >
-              <CheckSquare
-                size={16}
-                fill={selectedTask.id === task.id ? "green" : "none"}
-                className={`${selectedTask.id === task.id ? "text-white" : "text-text-secondary"}`}
-              />
-            </button>
+            <input
+              type="checkbox"
+              checked={selectedTask?._id === task._id}
+              onChange={() => setSelectedTask(task)}
+              className="h-4 w-4 cursor-pointer accent-green-600"
+            />
 
             {/* Task */}
             <div className="min-w-0">
               <p className="text-xs text-text-secondary">
-                {task.id.toUpperCase()}
+                {task._id.slice(task._id.length-4).toUpperCase()}
               </p>
 
               <h3 className="mt-0.5 truncate text-sm font-semibold text-text-primary">
@@ -220,22 +173,22 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
             {/* Project */}
             <div className="min-w-0">
               <p className="truncate text-sm font-medium text-text-primary">
-                {projects.find(project => project.id === task.projectId)?.name}
+                {projects.find(project => project._id === task.projectId)?.name}
               </p>
 
               <p className="mt-0.5 line-clamp-2 text-xs leading-4 text-text-secondary">
-                {requirements.find(requirement => requirement.id === task.requirementId)?.name}
+                {requirements.find(requirement => requirement._id === task.requirementId)?.name || "No Requirement"}
               </p>
             </div>
 
             {/* Assignee */}
             <div className="flex min-w-0 items-center gap-2">
               <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
-                {getInitials(task.assignee?.name)}
+                <Avatar user={task.assignee}/>
               </div>
 
               <span className="truncate text-xs text-text-primary">
-                {task.assignee?.name}
+                {task.assignee?.name || "Unassigned"}
               </span>
             </div>
 
@@ -248,17 +201,14 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
             {/* Due Date */}
             <div>
               <p className="text-xs font-medium text-text-primary">
-                {task.dueDate}
+                {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-- -- --"}
               </p>
             </div>
 
             {/* Effort */}
             <span className="text-xs font-medium text-text-primary">
-              {task.effort}
+              {getRelativeEstimatedTime(task.estimatedEffortMinutes)}
             </span>
-
-            {/* Progress */}
-            <ProgressBar progress={task.progress} />
 
             {/* Actions */}
             <button
@@ -279,7 +229,7 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
 
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-text-secondary">
-                  {task.id}
+                  {task._id}
                 </p>
 
                 <h3 className="mt-1 text-sm font-semibold text-text-primary">
@@ -301,7 +251,7 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
                       Project
                     </p>
                     <p className="mt-1 text-xs font-medium">
-                      {projects.find(project => project.id === task.projectId)?.name}
+                      {projects.find(project => project._id === task.projectId)?.name}
                     </p>
                   </div>
 
@@ -310,7 +260,7 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
                       Assignee
                     </p>
                     <p className="mt-1 text-xs font-medium">
-                      {task.assignee?.name}
+                      {task.assignee?.name || "Unassigned"}
                     </p>
                   </div>
 
@@ -319,18 +269,8 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
                       Due
                     </p>
                     <p className="mt-1 text-xs font-medium">
-                      {task.dueDate}
+                      {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-- -- --"}
                     </p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-text-secondary">
-                      Progress
-                    </p>
-
-                    <div className="mt-1">
-                      <ProgressBar progress={task.progress} />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -342,7 +282,8 @@ function TaskList({ selectedTask, setSelectedTask, insightFilter }) {
             </div>
           </div>
         </div>
-      ))}
+        )
+      })}
     </div>
   );
 }

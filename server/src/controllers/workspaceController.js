@@ -475,7 +475,7 @@ const getAllTasks = async (req, res) => {
         const allTasks = await Task.find({
             projectId: { $in: projectIds },
         })
-        .populate("assignee")
+        .populate("assignee reporter")
         .sort({ createdAt: -1 })
         .lean();
 
