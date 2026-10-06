@@ -1,13 +1,14 @@
-import { CheckSquare, MoreVertical } from "lucide-react";
+import { CheckSquare, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import Avatar from "../../utils/Avatar";
 import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
+import { useState } from "react";
+import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 function StatusBadge({ status }) {
   const styles = {
     "In Progress": "bg-blue-50 text-info",
-    Todo: "bg-blue-50 text-info",
-    // "In Review": "bg-purple-50 text-primary",
-    Completed: "bg-green-50 text-success",
+    Todo: "bg-purple-50 text-primary",
+    Done: "bg-green-50 text-success",
   };
 
   return (
@@ -39,7 +40,9 @@ function PriorityBadge({ priority }) {
   );
 }
 
-function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask, insightFilter }) {
+function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask, insightFilter, onEdit, onDelete }) {
+
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   const isDueThisWeek = (date) => {
     if (!date) return false;
@@ -97,6 +100,8 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
         return true;
     }
   });
+
+  const isAdmin = isWorkspaceAdmin();
   return (
     <div className="max-h-220 overflow-auto scrollbar-thin scrollbar-thumb-surface rounded-xl border border-border bg-white">
 
@@ -211,12 +216,62 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
             </span>
 
             {/* Actions */}
-            <button
-              type="button"
-              className="flex h-8 w-8 items-center justify-center rounded-md text-text-secondary hover:bg-surface"
-            >
-              <MoreVertical size={16} />
-            </button>
+            <div className="relative flex items-center justify-end">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenMenuId(
+                    openMenuId === task._id ? null : task._id
+                  );
+                }}
+                className="flex h-8 w-8 items-center justify-center rounded-md text-text-secondary hover:bg-surface"
+              >
+                <MoreVertical size={16} />
+              </button>
+
+              {openMenuId === task._id && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-border bg-white p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.10)]"
+                >
+                  {/* Admin Actions */}
+                  {isAdmin && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenMenuId(null);
+                          onEdit(task);
+                        }}
+                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-text-primary transition hover:bg-gray-50"
+                      >
+                        <div className="flex justify-center items-center gap-3">
+                          <Pencil size={15} />
+                          <span> Edit Task</span>
+                        </div>
+                      </button>
+
+                      <div className="my-1.5 h-px bg-border" />
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenMenuId(null);
+                          onDelete(task);
+                        }}
+                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                      >
+                        <div className="flex justify-center items-center gap-3">
+                          <Trash2 size={15} />
+                          <span>Delete Task</span>
+                        </div>
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile */}

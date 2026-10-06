@@ -86,7 +86,12 @@ function CreateTaskModal({ open, onClose }) {
 
   const handleCreateTask = async () => {
       try {
-        await createTask(currentWorkspaceId, projectId, formData);
+        await createTask(currentWorkspaceId, projectId, {
+          ...formData,
+          assignee: formData.assignee || null,
+          requirementId: formData.requirementId || null,
+        });
+        await fetchProject(currentWorkspaceId, projectId);
         
         onClose();
         showToast("Task Created Successfully!", "success");

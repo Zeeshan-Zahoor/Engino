@@ -52,7 +52,7 @@ const createTask = async (req, res) => {
             }
         }
 
-        if (requirementId !== "") {
+        if (requirementId) {
             const requirement = await Requirement.findOne({
                 _id: requirementId,
                 projectId,
@@ -286,8 +286,14 @@ const updateTask = async (req, res) => {
         const updatedTask = await Task.findByIdAndUpdate(
             taskId,
             { $set: updateFields },
-            { new: true, runValidators: true }
-        );
+            {
+                returnDocument: "after",
+                runValidators: true,
+            }
+        )
+            .populate("assignee", "-password")
+            .populate("reporter", "-password")
+            .populate("requirementId");
 
         return res.status(200).json({
             success: true,
@@ -363,10 +369,175 @@ const deleteTask = async (req, res) => {
     }
 };
 
+const claimTask = async (req, res) => {
+    try {
+         const { projectId, taskId } = req.params;
+        const userId = req.user.userId;
+        const workspaceId = req.workspaceId;
+        const membership = req.membership;
+
+        if (!projectId || !taskId) {
+            return res.status(400).json({
+                success: false,
+                message: "Project ID and task ID are required!",
+            });
+        }
+
+        if (!["Admin", "Member"].includes(membership.role)) {
+            return res.status(403).json({
+                success: false,
+                message: "You do not have permission to claim tasks.",
+            });
+        }
+
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
+        });
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found in the workspace",
+            });
+        }
+
+        const projectMember = await ProjectMember.findOne({
+            projectId,
+            userId,
+        });
+
+        if (!projectMember) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not a member of this project.",
+            });
+        }
+
+        // only succeeds if the task is still unassigned.
+        const task = await Task.findOneAndUpdate(
+            {
+                _id: taskId,
+                projectId,
+                assignee: null,
+            },
+            {
+                $set: {
+                    assignee: userId,
+                },
+            },
+            {
+                returnDocument: "after",
+                runValidators: true,
+            }
+        )
+            .populate("assignee", "-password")
+            .populate("reporter", "-password")
+            .populate("requirementId")
+            .populate("projectId");
+
+        if (!task) {
+            return res.status(409).json({
+                success: false,
+                message: "This task is already assigned to someone.",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Task claimed successfully!",
+            task,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
+    }
+}
+
+const unclaimTask = async (req, res) => {
+    try {
+        const { projectId, taskId } = req.params;
+        const userId = req.user.userId;
+        const workspaceId = req.workspaceId;
+        const membership = req.membership;
+
+        if (!projectId || !taskId) {
+            return res.status(400).json({
+                success: false,
+                message: "Project ID and task ID are required!",
+            });
+        }
+
+        const project = await Project.findOne({
+            _id: projectId,
+            workspaceId,
+        });
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found in the workspace",
+            });
+        }
+
+        const task = await Task.findOne({
+            _id: taskId,
+            projectId,
+        });
+
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                message: "Task not found in the project",
+            });
+        }
+
+        // Admin can unassign any task.
+        // Member can only unclaim their own task.
+        if (
+            membership.role !== "Admin" &&
+            (!task.assignee ||
+                task.assignee.toString() !== userId.toString())
+        ) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only unclaim tasks assigned to you.",
+            });
+        }
+
+        task.assignee = null;
+
+        await task.save();
+
+        const updatedTask = await Task.findById(task._id)
+            .populate("assignee", "-password")
+            .populate("reporter", "-password")
+            .populate("requirementId")
+            .populate("projectId");
+
+        return res.status(200).json({
+            success: true,
+            message: "Task unclaimed successfully!",
+            task: updatedTask,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
+    }
+};
+
 export {
     createTask,
     getAllTasks,
     getTask,
     updateTask,
     deleteTask,
+    claimTask,
+    unclaimTask,
 }

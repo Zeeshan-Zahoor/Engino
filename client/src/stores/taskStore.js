@@ -81,10 +81,10 @@ const useTaskStore = create((set) => ({
                 taskData,
             );
 
-            set(state => ({
+            set((state) => ({
                 isLoading: false,
                 error: null,
-                tasks: [state.tasks, response.data.task],
+                tasks: [...state.tasks, response.data.task],
             }));
 
             return response.data;
@@ -109,9 +109,19 @@ const useTaskStore = create((set) => ({
                 updatedTask,
             );
 
-            set(({
+            const updatedTaskData = response.data.updatedTask;
+
+            set((state) => ({
                 isLoading: false,
                 error: null,
+
+                tasks: state.tasks.map((task) => 
+                    task._id === taskId ? updatedTaskData : task
+                ),
+
+                allTasks: state.allTasks.map((task) => 
+                    task._id === taskId ? updatedTaskData : task
+                ),
             }));
 
             return response.data;
@@ -134,10 +144,12 @@ const useTaskStore = create((set) => ({
                 `workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`
             );
 
-            set({
+            set((state) => ({
+                tasks: state.tasks.filter((task) => task._id !== taskId),
+                allTasks: state.allTasks.filter((task) => task._id !== taskId),
                 isLoading: false,
                 error: null,
-            });
+            }));
 
             return response.data;
             
@@ -147,7 +159,77 @@ const useTaskStore = create((set) => ({
                 error: error.response?.data?.message || "Failed to delete task. Try again.",
             });
         }
-    }
+    },
+
+    claimTask: async (workspaceId, projectId, taskId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.post(`workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}/claim`);
+
+            set((state) => ({
+                allTasks: state.allTasks.map((task) =>
+                    task._id === taskId
+                        ? response.data.task
+                        : task
+                ),
+                tasks: state.tasks.map((task) =>
+                    task._id === taskId
+                        ? response.data.task
+                        : task
+                ),
+                isLoading: false,
+                error: null,
+            }));
+
+            return response.data;
+        } catch (error) {
+            set({
+                isLoading: false,
+                error:
+                    error.response?.data?.message ||
+                    "Failed to claim task. Try again.",
+            });
+            console.log(error.response);
+            throw error;
+        }
+    },
+
+    unclaimTask: async (workspaceId, projectId, taskId) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response = await api.patch(
+                `workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}/unclaim`
+            );
+
+            set((state) => ({
+                allTasks: state.allTasks.map((task) =>
+                    task._id === taskId
+                        ? response.data.task
+                        : task
+                ),
+                tasks: state.tasks.map((task) =>
+                    task._id === taskId
+                        ? response.data.task
+                        : task
+                ),
+                isLoading: false,
+                error: null,
+            }));
+
+            return response.data;
+        } catch (error) {
+            set({
+                isLoading: false,
+                error:
+                    error.response?.data?.message ||
+                    "Failed to unclaim task. Try again.",
+            });
+            console.log(error.response)
+            throw error;
+        }
+},
 }));
 
 export default useTaskStore;

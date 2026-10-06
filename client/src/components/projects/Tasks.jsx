@@ -26,6 +26,7 @@ import Toast from "../common/Toast";
 
 import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 import TaskDetailsModal from "./tasks/TasksDetailsModal";
+import DeleteTaskModal from "./tasks/DeleteTaskModal";
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 function Tasks({ project }) {
@@ -35,7 +36,7 @@ function Tasks({ project }) {
     const { showToast } = useToastStore();
     const {  
       updateTask,
-      deleteTask,
+      deleteTask: removeTask,
       fetchTask,
       isLoading,
       error, 
@@ -45,6 +46,7 @@ function Tasks({ project }) {
     const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [deleteTask, setDeleteTask] = useState(null);
 
     const isAdmin = isWorkspaceAdmin();
 
@@ -80,9 +82,6 @@ function Tasks({ project }) {
         case "Low":
             return "bg-success/10 text-success";
 
-        case "Urgent":
-            return "bg-danger/15 text-danger";
-
         default:
             return "bg-muted text-muted-foreground";
         }
@@ -116,11 +115,10 @@ function Tasks({ project }) {
 
     const handleDeleteTask = async (taskId) => {
       try {
-        setOpenMenuId(null);
-
-        await deleteTask(currentWorkspaceId, projectId, taskId);
+        await removeTask(currentWorkspaceId, projectId, taskId);
         await fetchProject(currentWorkspaceId, projectId);
         
+        setDeleteTask(null);
         showToast("Task Deleted Successfully!", "success");
 
       } catch {
@@ -444,7 +442,10 @@ function Tasks({ project }) {
                           <div className="my-1 border-t border-border" />
                           <button
                             type="button"
-                            onClick={() => handleDeleteTask(task._id)}
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              setDeleteTask(task)
+                            }}
                             className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger cursor-pointer hover:bg-danger/10"
                           >
                             <Trash2 size={15} />
@@ -484,6 +485,14 @@ function Tasks({ project }) {
         onSave={handleUpdateTask}
         loading={isLoading}
         error={error}
+      />
+
+      <DeleteTaskModal 
+          task={deleteTask}
+          open={!!deleteTask}
+          onClose={() => setDeleteTask(null)}
+          onConfirm={() => handleDeleteTask(deleteTask._id)}
+          loading={isLoading}
       />
 
       <Toast />

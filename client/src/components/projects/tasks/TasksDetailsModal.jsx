@@ -20,7 +20,7 @@ import { isWorkspaceAdmin } from "../../../utils/isWorkspaceAdmin";
 
 const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClose, projectMembers = [], onSave, loading, error }) => {
   
-  const [editedTask, setEditedTast] = useState(task || {});
+  const [editedTask, setEditedTask] = useState(task || {});
   const isAdmin = isWorkspaceAdmin();
 
   console.log(task)
@@ -28,14 +28,14 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
   useEffect(() => {
     if (task) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setEditedTast(task);
+      setEditedTask(task);
     }
   }, [task, editMode]);
   
   if (!task || !open) return null;
 
   const updateField = (field, value) => {
-    setEditedTast((prev) => ({
+    setEditedTask((prev) => ({
       ...prev, 
       [field]: value,
     }));
