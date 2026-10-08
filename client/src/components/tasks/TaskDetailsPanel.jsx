@@ -353,10 +353,6 @@ const projectMembers = currentProject?.team || [];
             {getRelativeEstimatedTime(task.estimatedEffortMinutes)}
           </DetailRow>
 
-          <DetailRow label="Time Spent">
-            {task.timeSpent || "Yet to implement"} 
-          </DetailRow>
-
           <DetailRow label="Task Type">
             <span className="inline-flex rounded-md bg-purple-50 px-2 py-1 text-xs font-semibold text-primary">
               {task.type}

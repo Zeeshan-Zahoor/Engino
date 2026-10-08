@@ -5,12 +5,14 @@ import Projects from "../pages/Projects";
 import ProjectDetails from "../pages/ProjectDetails";
 import AIRequirements from "../pages/AIRequirements";
 import Tasks from "../pages/Tasks";
+import Team from "../pages/Team";
 import Registration from "../pages/auth/Registration";
 import Login from "../pages/auth/Login";
 import PublicRoute from "../pages/auth/PublicRoute";
 import ProtectedRoute from "../pages/auth/ProtectedRoute";
 import InvitationPage from "../pages/invitation/Invitation";
 import ProjectRequirementDetails from "../components/projects/requirements/ProjectRequirementDetails";
+
 
 const router = createBrowserRouter([
     {
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
                     {
                         path: 'tasks',
                         element: <Tasks />
+                    },
+                    {
+                        path: 'team',
+                        element: <Team />
                     }
                 ],
             },

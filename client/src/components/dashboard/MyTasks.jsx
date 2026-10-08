@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   CalendarDays,
+  CheckCircle2,
   Circle,
   Clock3,
   UserRound,
@@ -22,7 +23,6 @@ const statusStyles = {
   "In Progress": "bg-blue-50 text-info",
   Todo: "bg-surface text-text-secondary",
   Done: "bg-green-50 text-success",
-  Review: "bg-orange-50 text-warning",
 };
 
 const dueStyles = {
@@ -100,7 +100,13 @@ function MyTasks() {
             >
               {/* Status Icon */}
               <div className="shrink-0">
-                {task.status === "In Progress" ? (
+                {task.status === "Done" ? (
+                  <CheckCircle2 
+                    size={18}
+                    className="text-success"
+                    strokeWidth={1.8}
+                  />
+                ) : task.status === "In Progress" ? (
                   <Clock3
                     size={18}
                     className="text-info"
