@@ -417,6 +417,176 @@ const declineInvitation = async (req, res) => {
     }
 }
 
+const updateWorkspaceMemberRole = async (req, res) => {
+  try {
+    const { workspaceId, userId } = req.params;
+    const { role } = req.body;
+    const membership = req.membership;
+
+    if (membership.role !== "Admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Admin-Only operation",
+      });
+    }
+
+    if (!["Admin", "Member"].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid workspace role",
+      });
+    }
+
+    const targetMembership = await WorkspaceMember.findOne({
+      workspaceId,
+      userId,
+    });
+
+    if (!targetMembership) {
+      return res.status(404).json({
+        success: false,
+        message: "Workspace member not found",
+      });
+    }
+
+    // Prevent an admin from accidentally removing
+    // the last remaining admin.
+    if (
+      targetMembership.role === "Admin" &&
+      role === "Member"
+    ) {
+      const adminCount = await WorkspaceMember.countDocuments({
+        workspaceId,
+        role: "Admin",
+      });
+
+      if (adminCount <= 1) {
+        return res.status(400).json({
+          success: false,
+          message: "The workspace must have at least one admin",
+        });
+      }
+    }
+
+    targetMembership.role = role;
+    await targetMembership.save();
+
+    const updatedMembership =
+      await WorkspaceMember.findById(targetMembership._id)
+        .populate("userId", "-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Workspace member role updated successfully",
+      workspaceMember: updatedMembership,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+const removeWorkspaceMember = async (req, res) => {
+  try {
+    const { workspaceId, userId } = req.params;
+    const membership = req.membership;
+
+    if (membership.role !== "Admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Admin-Only operation",
+      });
+    }
+
+    const targetMembership = await WorkspaceMember.findOne({
+      workspaceId,
+      userId,
+    });
+
+    if (!targetMembership) {
+      return res.status(404).json({
+        success: false,
+        message: "Workspace member not found",
+      });
+    }
+
+    // Prevent an admin from removing themselves.
+    if (userId === req.user.userId.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot remove yourself from the workspace",
+      });
+    }
+
+    // Prevent removing the last admin.
+    if (targetMembership.role === "Admin") {
+      const adminCount = await WorkspaceMember.countDocuments({
+        workspaceId,
+        role: "Admin",
+      });
+
+      if (adminCount <= 1) {
+        return res.status(400).json({
+          success: false,
+          message: "The workspace must have at least one admin",
+        });
+      }
+    }
+
+    // Find projects belonging to this workspace.
+    const projectIds = await Project.distinct("_id", {
+      workspaceId,
+    });
+
+    // Remove the member from all projects first.
+    await Project.updateMany(
+      {
+        _id: { $in: projectIds },
+        "team.userId": userId,
+      },
+      {
+        $pull: {
+          team: {
+            userId,
+          },
+        },
+      }
+    );
+
+    // Unassign their tasks instead of deleting them.
+    await Task.updateMany(
+      {
+        projectId: { $in: projectIds },
+        assignee: userId,
+      },
+      {
+        $set: {
+          assignee: null,
+        },
+      }
+    );
+
+    await WorkspaceMember.deleteOne({
+      _id: targetMembership._id,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Workspace member removed successfully",
+      userId,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 const getWorkspaceMembers = async (req, res) => {
     try {
         const workspaceId = req.workspaceId;
@@ -622,6 +792,8 @@ export {
     sendInvitation,
     acceptInvitation,
     declineInvitation,
+    updateWorkspaceMemberRole,
+    removeWorkspaceMember,
     getWorkspaceMembers,
     getAllAIPlans,
     getAllTasks,

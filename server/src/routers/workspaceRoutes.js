@@ -13,6 +13,8 @@ import {
     extractRequirementData,
     exploreWithAIWorkspace,
     getInsights,
+    updateWorkspaceMemberRole,
+    removeWorkspaceMember,
 } from '../controllers/workspaceController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import workspaceMiddleware from '../middleware/workspaceMiddleware.js';
@@ -34,5 +36,8 @@ router.post('/:workspaceId/ai/explore', authMiddleware, workspaceMiddleware, exp
 
 router.post('/accept-invite', acceptInvitation);
 router.post('/decline-invite', declineInvitation);
+
+router.patch('/:workspaceId/team/:userId/role', authMiddleware, workspaceMiddleware, updateWorkspaceMemberRole);
+router.delete('/:workspaceId/team/:userId', authMiddleware, workspaceMiddleware, removeWorkspaceMember);
 
 export default router;

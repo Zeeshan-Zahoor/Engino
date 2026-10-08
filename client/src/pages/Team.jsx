@@ -87,7 +87,6 @@ function Team() {
         showBack={true}
         user={user}
       />
-
         
         {/* Stats */}
         <div className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -302,6 +301,7 @@ function Team() {
                 member={selectedMember}
                 tasks={getMemberTasks(selectedMember.userId?._id)}
                 isAdmin={isAdmin}
+                currentUserId={user?._id}
                 onClose={() => setSelectedMember(null)}
               />
            )}

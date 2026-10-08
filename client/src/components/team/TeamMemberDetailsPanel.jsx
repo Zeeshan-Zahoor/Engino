@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   X,
   Mail,
@@ -7,15 +8,40 @@ import {
   CheckCircle2,
   AlertTriangle,
   CalendarClock,
+  Pencil,
+  Loader2,
+  UserMinus,
 } from "lucide-react";
+
+import useWorkspaceStore from "../../stores/workspaceStore";
+import useToastStore from "../../stores/toastStore";
 
 import Avatar from "../../utils/Avatar";
 import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 
-function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, onClose }) {
-  if (!member) return null;
-
+function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, onClose }) {
+  
   const user = member.userId;
+  const {
+    currentWorkspaceId,
+    updateMemberRole,
+    removeMember,
+    isLoading: workspaceLoading,
+  } = useWorkspaceStore();
+  
+  const { showToast } = useToastStore();
+  
+  const [isChangingRole, setIsChangingRole] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(
+    member.role || "Member"
+  );
+  const [currentRole, setCurrentRole] = useState(
+    member.role || "Member"
+  );
+  const [showRemoveConfirmation, setShowRemoveConfirmation] =
+  useState(false);
+
+  if (!member) return null;
 
   const activeTasks = tasks.filter(
     (task) => task.status !== "Done"
@@ -32,6 +58,64 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, onClose }) {
   const todoTasks = tasks.filter(
     (task) => task.status === "Todo"
   );
+
+
+  const handleRoleChange = async () => {
+    if (!currentWorkspaceId || !user?._id) return;
+
+    if (selectedRole === currentRole) {
+      setIsChangingRole(false);
+      return;
+    }
+
+    try {
+      await updateMemberRole(
+        currentWorkspaceId,
+        user._id,
+        selectedRole
+      );
+
+      setCurrentRole(selectedRole);
+      setIsChangingRole(false);
+
+      showToast(
+        "Workspace role updated successfully!",
+        "success"
+      );
+    } catch (error) {
+      showToast(
+        error.response?.data?.message ||
+          "Failed to update workspace role.",
+        "error"
+      );
+    }
+  };
+
+  const handleRemoveMember = async () => {
+    if (!currentWorkspaceId || !user?._id) return;
+
+    try {
+      await removeMember(
+        currentWorkspaceId,
+        user._id
+      );
+
+      showToast(
+        "Workspace member removed successfully!",
+        "success"
+      );
+
+      setShowRemoveConfirmation(false);
+
+      onClose();
+    } catch (error) {
+      showToast(
+        error.response?.data?.message ||
+          "Failed to remove workspace member.",
+        "error"
+      );
+    }
+  };
 
   //dates
   const now = new Date();
@@ -217,35 +301,118 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, onClose }) {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
-          {/* ----------------------------------------
-              Profile
-          ----------------------------------------- */}
+
+           {/* Profile  */}
           <div className="border-b border-border px-6 py-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
-                <Avatar user={user} />
-              </div>
-
-              <div className="min-w-0">
-                <h3 className="truncate text-lg font-semibold text-text-primary">
-                  {user?.name || "Unknown User"}
-                </h3>
-
-                <div className="mt-1 flex items-center gap-2 text-sm text-text-secondary">
-                  <Mail size={14} />
-
-                  <span className="truncate">
-                    {isAdmin ? email : maskedEmail}
-                  </span>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex justify-between items-center gap-3">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+                  <Avatar user={user} />
                 </div>
 
-                <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-                  <Shield size={12} />
-                  {member.role || "Member"}
+                <div className="min-w-0">
+                  <h3 className="truncate text-lg font-semibold text-text-primary">
+                    {user?.name || "Unknown User"}
+                  </h3>
+
+                  <div className="mt-1 flex items-center gap-2 text-sm text-text-secondary">
+                    <Mail size={14} />
+
+                    <span className="truncate">
+                      {isAdmin ? email : maskedEmail}
+                    </span>
+                  </div>
+
+                  {!isChangingRole ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                        <Shield size={12} />
+                        {currentRole}
+                      </div>
+
+                      {isAdmin && user?._id !== currentUserId && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedRole(currentRole);
+                            setIsChangingRole(true);
+                          }}
+                          className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-text-secondary transition hover:bg-surface hover:text-text-primary"
+                        >
+                          <Pencil size={12} />
+                          Change Role
+                        </button>
+                      )}
+
+                    </div>
+                  ) : (
+                    <div className="mt-3 rounded-lg border border-border bg-surface p-3">
+                      <p className="text-xs font-medium text-text-secondary">
+                        Change Workspace Role
+                      </p>
+
+                      <div className="mt-2 flex items-center gap-2">
+                        <select
+                          value={selectedRole}
+                          onChange={(e) => setSelectedRole(e.target.value)}
+                          disabled={workspaceLoading}
+                          className="h-9 flex-1 rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none focus:border-primary"
+                        >
+                          <option value="Member">Member</option>
+                          <option value="Admin">Admin</option>
+                        </select>
+
+                        <button
+                          type="button"
+                          onClick={handleRoleChange}
+                          disabled={workspaceLoading}
+                          className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-medium text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {workspaceLoading ? (
+                            <Loader2
+                              size={13}
+                              className="animate-spin"
+                            />
+                          ) : (
+                            "Save"
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedRole(currentRole);
+                            setIsChangingRole(false);
+                          }}
+                          disabled={workspaceLoading}
+                          className="h-9 rounded-lg border border-border px-3 text-xs font-medium text-text-secondary transition hover:bg-white disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+
                 </div>
               </div>
+
+              {isAdmin && user?._id !== currentUserId && (
+                  <div className="">
+                    <button
+                      type="button"
+                      onClick={() => setShowRemoveConfirmation(true)}
+                      className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+                    >
+                      <UserMinus size={15} />
+                      Remove
+                    </button>
+                  </div>
+              )}
             </div>
           </div>
+
+          
 
           {/* Stats  */}
           <div className="grid grid-cols-2 gap-3 border-b border-border p-6 sm:grid-cols-4">
@@ -509,6 +676,72 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, onClose }) {
           </div>
         </div>
       </aside>
+
+
+      {/* Confirmation dialog */}
+      {showRemoveConfirmation && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-border bg-white shadow-xl">
+            <div className="p-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50 text-red-600">
+                <UserMinus size={18} />
+              </div>
+
+              <h3 className="mt-4 text-base font-semibold text-text-primary">
+                Remove Workspace Member?
+              </h3>
+
+              <p className="mt-2 text-sm leading-6 text-text-secondary">
+                Are you sure you want to remove{" "}
+                <span className="font-medium text-text-primary">
+                  {user?.name || "this member"}
+                </span>{" "}
+                from this workspace?
+              </p>
+
+              <div className="mt-3 rounded-lg border border-warning/20 bg-warning/5 px-3 py-2.5">
+                <p className="text-xs leading-5 text-text-secondary">
+                  Their assigned tasks will not be deleted.
+                  Active tasks will become unassigned.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 border-t border-border px-5 py-4">
+              <button
+                type="button"
+                onClick={() => setShowRemoveConfirmation(false)}
+                disabled={workspaceLoading}
+                className="h-9 rounded-lg border border-border px-4 text-sm font-medium text-text-secondary transition hover:bg-surface disabled:opacity-50"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleRemoveMember}
+                disabled={workspaceLoading}
+                className="flex h-9 items-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {workspaceLoading ? (
+                  <>
+                    <Loader2
+                      size={14}
+                      className="animate-spin"
+                    />
+                    Removing...
+                  </>
+                ) : (
+                  <>
+                    <UserMinus size={14} />
+                    Remove Member
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
