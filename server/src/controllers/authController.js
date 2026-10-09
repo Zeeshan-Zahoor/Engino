@@ -5,6 +5,9 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import WorkspaceMember from '../models/workspaceMember.model.js';
 
+import cloudinary from '../config/cloudinary.js';
+import uploadToCloudinary from '../utils/cloudinary.js';
+
 const registerAdmin = async (req, res) => {
     try {
         const { name, email, password, description } = req.body;
@@ -217,9 +220,74 @@ const getCurrentUser = async(req, res) => {
     }
 }
 
+const uploadProfilePhoto = async(req, res) => {
+    try {
+        const userId = req.user.userId;
+        const file = req.file;
+        
+        if(!file) {
+            return res.status(400).json({
+                success: false,
+                message: "No file found!",
+            });
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            return res.status(400).json({
+                success: false,
+                message: "File must be under 2 MB.",
+            });
+        }
+
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found!",
+            });
+        }
+
+        const oldPublicId = user.avatarPublicId;
+
+        const result = await uploadToCloudinary(file.buffer);
+
+        user.avatar = result.secure_url;
+        user.avatarPublicId = result.public_id;
+
+        await user.save();
+
+        if(oldPublicId) {
+            try {
+                await cloudinary.uploader.destroy(oldPublicId);
+            } catch (error) {
+                console.error("Failed to delete old profile photo: ", error);
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            user: {
+                name: user.name,
+                email: user.email,
+                _id: user._id,
+                avatar: user.avatar,
+                role: user.role,
+            },
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error.",
+            error: error.message,
+        }); 
+    }
+}
+
 export {
     registerAdmin,
     loginUser,
     logoutUser,
     getCurrentUser,
+    uploadProfilePhoto,
 }
