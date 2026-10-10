@@ -7,7 +7,7 @@ const ai = new GoogleGenAI({
 const extractRequirement = async (prompt) => {
     
     const interaction = await ai.interactions.create({
-        model: "gemini-3.6-flash-lite",
+        model: "gemini-3.5-flash-lite",
         system_instruction: `
             You are a software requirement extraction assistant.
 
