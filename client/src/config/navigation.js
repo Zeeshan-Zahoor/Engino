@@ -4,7 +4,6 @@ import {
   Sparkles,
   ListTodo,
   Users,
-  Settings,
 } from "lucide-react";
 
 export const sidebarNavigation = [
@@ -32,10 +31,5 @@ export const sidebarNavigation = [
     label: "Team",
     path: "/team",
     icon: Users,
-  },
-  {
-    label: "Settings",
-    path: "/settings",
-    icon: Settings,
   },
 ];

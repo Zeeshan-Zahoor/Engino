@@ -47,6 +47,15 @@ const useAuthStore = create((set) => ({
                 loading: false,
             });
         }
+    },
+
+    updateUser: (updateUser) => {
+        set((state) => ({
+            user: {
+                ...state.user,
+                ...updateUser,
+            }
+        }));
     }
 }));
 

@@ -16,6 +16,7 @@ import { isWorkspaceAdmin } from "../utils/isWorkspaceAdmin"
 import useWorkspaceStore from "../stores/workspaceStore";
 import useTaskStore from "../stores/taskStore";
 import useAuthStore from "../stores/authStore";
+import useProjectStore from "../stores/projectStore";
 
 function Team() {
   const {
@@ -23,6 +24,11 @@ function Team() {
     workspaceMembers,
     getWorkspaceMembers,
   } = useWorkspaceStore();
+
+  const {
+    projects,
+    fetchProjects
+  } = useProjectStore();
 
   const { user } = useAuthStore();
  
@@ -49,6 +55,13 @@ function Team() {
     getWorkspaceMembers,
     fetchAllTasks,
   ]);
+
+  useEffect(() => {
+    if(!currentWorkspaceId) return;
+    if(projects.length === 0) {
+      fetchProjects(currentWorkspaceId);
+    }
+  }, [currentWorkspaceId, fetchProjects, projects.length]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const members = workspaceMembers || [];
@@ -158,7 +171,7 @@ function Team() {
                   Projects
                 </p>
                 <p className="mt-1 text-2xl font-bold text-text-primary">
-                  —
+                  {projects?.length}
                 </p>
               </div>
 

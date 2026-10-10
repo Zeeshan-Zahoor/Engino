@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 import WorkspaceSwitcher from "../common/WorkspaceSwitcher";
 import useWorkspaceStore from "../../stores/workspaceStore";
 import InvitationModal from "../common/InvitationModal";
+import AccountModal from "../common/AccountModal";
 import Avatar from "../../utils/Avatar";
+import api from "../../lib/api";
 
 function Sidebar() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, updateUser } = useAuthStore();
   const { workspaces, currentWorkspaceId } = useWorkspaceStore();
   const navigate = useNavigate();
 
@@ -25,6 +27,10 @@ function Sidebar() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [photoUploadError, setPhotoUploadError] = useState("");
 
   const handleLogout = async () => {
     setError("");
@@ -38,6 +44,45 @@ function Sidebar() {
       setError(error.response?.data?.message || "Failed to log out. Try Again.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  const handleChangePhoto = async (file) => {
+    setPhotoUploadError("");
+
+    if(isUploadingPhoto) return;
+
+    setIsUploadingPhoto(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("photo", file);
+
+      const response = await api.patch(
+       "/auth/profile/photo",
+       formData 
+      );
+
+      if(response.data.success) {
+        updateUser({
+          avatar: response.data.user.avatar,
+        });
+      } else {
+
+        setPhotoUploadError(
+          response.data.message || "Failed to upload photo."
+        );
+      }
+    } catch (error) {
+       
+        setPhotoUploadError(
+          error.response?.data?.message || 
+          "Failed to upload profile photo. Please try again."
+        );
+
+        console.log(error.response)
+    } finally {
+      setIsUploadingPhoto(false);
     }
   }
 
@@ -99,21 +144,24 @@ function Sidebar() {
 
       {/* User */}
       <div className="flex justify-between items-center border-t border-border p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
-            <Avatar 
-              user={user}
-            />
+        <button
+          type="button"
+          onClick={() => setIsAccountModalOpen(true)}
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-lg p-1 text-left transition hover:bg-surface"
+        >
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
+            <Avatar user={user} />
           </div>
 
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-text-primary">
               {user?.name}
             </p>
-
-            <p className="text-xs text-text-secondary">{user?.role}</p>
+            <p className="text-xs text-text-secondary">
+              {user?.role}
+            </p>
           </div>
-        </div>
+        </button>
 
         <button
           role="button"
@@ -135,6 +183,15 @@ function Sidebar() {
         isOpen={isInviteModalOpen}
         onClose={() => setIsInviteModalOpen(false)}
         workspaceId={currentWorkspaceId}
+      />
+
+      <AccountModal 
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
+        user={user}
+        onChangePhoto={handleChangePhoto}
+        uploadingPhoto={isUploadingPhoto}
+        photoUploadError={photoUploadError}
       />
     </aside>
   );
