@@ -25,7 +25,7 @@ const generateAIPlan = async (requirement, conversation) => {
             `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash-lite",
+        model: "gemini-3.6-flash-lite",
 
         system_instruction: `
             You are a senior software requirements analyst.

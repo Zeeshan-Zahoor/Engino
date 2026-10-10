@@ -450,7 +450,7 @@ function AccountModal({
                         </button>
                     </div>
                     <p className="mt-2 text-xs text-text-secondary">
-                        Use at least 8 characters, subject to your backend's password policy.
+                        Use at least 6 characters.
                     </p>
                     </div>
 

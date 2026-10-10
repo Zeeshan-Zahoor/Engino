@@ -15,7 +15,7 @@ const exploreWithAI = async (prompt, conversation = []) => {
     `;
 
     const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash-lite",
+        model: "gemini-3.6-flash-lite",
 
         system_instruction: `
             You are an AI assistant inside Engino, an engineering workspace.
