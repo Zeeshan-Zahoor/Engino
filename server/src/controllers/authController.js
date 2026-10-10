@@ -284,6 +284,60 @@ const uploadProfilePhoto = async(req, res) => {
     }
 }
 
+export const removeProfilePhoto = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    const oldPublicId = user.avatarPublicId;
+
+    // Clear the profile photo in MongoDB first.
+    user.avatar = "";
+    user.avatarPublicId = "";
+
+    await user.save();
+
+    // Delete the old Cloudinary image, if one exists.
+    if (oldPublicId) {
+      try {
+        await cloudinary.uploader.destroy(oldPublicId);
+      } catch (error) {
+        console.error(
+          "Failed to delete profile photo from Cloudinary:",
+          error
+        );
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile photo removed successfully.",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Remove profile photo error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to remove profile photo.",
+    });
+  }
+};
+
 export {
     registerAdmin,
     loginUser,

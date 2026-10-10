@@ -86,6 +86,42 @@ function Sidebar() {
     }
   }
 
+  const handleRemovePhoto = async () => {
+    if (isUploadingPhoto) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to remove your profile photo?"
+    );
+
+    if(!confirmed) return;
+
+    setPhotoUploadError("")
+    setIsUploadingPhoto(true);
+
+    try {
+      const response = await api.delete("/auth/profile/photo");
+
+      if (response.data.success) {
+        updateUser({
+          avatar: response.data.user.avatar,
+        });
+      } else {
+        setPhotoUploadError(
+          response.data.message || "Failed to remove profile photo."
+        );
+      }
+    } catch (error) {
+      console.error("Remove profile photo failed:", error);
+
+      setPhotoUploadError(
+        error.response?.data?.message ||
+          "Failed to remove profile photo. Please try again."
+      );
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  } 
+
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r border-border bg-white">
       {/* Logo */}
@@ -192,6 +228,7 @@ function Sidebar() {
         onChangePhoto={handleChangePhoto}
         uploadingPhoto={isUploadingPhoto}
         photoUploadError={photoUploadError}
+        onRemovePhoto={handleRemovePhoto}
       />
     </aside>
   );

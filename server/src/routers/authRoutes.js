@@ -5,6 +5,7 @@ import {
     logoutUser,
     getCurrentUser,
     uploadProfilePhoto,
+    removeProfilePhoto,
 } from '../controllers/authController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -16,6 +17,7 @@ router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.get("/me", authMiddleware, getCurrentUser);
 router.patch("/profile/photo", authMiddleware, upload.single("photo"), uploadProfilePhoto);
+router.delete("/profile/photo", authMiddleware, removeProfilePhoto);
 
 export default router;
 
