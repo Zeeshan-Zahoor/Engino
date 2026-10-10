@@ -9,6 +9,8 @@ import {
     Trash2,
     ShieldCheck,
     LoaderCircle,
+    EyeOff,
+    Eye,
 } from "lucide-react";
 import Avatar from "../../utils/Avatar";
 
@@ -24,12 +26,16 @@ function AccountModal({
     savingPassword = false,
     uploadingPhoto = false,
     photoUploadError = "",
+    profileSaveError = "",
+    passwordError = "",
 }) {
     const [activeTab, setActiveTab] = useState("profile");
     const [name, setName] = useState(user?.name || "");
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const fileInputRef = useRef(null);
 
@@ -48,14 +54,24 @@ function AccountModal({
         onSaveProfile?.(name.trim());
     };
 
-    const handlePasswordSubmit = (event) => {
+    const handlePasswordSubmit = async (event) => {
         event.preventDefault();
 
-        onChangePassword?.({
+        if (newPassword !== confirmPassword) {
+            return;
+        }
+
+        const success = await onChangePassword?.({
             currentPassword,
             newPassword,
             confirmPassword,
-        })
+        });
+
+        if (success) {
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+        }
     };
 
     const handlePhotoSelection = (event) => {
@@ -362,17 +378,39 @@ function AccountModal({
                         Current Password
                     </label>
 
-                    <input
-                        id="current-password"
-                        type="password"
-                        autoComplete="current-password"
-                        value={currentPassword}
-                        onChange={(event) =>
-                        setCurrentPassword(event.target.value)
-                        }
-                        required
-                        className={inputClass}
-                    />
+                    <div className="relative">
+                        <input
+                            id="password"
+                            name="password"
+                            type={
+                                showPassword
+                                    ? "text"
+                                    : "password"
+                                }
+                            value={currentPassword}
+                            onChange={(event) =>
+                                setCurrentPassword(event.target.value)
+                            }
+                            placeholder="Enter current password"
+                            autoComplete="current-password"
+                            required
+                            className={inputClass}
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setShowPassword((prev) => !prev)
+                            }
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                        >
+                            {showPassword ? (
+                                <EyeOff size={19} />
+                            ) : (
+                                <Eye size={19} />
+                            )}
+                        </button>
+                    </div>
                     </div>
 
                     <div>
@@ -380,19 +418,37 @@ function AccountModal({
                         New Password
                     </label>
 
-                    <input
-                        id="new-password"
-                        type="password"
-                        autoComplete="new-password"
-                        value={newPassword}
-                        onChange={(event) =>
-                        setNewPassword(event.target.value)
-                        }
-                        minLength={8}
-                        required
-                        className={inputClass}
-                    />
-
+                    <div className="relative">
+                        <input
+                            id="new-password"
+                            type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                    }
+                            autoComplete="new-password"
+                            placeholder="Enter new password"
+                            value={newPassword}
+                            onChange={(event) =>
+                                setNewPassword(event.target.value)
+                            }
+                            required
+                            className={inputClass}
+                        />
+                        <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword((prev) => !prev)
+                                }
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                            >
+                                {showPassword ? (
+                                    <EyeOff size={19} />
+                                ) : (
+                                    <Eye size={19} />
+                                )}
+                        </button>
+                    </div>
                     <p className="mt-2 text-xs text-text-secondary">
                         Use at least 8 characters, subject to your backend's password policy.
                     </p>
@@ -402,19 +458,37 @@ function AccountModal({
                     <label htmlFor="confirm-password" className={labelClass}>
                         Confirm New Password
                     </label>
-
-                    <input
-                        id="confirm-password"
-                        type="password"
-                        autoComplete="new-password"
-                        value={confirmPassword}
-                        onChange={(event) =>
-                        setConfirmPassword(event.target.value)
-                        }
-                        minLength={8}
-                        required
-                        className={inputClass}
-                    />
+                    <div className="relative">
+                        <input
+                            id="confirm-password"
+                            type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                    }
+                            autoComplete="new-password"
+                            value={confirmPassword}
+                            placeholder="Confirm new password"
+                            onChange={(event) =>
+                                setConfirmPassword(event.target.value)
+                            }
+                            required
+                            className={inputClass}
+                        />
+                        <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword((prev) => !prev)
+                                }
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                            >
+                                {showPassword ? (
+                                    <EyeOff size={19} />
+                                ) : (
+                                    <Eye size={19} />
+                                )}
+                        </button>
+                    </div>
                     </div>
                 </form>
                 )}
@@ -422,6 +496,19 @@ function AccountModal({
             </div>
 
             {/* Footer */}
+
+            {profileSaveError && (
+                <p className="text-sm text-red-600 text-center" role="alert">
+                    {profileSaveError}
+                </p>
+            )}
+
+            {passwordError && (
+                <p className="text-sm text-red-600 text-center" role="alert">
+                    {passwordError}
+                </p>
+            )}
+
             <footer className="flex flex-wrap items-center justify-end gap-3 border-t border-border px-6 py-4 sm:px-8">
             <button
                 type="button"
@@ -458,4 +545,4 @@ function AccountModal({
     );
 }
 
-export default AccountModal
+export default AccountModal;

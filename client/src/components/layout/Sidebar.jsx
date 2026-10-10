@@ -7,6 +7,8 @@ import useAuthStore from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import WorkspaceSwitcher from "../common/WorkspaceSwitcher";
 import useWorkspaceStore from "../../stores/workspaceStore";
+import useToastStore from "../../stores/toastStore";
+
 import InvitationModal from "../common/InvitationModal";
 import AccountModal from "../common/AccountModal";
 import Avatar from "../../utils/Avatar";
@@ -15,6 +17,7 @@ import api from "../../lib/api";
 function Sidebar() {
   const { user, logout, updateUser } = useAuthStore();
   const { workspaces, currentWorkspaceId } = useWorkspaceStore();
+  const { showToast } =  useToastStore();
   const navigate = useNavigate();
 
   const selectedWorkspace = workspaces.find((workspace) => 
@@ -31,6 +34,45 @@ function Sidebar() {
 
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [photoUploadError, setPhotoUploadError] = useState("");
+
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [profileSaveError, setProfileSaveError] = useState("");
+
+  const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+
+  const handleSaveProfile = async (name) => {
+    setProfileSaveError("");
+
+    if (isSavingProfile) return;
+    setIsSavingProfile(true);
+
+    try {
+      const response = await api.patch("/auth/profile", { name });
+
+      if (response.data.success) {
+        updateUser({
+          name: response.data.user.name,
+        });
+
+        setIsAccountModalOpen(false);
+        showToast("Profile Updated Successfully!", "success");
+      } else {
+        setProfileSaveError(
+          response.data.message || "Failed to update profile."
+        );
+      }
+    } catch (error) {
+      console.error("Profile update failed:", error);
+
+      setProfileSaveError(
+        error.response?.data?.message ||
+          "Failed to update profile. Please try again."
+      );
+    } finally {
+      setIsSavingProfile(false);
+    }
+  }
 
   const handleLogout = async () => {
     setError("");
@@ -120,7 +162,49 @@ function Sidebar() {
     } finally {
       setIsUploadingPhoto(false);
     }
-  } 
+  }
+
+  
+const handleChangePassword = async ({ currentPassword, newPassword, confirmPassword }) => {
+    setPasswordError("");
+
+    if (isSavingPassword) return;
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New passwords do not match.");
+      return;
+    }
+
+    setIsSavingPassword(true);
+
+    try {
+      const response = await api.patch("/auth/profile/password", {
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      });
+
+      if (response.data.success) {
+        setIsAccountModalOpen(false);
+        showToast("Password Updated Successfully!", "success");
+
+      } else {
+        setPasswordError(
+          response.data.message || "Failed to change password."
+        );
+      }
+    } catch (error) {
+      console.error("Password change failed:", error);
+
+      setPasswordError(
+        error.response?.data?.message ||
+          "Failed to change password. Please try again."
+      );
+    } finally {
+      setIsSavingPassword(false);
+    }
+  };
+
 
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r border-border bg-white">
@@ -226,9 +310,15 @@ function Sidebar() {
         onClose={() => setIsAccountModalOpen(false)}
         user={user}
         onChangePhoto={handleChangePhoto}
+        onSaveProfile={handleSaveProfile}
+        onChangePassword={handleChangePassword}
         uploadingPhoto={isUploadingPhoto}
         photoUploadError={photoUploadError}
+        profileSaveError={profileSaveError}
         onRemovePhoto={handleRemovePhoto}
+        savingProfile={isSavingProfile}
+        passwordError={passwordError}
+        savingPassword={isSavingPassword}
       />
     </aside>
   );
