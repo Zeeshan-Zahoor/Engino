@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import StepHeader from "./StepHeader";
 import Loader from "../../../common/Loader";
 import { useParams } from "react-router-dom";
+import { isWorkspaceAdmin } from "../../../../utils/isWorkspaceAdmin";
 
 const ReviewStep = ({
   plan,
@@ -61,6 +62,8 @@ const ReviewStep = ({
     priority: "medium",
     estimatedEffortMinutes: 60,
   });
+
+  const isAdmin = isWorkspaceAdmin();
 
   useEffect(() => {
     if(currentRequirement) return;
@@ -557,14 +560,16 @@ const ReviewStep = ({
               description="What the implementation should achieve"
             />
 
-            <button
-              type="button"
-              onClick={addObjective}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-text-primary transition hover:bg-surface"
-            >
-              <Plus size={14} />
-              Add
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={addObjective}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-text-primary transition hover:bg-surface"
+              >
+                <Plus size={14} />
+                Add
+              </button>
+            )}
           </div>
 
           <div className="space-y-3">
@@ -590,13 +595,15 @@ const ReviewStep = ({
                     className="min-w-0 flex-1 resize-none rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm leading-6 text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                   />
 
-                  <button
-                    type="button"
-                    onClick={() => removeObjective(index)}
-                    className="mt-2 rounded-lg p-2 text-danger transition hover:bg-danger/10"
-                  >
-                    <Trash2 size={15} />
-                  </button>
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => removeObjective(index)}
+                      className="mt-2 rounded-lg p-2 text-danger transition hover:bg-danger/10"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  )}
                 </div>
               ))
             ) : (
@@ -615,16 +622,18 @@ const ReviewStep = ({
               description="Major implementation areas identified by AI"
             />
 
-            <button
-              type="button"
-              onClick={() =>
-                setShowAddFeature((prev) => !prev)
-              }
-              className="inline-flex w-fit items-center gap-2 rounded-xl border border-border bg-background px-3.5 py-2 text-sm font-semibold text-text-primary transition hover:bg-surface"
-            >
-              <Plus size={16} />
-              Add Feature
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() =>
+                  setShowAddFeature((prev) => !prev)
+                }
+                className="inline-flex w-fit items-center gap-2 rounded-xl border border-border bg-background px-3.5 py-2 text-sm font-semibold text-text-primary transition hover:bg-surface"
+              >
+                <Plus size={16} />
+                Add Feature
+              </button>
+            )}
           </div>
 
           {/* Add Feature */}
@@ -641,13 +650,15 @@ const ReviewStep = ({
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setShowAddFeature(false)}
-                  className="rounded-lg p-1.5 text-text-secondary hover:bg-background hover:text-text-primary"
-                >
-                  <X size={17} />
-                </button>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAddFeature(false)}
+                    className="rounded-lg p-1.5 text-text-secondary hover:bg-background hover:text-text-primary"
+                  >
+                    <X size={17} />
+                  </button>
+                )}
               </div>
 
               <FeatureForm
@@ -746,34 +757,36 @@ const ReviewStep = ({
         {/* footer  */}
 
         <div className="flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-end">
-            <button
-              type="button"
-              disabled={approved || isApproving}
-              onClick={handleApprove}
-              className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
-                reviewPlan.features.length > 0
-                  ? "bg-primary text-white hover:bg-primary-dark"
-                  : "cursor-not-allowed bg-surface text-text-secondary"
-              }`}
-            >
-              
-              {isApproving ? (
-                <>
-                  <Loader />
-                  <span>Approving...</span>
-                </>
-              ) : approved ? (
-                <>
-                  <Check size={17} />
-                  <span>Plan Approved</span>
-                </>
-              ) : (
-                <>
-                  <Check size={17}/>
-                  <span>Approve Plan</span>
-                </>
-              )}
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                disabled={approved || isApproving}
+                onClick={handleApprove}
+                className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
+                  reviewPlan.features.length > 0
+                    ? "bg-primary text-white hover:bg-primary-dark"
+                    : "cursor-not-allowed bg-surface text-text-secondary"
+                }`}
+              >
+                
+                {isApproving ? (
+                  <>
+                    <Loader />
+                    <span>Approving...</span>
+                  </>
+                ) : approved ? (
+                  <>
+                    <Check size={17} />
+                    <span>Plan Approved</span>
+                  </>
+                ) : (
+                  <>
+                    <Check size={17}/>
+                    <span>Approve Plan</span>
+                  </>
+                )}
+              </button>
+            )}
         </div>
       </div>
     </div>

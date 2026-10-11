@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import StepHeader from "./StepHeader";
+import { isWorkspaceAdmin } from "../../../../utils/isWorkspaceAdmin";
 
 
 const TasksStep = ({
@@ -18,8 +19,11 @@ const TasksStep = ({
   onGenerate,
 }) => {
 
+  const isAdmin = isWorkspaceAdmin();
+
   const formatEffort = (minutes) => {
     if (!minutes || minutes <= 0) return "Not estimated";
+
 
     if (minutes < 60) {
       return `${minutes} min`;
@@ -134,24 +138,26 @@ const TasksStep = ({
             </div>
 
 
-            <button
-              type="button"
-              onClick={onGenerate}
-              disabled={loading}
-              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw size={17} className="animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Sparkles size={17} />
-                  Generate Tasks
-                </>
-              )}
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={onGenerate}
+                disabled={loading}
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? (
+                  <>
+                    <RefreshCw size={17} className="animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={17} />
+                    Generate Tasks
+                  </>
+                )}
+              </button>
+            )}
 
           </div>
 

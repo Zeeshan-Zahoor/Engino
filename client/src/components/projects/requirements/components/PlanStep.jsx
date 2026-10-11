@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import StepHeader from "./StepHeader";
+import { isWorkspaceAdmin } from "../../../../utils/isWorkspaceAdmin";
 
 const PlanStep = ({
   plan,
@@ -22,6 +23,9 @@ const PlanStep = ({
   onContinue,
   onRetry,
 }) => {
+
+  const isAdmin = isWorkspaceAdmin();
+
   if (loading) {
     return (
       <div>
@@ -292,14 +296,16 @@ const PlanStep = ({
 
         {/* Footer */}
         <div className="flex items-center justify-end border-t border-border pt-5">
-          <button
-            type="button"
-            onClick={onContinue}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
-          >
-            Continue to Admin Review
-            <ArrowRight size={17} />
-          </button>
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={onContinue}
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+            >
+              Continue to Admin Review
+              <ArrowRight size={17} />
+            </button>
+          )}
         </div>
       </div>
     </div>

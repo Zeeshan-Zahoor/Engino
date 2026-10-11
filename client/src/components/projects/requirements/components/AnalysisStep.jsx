@@ -12,6 +12,7 @@ import {
 
 import { useRef, useState } from "react";
 import StepHeader from "./StepHeader";
+import { isWorkspaceAdmin } from "../../../../utils/isWorkspaceAdmin";
 
 const AnalysisStep = ({
   analysis,
@@ -23,7 +24,7 @@ const AnalysisStep = ({
 }) => {
 
   const questions = analysis?.questions || [];
-
+  const isAdmin = isWorkspaceAdmin();
   const [analysisRound, setAnalysisRound] = useState(1);
 
   const [lastAnswer, setLastAnswer] = useState("");
@@ -43,12 +44,6 @@ const AnalysisStep = ({
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const clarificationInFlight = useRef(false);
-
-  // const [clarificationQuestions, setClarificationQuestions] =
-  //   useState(questions);
-
-  // const [analysisHistory, setAnalysisHistory] = useState([]);
-
 
   const handleAnswerChange = (index, value) => {
     setAnswers((prev) => ({
@@ -519,94 +514,26 @@ if (error) {
               : "Answer all questions before submitting."}
           </div>
 
-          <button
-            type="button"
-            disabled={!allQuestionsAnswered || isAnalyzing}
-            onClick={handleSubmitClarification}
-            className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
-              allQuestionsAnswered
-                ? "bg-primary text-white hover:bg-primary-dark"
-                : "cursor-not-allowed bg-surface text-text-secondary"
-            }`}
-          >
-            Submit & Re-analyze
-            <RefreshCw size={17} />
-          </button>
+          {isAdmin && (
+            <button
+              type="button"
+              disabled={!allQuestionsAnswered || isAnalyzing}
+              onClick={handleSubmitClarification}
+              className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
+                allQuestionsAnswered
+                  ? "bg-primary text-white hover:bg-primary-dark"
+                  : "cursor-not-allowed bg-surface text-text-secondary"
+              }`}
+            >
+              Submit & Re-analyze
+              <RefreshCw size={17} />
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 };
-
-// const AnalysisHistory = ({
-//   history,
-// }) => {
-//   return (
-//     <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
-//       <div className="mb-5">
-//         <h2 className="text-base font-semibold text-text-primary">
-//           Analysis History
-//         </h2>
-
-//         <p className="mt-1 text-sm text-text-secondary">
-//           Previous AI analysis rounds for this requirement.
-//         </p>
-//       </div>
-
-//       <div className="space-y-3">
-//         {history.map((item) => {
-//           const isClear =
-//             item.status === "clear";
-
-//           return (
-//             <div
-//               key={item.round}
-//               className="flex items-center gap-3 rounded-xl bg-surface p-4"
-//             >
-//               <div
-//                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-//                   isClear
-//                     ? "bg-success/10 text-success"
-//                     : "bg-warning/10 text-warning"
-//                 }`}
-//               >
-//                 {isClear ? (
-//                   <CheckCircle2 size={16} />
-//                 ) : (
-//                   <AlertCircle size={16} />
-//                 )}
-//               </div>
-
-//               <div className="min-w-0 flex-1">
-//                 <p className="text-sm font-semibold text-text-primary">
-//                   Analysis Round {item.round}
-//                 </p>
-
-//                 <p className="mt-0.5 text-xs text-text-secondary">
-//                   {isClear
-//                     ? "Requirement is clear"
-//                     : "Additional clarification required"}
-//                 </p>
-//               </div>
-
-//               <span
-//                 className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-//                   isClear
-//                     ? "bg-success/10 text-success"
-//                     : "bg-warning/10 text-warning"
-//                 }`}
-//               >
-//                 {isClear
-//                   ? "Clear"
-//                   : "Needs Clarification"}
-//               </span>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     </section>
-//   );
-// };
 
 
 export default AnalysisStep;
