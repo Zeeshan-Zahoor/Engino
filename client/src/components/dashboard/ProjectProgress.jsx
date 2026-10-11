@@ -39,14 +39,22 @@ function ProjectProgress({ projects }) {
       {/* Projects */}
       <div className="grid gap-4 p-5 sm:grid-cols-2">
         {(projects.slice(0, 4)).map((project) => {
-          const tasks = project.tasks;
-          const completedTasks = tasks.filter(task => task.status === "Done");
-          const progress = Math.floor((completedTasks.length / tasks.length) * 100) || 0;
+          const tasks = project.tasks || [];
+
+          const completedTasks = tasks.filter(
+            (task) => task.status === "Done"
+          );
+
+          const progress =
+            tasks.length > 0
+              ? Math.floor((completedTasks.length / tasks.length) * 100)
+              : 0;
 
           return (
             <button
               key={project._id}
               type="button"
+              onClick={() => navigate(`/projects/${project._id}`)}
               className="rounded-xl border border-border p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
             >
             {/* Project heading */}

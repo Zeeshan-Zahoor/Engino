@@ -6,7 +6,7 @@ const statusStyles = {
   "Planned": "bg-primary/10 text-primary",
 };
 
-function ProjectRequirements({ project }) {
+function ProjectRequirements({ project, onViewAll }) {
   const projectRequirements = project?.requirements || [];
   return (
     <section className="rounded-2xl border border-border bg-white">
@@ -18,6 +18,7 @@ function ProjectRequirements({ project }) {
 
         <button
           type="button"
+          onClick={onViewAll}
           className="flex items-center gap-1 text-sm font-semibold text-primary transition hover:text-primary-dark"
         >
           View all
@@ -26,7 +27,7 @@ function ProjectRequirements({ project }) {
       </div>
 
       {/* Requirements */}
-      <div className="divide-y divide-border">
+      <div className="divide-y divide-border overflow-y-auto max-h-80 scrollbar-thin scrollbar-thumb-surface">
         {projectRequirements.map((requirement) => (
           <div
             key={requirement._id}

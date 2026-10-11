@@ -12,13 +12,13 @@ import StatsCard from "../components/dashboard/StatsCard";
 import RequirementsOverview from "../components/dashboard/RequirementsOverview";
 import MyTasks from "../components/dashboard/MyTasks";
 import ProjectProgress from "../components/dashboard/ProjectProgress";
-// import QuickActions from "../components/dashboard/QuickActions";
 import RepositoryStatus from "../components/dashboard/RepositoryStatus";
 
 import useProjectStore from "../stores/projectStore";
 import useTaskStore from "../stores/taskStore";
 import useAuthStore from '../stores/authStore';
 import useWorkspaceStore from "../stores/workspaceStore";
+import { useNavigate } from "react-router-dom";
 
 import { useEffect } from "react";
 import useAIPlanStore from "../stores/aiPlanStore";
@@ -29,6 +29,7 @@ function Dashboard() {
     const { currentWorkspaceId } = useWorkspaceStore();
     const { allAIPlans,  fetchAllPlans } = useAIPlanStore();
     const { projects, fetchProjects } = useProjectStore();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchProjects(currentWorkspaceId);
@@ -77,6 +78,7 @@ function Dashboard() {
                 title="Projects"
                 value={projects?.length}
                 description={`${activeProjects.length} active`}
+                onClick={() => navigate("/projects")}
             />
 
             <StatsCard
@@ -85,6 +87,7 @@ function Dashboard() {
                 title="AI Plans"
                 value={allAIPlans?.length} 
                 description="Workspace AI plans"
+                onClick={() => navigate("/requirements")}
             />
 
             <StatsCard
@@ -93,6 +96,7 @@ function Dashboard() {
                 title="Tasks In Progress"
                 value={inProgressTasks?.length}
                 description={`${allTasks.length} Total`}
+                onClick={() => navigate("/tasks")}
             />
 
             <StatsCard
@@ -101,6 +105,7 @@ function Dashboard() {
                 title="Tasks Completed"
                 value={completedTasks?.length}
                 description={`${allTasks.length} Total`}
+                onClick={() => navigate("/tasks")}
             />
 
             <StatsCard
@@ -109,6 +114,7 @@ function Dashboard() {
                 title="Tasks Due Today"
                 value={dueTodayTasks().length}
                 description={`${dueTodayTasks().filter(task => task.priority === "High").length} high priority`}
+                onClick={() => navigate("/tasks")}
             />
         </div>
 

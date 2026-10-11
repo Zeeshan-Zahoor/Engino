@@ -71,24 +71,58 @@ function AIInsights() {
       
   }, [currentWorkspaceId, fetchInsights, insights.length]);
 
-  const handleInsightClick = (insight) => {
-    switch (insight.action?.type) {
-      case "requirement":
-        navigate(`/projects/${insight.action.projectId}/requirements/${insight.action.requirementId}`);
-        break;
-      
-      case "requirements":
-        navigate("/requirements");
-        break;
-      
-      case "tasks":
-        navigate(`/tasks?filter=${insight.action.filter}`);
-        break;
+  
+const handleInsightClick = (insight) => {
+  const action = insight.action;
 
-      default:
-        break;
+  if (!action?.type) return;
+
+  switch (action.type) {
+    case "requirement": {
+      const { projectId, requirementId } = action;
+
+      if (!projectId || !requirementId) {
+        navigate("/requirements");
+        return;
+      }
+
+      navigate(
+        `/projects/${projectId}/requirements/${requirementId}`
+      );
+      break;
     }
+
+    case "requirements":
+      navigate("/requirements");
+      break;
+
+    case "tasks": {
+      const params = new URLSearchParams();
+
+      if (action.filter) {
+        params.set("filter", action.filter);
+      }
+
+      navigate(
+        params.size ? `/tasks?${params.toString()}` : "/tasks"
+      );
+      break;
+    }
+
+    case "project":
+      if (action.projectId) {
+        navigate(`/projects/${action.projectId}`);
+      } else {
+        navigate("/projects");
+      }
+      break;
+
+    default:
+      // Don't navigate to an unverified destination.
+      break;
   }
+};
+
 
   return (
     <section className="rounded-2xl border border-border bg-white">
@@ -141,7 +175,7 @@ function AIInsights() {
 
             return (
               <button
-                key={insight.type}
+                key={insight._id || `${insight.type}-${insight.title}`}
                 type="button"
                 onClick={() => handleInsightClick(insight)}
                 className="flex w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-surface"
@@ -239,7 +273,7 @@ function AIInsights() {
 
                         return (
                           <button
-                            key={insight.type}
+                            key={insight._id || `${insight.type}-${insight.title}`}
                             type="button"
                             onClick={() => {
                               setShowAllInsights(false);

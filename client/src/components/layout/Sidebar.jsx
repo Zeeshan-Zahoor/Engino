@@ -24,6 +24,7 @@ function Sidebar() {
     workspace._id === currentWorkspaceId
   );
 
+  const role = selectedWorkspace?.role || "Member"
   const isAdmin = selectedWorkspace?.role === "Admin";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -278,7 +279,7 @@ const handleChangePassword = async ({ currentPassword, newPassword, confirmPassw
               {user?.name}
             </p>
             <p className="text-xs text-text-secondary">
-              {user?.role}
+              {role}
             </p>
           </div>
         </button>

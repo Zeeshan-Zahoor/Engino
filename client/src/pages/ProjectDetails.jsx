@@ -88,7 +88,11 @@ function ProjectDetails() {
           </div>
         </div>
 
-        <TabBody tab={activeTab} activeProject={activeProject}/>
+        <TabBody 
+          tab={activeTab} 
+          activeProject={activeProject} 
+          setActiveTab={setActiveTab}
+        />
 
         <CreateProjectModal 
           key={activeProject?._id}
@@ -107,7 +111,7 @@ function ProjectDetails() {
   )
 }
 
-const TabBody = ({ tab, activeProject }) => {
+const TabBody = ({ tab, activeProject, setActiveTab }) => {
   switch (tab) {
       case "Overview":
         return <>
@@ -115,9 +119,15 @@ const TabBody = ({ tab, activeProject }) => {
             project={activeProject}
           />
 
-          <div className="grid gap-4 lg:grid-cols-[1fr_1.8fr_0.9fr]">
-              <ProjectRequirements project={activeProject}/>
-              <ProjectTasks project={activeProject}/>
+          <div className="grid gap-4 lg:grid-cols-2">
+              <ProjectRequirements 
+                project={activeProject}
+                onViewAll={() => setActiveTab("AI Requirements")}
+              />
+              <ProjectTasks 
+                project={activeProject}
+                onViewAll={() => setActiveTab("Tasks")}
+              />
           </div>
 
           <ProjectDescription project={activeProject}/>

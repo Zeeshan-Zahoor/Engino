@@ -7,7 +7,7 @@ const priorityStyles = {
   Low: "bg-green-50 text-success",
 };
 
-function ProjectTasks({ project }) {
+function ProjectTasks({ project,onViewAll }) {
   const projectTasks = project?.tasks || [];
 
   return (
@@ -20,6 +20,7 @@ function ProjectTasks({ project }) {
 
         <button
           type="button"
+          onClick={onViewAll}
           className="flex items-center gap-1 text-sm font-semibold text-primary transition hover:text-primary-dark"
         >
           View all
@@ -28,7 +29,7 @@ function ProjectTasks({ project }) {
       </div>
 
       {/* Task list */}
-      <div className="divide-y divide-border">
+      <div className="divide-y divide-border overflow-y-auto max-h-80 scrollbar-thin scrollbar-thumb-surface">
         {projectTasks.slice(0, 5).map((task) => (
           <div
             key={task._id}

@@ -69,6 +69,16 @@ function RequirementsOverview() {
             <button
               key={requirement._id}
               type="button"
+              onClick={() => {
+                if (!requirement.projectId || !requirement._id) {
+                  navigate("/requirements");
+                  return;
+                }
+
+                navigate(
+                  `/projects/${requirement.projectId}/requirements/${requirement._id}`
+                )
+              }}
               className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-surface"
             >
               {/* Requirement */}

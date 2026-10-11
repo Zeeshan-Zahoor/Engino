@@ -11,7 +11,6 @@ import useAuthStore from "../../stores/authStore";
 function WorkspaceSwitcher() {
     const { workspaces, currentWorkspaceId, setCurrentWorkspace } = useWorkspaceStore();
     const { user } = useAuthStore();
-
     const [isOpen, setIsOpen] = useState(false);
 
     const selectedWorkspace = workspaces.find((workspace) =>
@@ -19,8 +18,9 @@ function WorkspaceSwitcher() {
     )
 
     const handleSelect = (id) => {
-        setCurrentWorkspace(id)
+        setCurrentWorkspace(id);
         setIsOpen(false);
+        window.location.reload();
     };
 
     return (

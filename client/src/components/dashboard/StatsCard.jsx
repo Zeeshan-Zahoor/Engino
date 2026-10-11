@@ -8,9 +8,19 @@ function StatsCard({
   description,
   trend,
   trendType = "positive",
+  onClick,
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-3 flex items-center gap-2">
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={!onClick}
+      className={`flex items-center gap-2 rounded-2xl border border-border bg-white p-3 text-left ${
+        onClick
+          ? "cursor-pointer transition hover:border-primary/40 hover:shadow-sm"
+          : "cursor-default"
+      }`}
+    >
       <div className="flex items-start justify-between">
         <div
           className={`flex h-15 w-15 items-center justify-center rounded-xl ${iconClassName}`}
@@ -19,44 +29,42 @@ function StatsCard({
         </div>
       </div>
 
-      <div className="mt-3 flex justify-between flex-1">
+      <div className="mt-3 flex flex-1 justify-between">
         <div>
-            <p className="text-2xl font-bold tracking-tight text-text-primary">
-            {value}
-            </p>
+          <p className="text-2xl font-bold tracking-tight text-text-primary">
+            {value ?? 0}
+          </p>
 
-            <p className="mt-0.5 text-xs font-medium text-text-secondary">
+          <p className="mt-0.5 text-xs font-medium text-text-secondary">
             {title}
-            </p>
+          </p>
 
-            {description && (
+          {description && (
             <p className="mt-1 text-xs text-text-secondary">
-                {description}
+              {description}
             </p>
-            )}
+          )}
         </div>
 
-        <div>
-            {trend && (
-            <div
-                className={`flex items-center gap-0.5 text-xs font-medium ${
-                trendType === "negative"
-                    ? "text-danger"
-                    : "text-success"
-                }`}
-            >
-                {trendType === "negative" ? (
-                <ArrowDownRight size={13} />
-                ) : (
-                <ArrowUpRight size={13} />
-                )}
-
-                {trend}
-            </div>
+        {trend && (
+          <div
+            className={`flex items-center gap-0.5 text-xs font-medium ${
+              trendType === "negative"
+                ? "text-danger"
+                : "text-success"
+            }`}
+          >
+            {trendType === "negative" ? (
+              <ArrowDownRight size={13} />
+            ) : (
+              <ArrowUpRight size={13} />
             )}
-        </div>
+
+            {trend}
+          </div>
+        )}
       </div>
-    </div>
+    </button>
   );
 }
 

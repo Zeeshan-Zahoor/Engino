@@ -35,6 +35,7 @@ function Tasks() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [searchParams] = useSearchParams();
   const insightFilter = searchParams.get("filter");
+  const taskId = searchParams.get("taskId");
 
   const [taskScope, setTaskScope] = useState("all");
   const [editTask, setEditTask] = useState(null);
@@ -162,6 +163,17 @@ function Tasks() {
       fetchAllTasks(currentWorkspaceId);
     }
   }, [fetchAllTasks, currentWorkspaceId, allTasks.length]);
+
+  useEffect(() => {
+    if (!taskId || allTasks.length === 0) return;
+
+    const task = allTasks.find((item) => item._id === taskId);
+
+    if(task) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedTask(task);
+    }
+  }, [taskId, allTasks]);
 
   useEffect(() => {
     if(!currentWorkspaceId) return;
