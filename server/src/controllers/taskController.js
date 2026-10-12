@@ -2,6 +2,7 @@ import Project from "../models/project.model.js";
 import ProjectMember from "../models/projectMember.model.js";
 import Task from "../models/task.model.js";
 import Requirement from '../models/requirement.model.js'
+import { createTaskAssignmentNotification } from "../services/notificationService.js";
 
 const createTask = async (req, res) => {
     try {
@@ -82,6 +83,15 @@ const createTask = async (req, res) => {
         });
 
         await newTask.save();
+
+        if(newTask.assignee) {
+            await createTaskAssignmentNotification({
+                recipientId: newTask.assignee,
+                actorId: userId,
+                task: newTask,
+                projectId,
+            });
+        }
 
         return res.status(201).json({
             success: true,
@@ -227,6 +237,8 @@ const updateTask = async (req, res) => {
             });
         }
 
+        const previousAssignee = task.assignee?.toString() || null;
+
         let allowedFields = [];
         const updateFields = {};
         if (membership.role === "Admin") {
@@ -294,6 +306,19 @@ const updateTask = async (req, res) => {
             .populate("assignee", "-password")
             .populate("reporter", "-password")
             .populate("requirementId");
+
+        const newAssignee = updatedTask.assignee?._id
+            ? updatedTask.assignee._id.toString()
+            : updatedTask.assignee?.toString() || null;
+        
+        if (newAssignee && newAssignee !== previousAssignee) {
+            await createTaskAssignmentNotification({
+                recipientId: newAssignee,
+                actorId: userId,
+                task: updatedTask,
+                projectId,
+            });
+        }
 
         return res.status(200).json({
             success: true,
@@ -443,11 +468,19 @@ const claimTask = async (req, res) => {
             });
         }
 
+        await createTaskAssignmentNotification({
+            recipientId: userId,
+            actorId: userId,
+            task,
+            projectId,
+        });
+
         return res.status(200).json({
             success: true,
             message: "Task claimed successfully!",
             task,
         });
+        
     } catch (error) {
         return res.status(500).json({
             success: false,

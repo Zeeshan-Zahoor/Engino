@@ -1,7 +1,8 @@
-import { Bell, Search } from "lucide-react";
-import { ArrowLeft } from "lucide-react";
+import { Bell, SunIcon, MoonIcon, ArrowLeft, CheckCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../utils/Avatar";
+import { useEffect, useRef, useState } from "react";
+import useNotificationStore from "../../stores/notificationStore";
 
 function Header({
   title,
@@ -10,6 +11,71 @@ function Header({
   user,
 }) {
   const navigate = useNavigate();
+  const {
+    notifications,
+    unreadCount,
+    isLoading,
+    error,
+    fetchNotifications,
+    markAsRead,
+    markAllAsRead,
+    clearError,
+  } = useNotificationStore();
+
+  const [theme, setTheme] = useState("light");
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const notificationRef = useRef(null);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        notificationRef.current && 
+        !notificationRef.current.contains(event.target)
+      ) {
+        setIsNotificationsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    }
+  }, []);
+  
+
+  useEffect(() => {
+    const selectedTheme = localStorage.getItem("theme") || "light";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTheme(selectedTheme);
+  }, []);
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      if (!notification.isRead) {
+        await markAsRead(notification._id);
+      }
+      setIsNotificationsOpen(false);
+      if (notification.projectId?._id && notification.taskId?._id) {
+        navigate(`/tasks/?taskId=${notification.taskId._id}`);
+      }
+    } catch {
+      // store already records the error.
+    }
+  }
+
+  const handleToggleTheme = () => {
+    setTheme(
+      theme === "light" ? "dark" : "light"
+    );
+    
+    localStorage.setItem("theme", theme);
+  }
+
   return (
     <header className="flex h-20 items-center justify-between bg-white m-0">
       {/* Page Title */}
@@ -37,29 +103,124 @@ function Header({
 
       {/* Right Side */}
       <div className="flex items-center gap-4">
-        {/* Search */}
-        <div className="relative">
-          <Search
-            size={18}
-            strokeWidth={1.8}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary"
-          />
+        
+        {/* Notifications */}
+        <div className="relative" ref={notificationRef}>
+          <button
+            type="button"
+            onClick={() => {
+              setIsNotificationsOpen((open) => !open);
+              clearError();
+            }}
+            aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ""}`}
+            aria-expanded={isNotificationsOpen}
+            className="relative flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
+          >
+            <Bell size={19} strokeWidth={1.8} />
 
-          <input
-            type="text"
-            placeholder="Search..."
-            className="h-10 w-64 rounded-lg border border-border bg-surface pl-10 pr-4 text-sm text-text-primary outline-none placeholder:text-text-secondary focus:border-primary"
-          />
+            {unreadCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex min-h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-semibold text-white">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {isNotificationsOpen && (
+            <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-border bg-white shadow-lg sm:w-96">
+              <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                <div>
+                  <h3 className="font-semibold text-text-primary">Notifications</h3>
+                  <p className="text-xs text-text-secondary">
+                    {unreadCount} unread
+                  </p>
+                </div>
+
+                {unreadCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await markAllAsRead();
+                      } catch {
+                        // The store records the error.
+                      }
+                    }}
+                    className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  >
+                    <CheckCheck size={14} />
+                    Mark all read
+                  </button>
+                )}
+              </div>
+
+              <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-surface">
+                {isLoading ? (
+                  <p className="p-6 text-center text-sm text-text-secondary">
+                    Loading notifications...
+                  </p>
+                ) : error ? (
+                  <div className="p-5 text-center">
+                    <p className="text-sm text-danger">{error}</p>
+                    <button
+                      type="button"
+                      onClick={fetchNotifications}
+                      className="mt-2 text-sm font-medium text-primary hover:underline"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                ) : notifications.length === 0 ? (
+                  <p className="p-6 text-center text-sm text-text-secondary">
+                    You're all caught up. No notifications yet.
+                  </p>
+                ) : (
+                  notifications.map((notification) => (
+                    <button
+                      key={notification._id}
+                      type="button"
+                      onClick={() => handleNotificationClick(notification)}
+                      className={`flex w-full gap-3 border-b border-border px-4 py-3 text-left transition-colors hover:bg-surface ${
+                        !notification.isRead ? "bg-blue-50/60" : "bg-white"
+                      }`}
+                    >
+                      <div className="h-7 w-7 m-1">
+                        <Avatar user={notification.actor}/>
+                      </div>
+
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm text-text-primary">
+                          {notification.message}
+                        </span>
+
+                        <span className="mt-1 block text-xs text-text-secondary">
+                          {notification.projectId?.name || "Project"} ·{" "}
+                          {notification.taskId?.title || "Task"}
+                        </span>
+
+                        <span className="mt-1 block text-xs text-text-secondary">
+                          {new Date(notification.createdAt).toLocaleString()}
+                        </span>
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Notifications */}
+
+        {/* Theme */}
         <button
           type="button"
+          onClick={handleToggleTheme}
           className="relative flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
         >
-          <Bell size={19} strokeWidth={1.8} />
-
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger" />
+          {theme === "light" ? (
+            <SunIcon size={19} strokeWidth={1.8} />
+          ) : (
+            <MoonIcon size={19} strokeWidth={1.8}/>
+          )}
         </button>
 
         {/* Profile */}

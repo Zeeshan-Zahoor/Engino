@@ -9,6 +9,7 @@ import taskRoutes from './routers/taskRoutes.js';
 import requirementRoutes from './routers/requirementRoutes.js';
 import aiRoutes from './routers/aiRoutes.js';
 import aiPlansRoutes from './routers/aiPlansRoutes.js';
+import notificationRoutes from './routers/notificationRoutes.js';
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/api/workspaces/:workspaceId/projects/:projectId/requirements', require
 app.use('/api/workspaces/:workspaceId/projects/:projectId/requirements/:requirementId', aiPlansRoutes);
 app.use('/api/workspaces/:workspaceId/projects/:projectId/requirements/:requirementId/ai', aiRoutes);
 app.use('/api/workspaces/:workspaceId/projects/:projectId/tasks', taskRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get("/", (req, res) => {
     res.json({
