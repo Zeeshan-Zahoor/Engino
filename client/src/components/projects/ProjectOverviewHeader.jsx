@@ -12,7 +12,7 @@ import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 function ProjectOverviewHeader({ project, onEdit, onDelete }) {
   const isAdmin = isWorkspaceAdmin();
   return (
-    <section className="rounded-2xl border border-border bg-white p-4">
+    <section className="rounded-2xl border border-border bg-card p-4">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         {/* Project identity */}
         <div className="flex min-w-0 items-start gap-4">

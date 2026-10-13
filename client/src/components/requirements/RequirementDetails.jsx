@@ -144,7 +144,7 @@ function RequirementDetails({ requirement, setSelectedRequirement, isLoading }) 
     const nextAction =
       nextActionConfig[requirement?.aiStatus] || nextActionConfig.Pending;
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-white transition-all">
+    <section className="overflow-hidden rounded-xl border border-border bg-card transition-all">
    
       {/* Requirement Header */}
       <div className="border-b border-border px-4 pt-4">
@@ -166,7 +166,7 @@ function RequirementDetails({ requirement, setSelectedRequirement, isLoading }) 
           </div>
 
           <div className="flex shrink-0 items-start gap-2">
-            <span className="rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-success">
+            <span className="rounded-md bg-success-surface px-2 py-1 text-xs font-semibold text-success">
               {requirement.aiStatus}
             </span>
 

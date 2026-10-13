@@ -10,9 +10,9 @@ import { getRelativeTime } from "../../utils/getRelativeTime";
 
 const statusStyles = {
   "AI Plan Ready": "bg-primary-light text-primary",
-  "Needs Clarification": "bg-orange-50 text-warning",
-  "Plan Generated": "bg-blue-50 text-info",
-  Approved: "bg-green-50 text-success",
+  "Needs Clarification": "bg-warning-surface text-warning",
+  "Plan Generated": "bg-info-surface text-info",
+  Approved: "bg-success-surface text-success",
   Pending: "bg-surface text-text-secondary",
 };
 
@@ -33,7 +33,7 @@ function RequirementsOverview() {
   }, [fetchWorkspaceRequirements, fetchAllTasks, currentWorkspaceId, workspaceRequirements.length, allTasks.length]);
   
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>

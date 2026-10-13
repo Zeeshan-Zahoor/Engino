@@ -12,22 +12,22 @@ import useToastStore from "../../stores/toastStore";
 const toastConfig = {
   success: {
     icon: CheckCircle2,
-    iconWrapper: "bg-green-50 text-success",
+    iconWrapper: "bg-success-surface text-success",
     progress: "bg-success",
   },
   error: {
     icon: CircleAlert,
-    iconWrapper: "bg-red-50 text-danger",
+    iconWrapper: "bg-danger-surface text-danger",
     progress: "bg-danger",
   },
   warning: {
     icon: TriangleAlert,
-    iconWrapper: "bg-orange-50 text-warning",
+    iconWrapper: "bg-warning-surface text-warning",
     progress: "bg-warning",
   },
   info: {
     icon: Info,
-    iconWrapper: "bg-blue-50 text-info",
+    iconWrapper: "bg-info-surface text-info",
     progress: "bg-info",
   },
 };
@@ -52,7 +52,7 @@ function Toast() {
   const Icon = config.icon;
 
   return (
-    <div className="fixed right-6 top-6 z-[100] w-[360px] overflow-hidden rounded-xl border border-border bg-white shadow-xl">
+    <div className="fixed right-6 top-6 z-[100] w-[360px] overflow-hidden rounded-xl border border-border bg-card shadow-xl">
       <div className="flex items-start gap-3 px-4 py-3.5">
         {/* Icon */}
         <div

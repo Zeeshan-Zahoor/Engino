@@ -15,7 +15,7 @@ function StatsCard({
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className={`flex items-center gap-2 rounded-2xl border border-border bg-white p-3 text-left ${
+      className={`flex items-center gap-2 rounded-2xl border border-border bg-card p-3 text-left ${
         onClick
           ? "cursor-pointer transition hover:border-primary/40 hover:shadow-sm"
           : "cursor-default"

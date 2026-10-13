@@ -57,18 +57,18 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8f8fc] p-4 md:p-6">
-            <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl md:min-h-[calc(100vh-3rem)]">
+        <div className="min-h-screen bg-background p-4 md:p-6">
+            <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-7xl overflow-hidden rounded-2xl bg-card shadow-xl md:min-h-[calc(100vh-3rem)]">
 
                 {/* left panel */}
                 <div className="relative hidden w-[46%] overflow-hidden bg-gradient-to-br from-[#302080] via-[#39248f] to-[#241760] px-10 py-10 text-white lg:flex lg:flex-col">
 
-                    <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/5" />
-                    <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-white/5" />
+                    <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-card/5" />
+                    <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-card/5" />
 
                     {/* Logo */}
                     <div className="relative z-10 flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-card/15">
                             <Zap
                                 size={20}
                                 fill="currentColor"
@@ -119,7 +119,7 @@ const Login = () => {
                     </div>
 
                     <div className="relative z-10 mt-auto pt-8">
-                        <div className="mb-4 h-px w-8 bg-white/70" />
+                        <div className="mb-4 h-px w-8 bg-card/70" />
 
                         <p className="text-sm text-purple-100">
                             “A more organized team builds a brighter tomorrow.”
@@ -142,18 +142,18 @@ const Login = () => {
                                     />
                                 </div>
 
-                                <span className="text-2xl font-bold text-slate-900">
+                                <span className="text-2xl font-bold text-text-primary">
                                     Engino
                                 </span>
                             </div>
 
                             {/* Heading */}
                             <div className="mb-8">
-                                <h2 className="text-3xl font-bold tracking-tight text-[#11142d]">
+                                <h2 className="text-3xl font-bold tracking-tight text-text-primary">
                                     Welcome back
                                 </h2>
 
-                                <p className="mt-2 text-sm text-slate-500">
+                                <p className="mt-2 text-sm text-text-secondary">
                                     Sign in to continue to Engino
                                 </p>
                             </div>
@@ -166,7 +166,7 @@ const Login = () => {
                                 <div>
                                     <label
                                         htmlFor="email"
-                                        className="mb-2 block text-sm font-medium text-slate-700"
+                                        className="mb-2 block text-sm font-medium text-text-primary"
                                     >
                                         Email
                                     </label>
@@ -180,7 +180,7 @@ const Login = () => {
                                         placeholder="you@company.com"
                                         autoComplete="email"
                                         required
-                                        className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
+                                        className="h-12 w-full rounded-xl border border-border bg-card px-4 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
                                     />
                                 </div>
 
@@ -189,7 +189,7 @@ const Login = () => {
                                     <div className="mb-2 flex items-center justify-between">
                                         <label
                                             htmlFor="password"
-                                            className="block text-sm font-medium text-slate-700"
+                                            className="block text-sm font-medium text-text-primary"
                                         >
                                             Password
                                         </label>
@@ -216,7 +216,7 @@ const Login = () => {
                                             placeholder="Enter your password"
                                             autoComplete="current-password"
                                             required
-                                            className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 pr-12 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
+                                            className="h-12 w-full rounded-xl border border-border bg-card px-4 pr-12 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
                                         />
 
                                         <button
@@ -224,7 +224,7 @@ const Login = () => {
                                             onClick={() =>
                                                 setShowPassword((prev) => !prev)
                                             }
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition hover:text-text-secondary"
                                         >
                                             {showPassword ? (
                                                 <EyeOff size={19} />
@@ -259,7 +259,7 @@ const Login = () => {
                             </form>
 
                             <div className="flex justify-center px-6 py-6 sm:px-10">
-                                <p className="text-sm text-slate-500">
+                                <p className="text-sm text-text-secondary">
                                     New to Engino?{" "}
                                     <a
                                         href="/register"
@@ -271,7 +271,7 @@ const Login = () => {
                             </div>
 
                             {/* Terms */}
-                            <p className="mt-6 text-center text-xs leading-5 text-slate-400">
+                            <p className="mt-6 text-center text-xs leading-5 text-text-muted">
                                 By signing in, you agree to our{" "}
                                 <a
                                     href="#"
@@ -299,7 +299,7 @@ const Login = () => {
 const Benefit = ({ icon, title, description }) => {
     return (
         <div className="flex gap-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/10">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-card/10 text-white ring-1 ring-white/10">
                 {icon}
             </div>
 

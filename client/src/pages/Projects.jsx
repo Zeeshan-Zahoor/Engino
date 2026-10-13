@@ -139,26 +139,26 @@ function Projects() {
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <StatsCard 
                     icon={FolderKanban}
-                    iconClassName="bg-purple-50 text-primary"
+                    iconClassName="bg-primary-light text-primary"
                     title="Total Projects"
                     value={totalProjects}
                     description={`${activeProjects.length} active`}
                 />
                 <StatsCard 
                     icon={FolderCheck}
-                    iconClassName="bg-green-50 text-success"
+                    iconClassName="bg-success-surface text-success"
                     title="Active Projects"
                     value={activeProjects.length}
                 />
                 <StatsCard 
                     icon={SquareStop}
-                    iconClassName="bg-red-50 text-danger"
+                    iconClassName="bg-danger-surface text-danger"
                     title="On Hold Projects"
                     value={onHoldProjects.length}
                 />
                 <StatsCard 
                     icon={CircleCheck}
-                    iconClassName="bg-blue-50 text-success"
+                    iconClassName="bg-info-surface text-success"
                     title="Avg. Progress"
                     value={`${avgProgress()}%`}
                 />

@@ -91,18 +91,18 @@ function InvitationPage() {
     }
 
      return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-5">
-        <div className="w-full max-w-[1000px] bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+        <div className="min-h-screen bg-subtle flex items-center justify-center px-4 py-5">
+        <div className="w-full max-w-[1000px] bg-card rounded-2xl border border-border shadow-xl overflow-hidden">
             <div className="grid md:grid-cols-[42%_58%]">
 
             {/* Left */}
             <div className="relative overflow-hidden bg-gradient-to-br from-violet-600 via-violet-700 to-indigo-900 p-10 text-white">
-                <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10" />
-                <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-white/5" />
+                <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-card/10" />
+                <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-card/5" />
 
                 <div className="relative z-10 h-full flex flex-col">
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-white/15 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-xl bg-card/15 flex items-center justify-center">
                     <span className="text-xl font-bold">✦</span>
                     </div>
                     <span className="text-xl font-bold">Engino</span>
@@ -127,7 +127,7 @@ function InvitationPage() {
 
                 <div className="mt-auto pt-16 space-y-5">
                     <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-full bg-card/10 flex items-center justify-center">
                         <Users size={19} />
                     </div>
                     <div>
@@ -139,7 +139,7 @@ function InvitationPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-full bg-card/10 flex items-center justify-center">
                         <ShieldCheck size={19} />
                     </div>
                     <div>
@@ -161,11 +161,11 @@ function InvitationPage() {
                     <Users size={23} />
                     </div>
 
-                    <h2 className="text-2xl font-bold text-slate-900">
+                    <h2 className="text-2xl font-bold text-text-primary">
                     Accept invitation
                     </h2>
 
-                    <p className="mt-2 text-sm text-slate-500">
+                    <p className="mt-2 text-sm text-text-secondary">
                     Complete your account to join the workspace.
                     </p>
                 </div>
@@ -177,7 +177,7 @@ function InvitationPage() {
                     </p>
 
                     <div className="mt-1 flex items-center justify-between">
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-sm font-semibold text-text-primary">
                         {invitation?.workspaceId?.name}
                     </p>
 
@@ -186,7 +186,7 @@ function InvitationPage() {
                     </span>
                     </div>
 
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-text-secondary">
                         {invitation?.email}
                     </p>
                 </div>
@@ -194,7 +194,7 @@ function InvitationPage() {
                 <form className="space-y-5">
                     {/* Name */}
                     <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-text-primary mb-2">
                         Full name
                     </label>
 
@@ -204,13 +204,13 @@ function InvitationPage() {
                         value={data.name}
                         onChange={handleChange}
                         placeholder="Zeeshan Zahoor"
-                        className="w-full h-12 rounded-xl border border-slate-200 px-4 text-sm text-slate-900 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10"
+                        className="w-full h-12 rounded-xl border border-border px-4 text-sm text-text-primary outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10"
                     />
                     </div>
 
                     {/* Email */}
                     <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-text-primary mb-2">
                         Email
                     </label>
 
@@ -218,17 +218,17 @@ function InvitationPage() {
                         type="email"
                         value={invitation?.email || "invitation@example.com"}
                         readOnly
-                        className="w-full h-12 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-500 outline-none cursor-not-allowed"
+                        className="w-full h-12 rounded-xl border border-border bg-subtle px-4 text-sm text-text-secondary outline-none cursor-not-allowed"
                     />
 
-                    <p className="mt-1.5 text-xs text-slate-400">
+                    <p className="mt-1.5 text-xs text-text-muted">
                         This email is linked to your invitation.
                     </p>
                     </div>
 
                     {/* Password */}
                     <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-text-primary mb-2">
                         Create password
                     </label>
 
@@ -239,11 +239,11 @@ function InvitationPage() {
                         onChange={handleChange}
                         type="password"
                         placeholder="Create a password"
-                        className="w-full h-12 rounded-xl border border-slate-200 px-4 text-sm text-slate-900 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10"
+                        className="w-full h-12 rounded-xl border border-border px-4 text-sm text-text-primary outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10"
                         />
                     </div>
 
-                    <div className="mt-3 grid grid-cols-2 gap-y-2 text-xs text-slate-400">
+                    <div className="mt-3 grid grid-cols-2 gap-y-2 text-xs text-text-muted">
                         <span>○ At least 8 characters</span>
                         <span>○ One uppercase letter</span>
                         <span>○ One lowercase letter</span>
@@ -284,7 +284,7 @@ function InvitationPage() {
                                     <button
                                         onClick={() => setIsDeclineModalOpen(true)}
                                         type="button"
-                                        className="h-12 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition flex items-center justify-center gap-2"
+                                        className="h-12 rounded-xl border border-border text-sm font-semibold text-text-secondary hover:bg-subtle transition flex items-center justify-center gap-2"
                                     >
                                         <X size={17} />
                                         Decline
@@ -293,7 +293,7 @@ function InvitationPage() {
                                     <button
                                         type="submit"
                                         onClick={handleAcceptInvite}
-                                        className="h-12 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition shadow-lg shadow-violet-600/20 flex items-center justify-center gap-2 disabled:bg-surface disabled:text-gray-600"
+                                        className="h-12 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition shadow-lg shadow-violet-600/20 flex items-center justify-center gap-2 disabled:bg-surface disabled:text-text-secondary"
                                     >
                                         <Check size={17} />
                                         {loading ? (
@@ -304,7 +304,7 @@ function InvitationPage() {
                             )
                     }
 
-                    <p className="pt-1 text-center text-xs text-slate-400">
+                    <p className="pt-1 text-center text-xs text-text-muted">
                     This invitation expires in 24 hours.
                     </p>
                 </form>

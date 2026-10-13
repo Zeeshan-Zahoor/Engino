@@ -30,9 +30,9 @@ function WorkspaceSwitcher() {
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
                 className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5
-                    bg-violet-50 hover:bg-violet-100 transition-colors
+                    bg-workspace hover:bg-workspace-hover transition-colors
                     text-left ${
-                        isOpen ? "ring-1 ring-violet-200" : ""
+                        isOpen ? "ring-1 ring-border" : ""
                     }`}
             >
                 <div
@@ -43,11 +43,11 @@ function WorkspaceSwitcher() {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-slate-900 truncate">
+                    <p className="text-sm font-semibold text-text-primary truncate">
                         {selectedWorkspace?.name || "Select Workspace"}
                     </p>
 
-                    <p className="text-xs text-slate-500 truncate">
+                    <p className="text-xs text-text-secondary truncate">
                         {selectedWorkspace?.ownerId === user._id
                             ? ("Personal Workspace")
                             : (`${selectedWorkspace?.name}'s Workspace`)
@@ -57,7 +57,7 @@ function WorkspaceSwitcher() {
 
                 <ChevronDown
                     size={17}
-                    className={`shrink-0 text-slate-500 transition-transform ${
+                    className={`shrink-0 text-text-secondary transition-transform ${
                         isOpen ? "rotate-180" : ""
                     }`}
                 />
@@ -67,11 +67,11 @@ function WorkspaceSwitcher() {
             {isOpen && (
                 <div
                     className="absolute left-4 right-4 top-[calc(100%+6px)] z-50
-                    rounded-xl border border-slate-200 bg-white shadow-xl
-                    shadow-slate-200/50 overflow-hidden"
+                    rounded-xl border border-border bg-card shadow-lg
+                    overflow-hidden"
                 >
                     <div className="px-4 py-3">
-                        <p className="text-[11px] font-semibold tracking-wide text-slate-400 uppercase">
+                        <p className="text-[11px] font-semibold tracking-wide text-text-muted uppercase">
                             Workspaces
                         </p>
                     </div>
@@ -92,8 +92,8 @@ function WorkspaceSwitcher() {
                                         rounded-lg px-2.5 py-2.5 text-left
                                         transition-colors ${
                                             isSelected
-                                                ? "bg-violet-50"
-                                                : "hover:bg-slate-50"
+                                                ? "bg-workspace-hover"
+                                                : "hover:bg-subtle"
                                         }`}
                                 >
                                     <div
@@ -105,11 +105,11 @@ function WorkspaceSwitcher() {
                                     </div>
 
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-semibold text-slate-800 truncate">
+                                        <p className="text-sm font-semibold text-text-primary truncate">
                                             {workspace?.name}
                                         </p>
 
-                                        <p className="text-xs text-slate-500 truncate">
+                                        <p className="text-xs text-text-secondary truncate">
                                             {workspace?.role}
                                         </p>
                                     </div>

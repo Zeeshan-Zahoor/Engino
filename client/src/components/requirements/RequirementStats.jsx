@@ -14,35 +14,35 @@ function RequirementStats({ requirements }) {
       value: `${requirements.length}`,
       description: "Across all projects",
       icon: ListChecks,
-      iconClassName: "bg-purple-50 text-primary",
+      iconClassName: "bg-primary-light text-primary",
     },
     {
       title: "Ready to Generate",
       value: `${requirements.filter((requirement) => requirement.aiStatus === "Clear")?.length}`,
       description: "Generate engineering plan",
       icon: WandSparkles,
-      iconClassName: "bg-green-50 text-success",
+      iconClassName: "bg-success-surface text-success",
     },
     {
       title: "AI Clarification",
       value: `${requirements.filter((requirement) => requirement.aiStatus === "Needs Clarification")?.length}`,
       description: "Awaiting your input",
       icon: Sparkles,
-      iconClassName: "bg-orange-50 text-warning",
+      iconClassName: "bg-warning-surface text-warning",
     },
     {
       title: "Plans Generated",
       value: `${requirements.filter((requirement) => requirement.aiStatus === "Plan Generated")?.length}`,
       description: "Ready for review",
       icon: ClipboardCheck,
-      iconClassName: "bg-blue-50 text-info",
+      iconClassName: "bg-info-surface text-info",
     },
     {
       title: "Approved",
       value: `${requirements.filter((requirement) => requirement.aiStatus === "Approved")?.length}`,
       description: "Converted to tasks",
       icon: FileCheck2,
-      iconClassName: "bg-purple-50 text-primary",
+      iconClassName: "bg-primary-light text-primary",
     },
   ];
   return (
@@ -53,7 +53,7 @@ function RequirementStats({ requirements }) {
         return (
           <div
             key={stat.title}
-            className="rounded-2xl border border-border bg-white p-4"
+            className="rounded-2xl border border-border bg-card p-4"
           >
             <div className="flex items-start gap-3">
               <div

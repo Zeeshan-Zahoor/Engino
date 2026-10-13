@@ -207,7 +207,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
   const getPriorityClass = (priority) => {
     switch (priority) {
       case "High":
-        return "bg-red-50 text-red-600";
+        return "bg-danger-surface text-danger";
 
       case "Medium":
         return "bg-warning/10 text-warning";
@@ -277,7 +277,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
       />
 
       {/* Panel */}
-      <aside className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col border-l border-border bg-white shadow-xl scrollbar-thin scrollbar-thumb-text-secondary/30">
+      <aside className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col border-l border-border bg-card shadow-xl scrollbar-thin scrollbar-thumb-text-secondary/30">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div>
@@ -356,7 +356,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                           value={selectedRole}
                           onChange={(e) => setSelectedRole(e.target.value)}
                           disabled={workspaceLoading}
-                          className="h-9 flex-1 rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none focus:border-primary"
+                          className="h-9 flex-1 rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none focus:border-primary"
                         >
                           <option value="Member">Member</option>
                           <option value="Admin">Admin</option>
@@ -385,7 +385,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                             setIsChangingRole(false);
                           }}
                           disabled={workspaceLoading}
-                          className="h-9 rounded-lg border border-border px-3 text-xs font-medium text-text-secondary transition hover:bg-white disabled:opacity-50"
+                          className="h-9 rounded-lg border border-border px-3 text-xs font-medium text-text-secondary transition hover:bg-card disabled:opacity-50"
                         >
                           Cancel
                         </button>
@@ -402,7 +402,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                     <button
                       type="button"
                       onClick={() => setShowRemoveConfirmation(true)}
-                      className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+                      className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger-surface"
                     >
                       <UserMinus size={15} />
                       Remove
@@ -458,8 +458,8 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
               </p>
             </div>
 
-            <div className="rounded-lg border border-red-100 bg-red-50 p-3">
-              <div className="flex items-center gap-2 text-red-600">
+            <div className="rounded-lg border border-red-100 bg-danger-surface p-3">
+              <div className="flex items-center gap-2 text-danger">
                 <AlertTriangle size={15} />
 
                 <span className="text-xs">
@@ -467,7 +467,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                 </span>
               </div>
 
-              <p className="mt-1 text-xl font-bold text-red-600">
+              <p className="mt-1 text-xl font-bold text-danger">
                 {overdueTasks.length}
               </p>
             </div>
@@ -620,7 +620,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                       <div
                         className={`flex items-center gap-1.5 ${
                           isOverdue(task)
-                            ? "font-medium text-red-600"
+                            ? "font-medium text-danger"
                             : isDueToday(task)
                             ? "font-medium text-warning"
                             : "text-text-secondary"
@@ -681,9 +681,9 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
       {/* Confirmation dialog */}
       {showRemoveConfirmation && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-border bg-white shadow-xl">
+          <div className="w-full max-w-sm rounded-xl border border-border bg-card shadow-xl">
             <div className="p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50 text-red-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-danger-surface text-danger">
                 <UserMinus size={18} />
               </div>
 

@@ -43,7 +43,7 @@ function ProjectTeam({ project }) {
 
 
   return (
-    <section className="rounded-2xl border border-border bg-white p-5">
+    <section className="rounded-2xl border border-border bg-card p-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -171,12 +171,12 @@ function ProjectTeam({ project }) {
                       </button>
 
                       {openMenuId === membership._id && (
-                        <div className="absolute right-0 top-10 z-20 w-44 overflow-hidden rounded-xl border border-border bg-white py-1 shadow-lg">
+                        <div className="absolute right-0 top-10 z-20 w-44 overflow-hidden rounded-xl border border-border bg-card py-1 shadow-lg">
                           
                           <button
                             type="button"
                             onClick={() => handleRemoveProjectMember(member._id)}
-                            className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-danger transition hover:bg-red-50"
+                            className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-danger transition hover:bg-danger-surface"
                           >
                             <Trash2 size={15} />
                             {isLoading ? (

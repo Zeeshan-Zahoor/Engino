@@ -21,9 +21,9 @@ import { useState } from "react";
 
 
 const statusStyles = {
-    "In Progress": "bg-blue-50 text-info",
-    Todo: "bg-purple-50 text-primary",
-    Done: "bg-green-50 text-success",
+    "In Progress": "bg-info-surface text-info",
+    Todo: "bg-primary-light text-primary",
+    Done: "bg-success-surface text-success",
   };
 
 const complexityStyles = {
@@ -190,7 +190,7 @@ const projectMembers = currentProject?.team || [];
   
   
   return (
-    <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-white">
+    <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-card">
       {/* Header */}
       <div className="shrink-0 border-b border-border p-4">
         <div className="flex items-start justify-between gap-3">
@@ -251,7 +251,7 @@ const projectMembers = currentProject?.team || [];
                   <button
                       type="button"
                       onClick={() => setIsAssigneeMenuOpen((prev) => !prev)}
-                      className="flex min-w-[170px] items-center justify-between gap-3 rounded-lg bg-white px-2.5 py-1.5 text-sm font-medium text-text-primary transition hover:bg-surface"
+                      className="flex min-w-[170px] items-center justify-between gap-3 rounded-lg bg-card px-2.5 py-1.5 text-sm font-medium text-text-primary transition hover:bg-surface"
                   >
                       <div className="flex min-w-0 items-center gap-2">
                           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
@@ -270,7 +270,7 @@ const projectMembers = currentProject?.team || [];
                   </button>
 
                   {isAssigneeMenuOpen && (
-                      <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-border bg-white p-1.5 shadow-lg">
+                      <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-lg">
                           
                           {/* Unassigned */}
                           <button
@@ -338,7 +338,7 @@ const projectMembers = currentProject?.team || [];
           </DetailRow>
 
           <DetailRow label="Priority">
-            <span className={`inline-flex rounded-md bg-red-50 px-2 py-1 text-xs font-semibold ${priorityStyles[task.priority]}`}>
+            <span className={`inline-flex rounded-md bg-danger-surface px-2 py-1 text-xs font-semibold ${priorityStyles[task.priority]}`}>
               {task.priority}
             </span>
           </DetailRow>
@@ -354,7 +354,7 @@ const projectMembers = currentProject?.team || [];
           </DetailRow>
 
           <DetailRow label="Task Type">
-            <span className="inline-flex rounded-md bg-purple-50 px-2 py-1 text-xs font-semibold text-primary">
+            <span className="inline-flex rounded-md bg-primary-light px-2 py-1 text-xs font-semibold text-primary">
               {task.type}
             </span>
           </DetailRow>
@@ -403,9 +403,9 @@ const projectMembers = currentProject?.team || [];
             Linked Requirement
           </h3>
 
-          <div className="mt-3 rounded-lg bg-purple-50 p-3">
+          <div className="mt-3 rounded-lg bg-primary-light p-3">
             <div className="flex items-start gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-primary">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-card text-primary">
                 <CheckCircle2 size={17} />
               </div>
 
@@ -451,7 +451,7 @@ const projectMembers = currentProject?.team || [];
                 className={`w-full flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-semibold transition ${
                   isMoreActionsOpen
                     ? "border-primary/30 bg-primary/5 text-primary"
-                    : "border-border bg-white text-text-primary hover:bg-gray-50"
+                    : "border-border bg-card text-text-primary hover:bg-subtle"
                 }`}
               >
                 More Actions
@@ -464,7 +464,7 @@ const projectMembers = currentProject?.team || [];
               </button>
 
               {isMoreActionsOpen && (
-                <div className="w-full absolute bottom-full left-0 z-50 mb-2 w-52 overflow-hidden rounded-xl border border-border bg-white p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.10)]">
+                <div className="w-full absolute bottom-full left-0 z-50 mb-2 w-52 overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.10)]">
 
                   {/* Admin Actions */}
                   {isAdmin && (
@@ -475,9 +475,9 @@ const projectMembers = currentProject?.team || [];
                           setIsMoreActionsOpen(false);
                           onEdit(task);
                         }}
-                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-gray-50"
+                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-subtle"
                       >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition group-hover:bg-gray-200">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-subtle-strong text-text-secondary transition group-hover:bg-border">
                           <Pencil size={15} />
                         </span>
 
@@ -497,15 +497,15 @@ const projectMembers = currentProject?.team || [];
                           setIsMoreActionsOpen(false);
                           onDelete(task);
                         }}
-                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-danger transition hover:bg-danger-surface"
                       >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-red-50 text-red-500 transition group-hover:bg-red-100">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-danger-surface text-danger transition group-hover:bg-danger-surface">
                           <Trash2 size={15} />
                         </span>
 
                         <div className="flex flex-col">
                           <span>Delete Task</span>
-                          <span className="text-[11px] font-normal text-red-400">
+                          <span className="text-[11px] font-normal text-danger">
                             Permanently remove task
                           </span>
                         </div>
@@ -519,9 +519,9 @@ const projectMembers = currentProject?.team || [];
                       type="button"
                       onClick={handleUnclaimTask}
                       disabled={isLoading}
-                      className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition group-hover:bg-gray-200">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-md bg-subtle-strong text-text-secondary transition group-hover:bg-border">
                         {isLoading ? (
                           <Loader size={15} color="text-primary" />
                         ) : (
@@ -562,7 +562,7 @@ const projectMembers = currentProject?.team || [];
               </button>
 
               {isStatusMenuOpen && (
-                  <div className="absolute bottom-full left-0 z-50 mb-2 w-full overflow-hidden rounded-xl border border-border bg-white p-1.5 shadow-lg">
+                  <div className="absolute bottom-full left-0 z-50 mb-2 w-full overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-lg">
                       {["Todo", "In Progress", "Done"].map((status) => (
                           <button
                               key={status}

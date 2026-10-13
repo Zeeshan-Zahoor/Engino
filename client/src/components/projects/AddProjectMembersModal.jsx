@@ -148,7 +148,7 @@ function AddProjectMembersModal({ isOpen, onClose, project }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-            <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
+            <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-card shadow-xl">
 
                 {/* Header */}
                 <div className="flex items-start justify-between border-b border-border px-6 py-5">
@@ -189,7 +189,7 @@ function AddProjectMembersModal({ isOpen, onClose, project }) {
                                 setSearchInput(e.target.value)
                             }
                             placeholder="Search workspace members..."
-                            className="w-full rounded-lg border border-border bg-white py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-primary"
+                            className="w-full rounded-lg border border-border bg-card py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-primary"
                         />
                     </div>
 
@@ -337,7 +337,7 @@ function AddProjectMembersModal({ isOpen, onClose, project }) {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary outline-none focus:border-primary"
+                                                className="rounded-lg border border-border bg-card px-3 py-2 text-sm text-text-primary outline-none focus:border-primary"
                                             >
                                                 {projectRoles.map((role) => (
                                                     <option

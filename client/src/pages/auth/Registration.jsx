@@ -81,19 +81,19 @@ const Registration = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8f8fc] p-4 md:p-6">
-            <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl md:min-h-[calc(100vh-3rem)]">
+        <div className="min-h-screen bg-background p-4 md:p-6">
+            <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-7xl overflow-hidden rounded-2xl bg-card shadow-xl md:min-h-[calc(100vh-3rem)]">
 
                 {/* left panel */}
                 <div className="relative hidden w-[46%] overflow-hidden bg-gradient-to-br from-[#302080] via-[#39248f] to-[#241760] px-10 py-10 text-white lg:flex lg:flex-col">
 
                     {/* Decorative background */}
-                    <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/5" />
-                    <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-white/5" />
+                    <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-card/5" />
+                    <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-card/5" />
 
                     {/* Logo */}
                     <div className="relative z-10 flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-card/15">
                             <Zap
                                 size={20}
                                 fill="currentColor"
@@ -150,7 +150,7 @@ const Registration = () => {
 
                     {/* Bottom quote */}
                     <div className="relative z-10 mt-auto pt-8">
-                        <div className="mb-4 h-px w-8 bg-white/70" />
+                        <div className="mb-4 h-px w-8 bg-card/70" />
 
                         <p className="text-sm text-purple-100">
                             From ideas to impact.
@@ -174,18 +174,18 @@ const Registration = () => {
                                     />
                                 </div>
 
-                                <span className="text-2xl font-bold text-slate-900">
+                                <span className="text-2xl font-bold text-text-primary">
                                     Engino
                                 </span>
                             </div>
 
                             {/* Heading */}
                             <div className="mb-8">
-                                <h2 className="text-3xl font-bold tracking-tight text-[#11142d]">
+                                <h2 className="text-3xl font-bold tracking-tight text-text-primary">
                                     Create your account
                                 </h2>
 
-                                <p className="mt-2 text-sm text-slate-500">
+                                <p className="mt-2 text-sm text-text-secondary">
                                     Join Engino and start building today.
                                 </p>
                             </div>
@@ -200,7 +200,7 @@ const Registration = () => {
                                 <div>
                                     <label
                                         htmlFor="name"
-                                        className="mb-2 block text-sm font-medium text-slate-700"
+                                        className="mb-2 block text-sm font-medium text-text-primary"
                                     >
                                         Full name
                                     </label>
@@ -214,7 +214,7 @@ const Registration = () => {
                                         placeholder="John Doe"
                                         autoComplete="name"
                                         required
-                                        className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
+                                        className="h-12 w-full rounded-xl border border-border bg-card px-4 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
                                     />
                                 </div>
 
@@ -222,7 +222,7 @@ const Registration = () => {
                                 <div>
                                     <label
                                         htmlFor="email"
-                                        className="mb-2 block text-sm font-medium text-slate-700"
+                                        className="mb-2 block text-sm font-medium text-text-primary"
                                     >
                                         Email
                                     </label>
@@ -236,7 +236,7 @@ const Registration = () => {
                                         placeholder="you@company.com"
                                         autoComplete="email"
                                         required
-                                        className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
+                                        className="h-12 w-full rounded-xl border border-border bg-card px-4 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
                                     />
                                 </div>
 
@@ -244,7 +244,7 @@ const Registration = () => {
                                 <div>
                                     <label
                                         htmlFor="password"
-                                        className="mb-2 block text-sm font-medium text-slate-700"
+                                        className="mb-2 block text-sm font-medium text-text-primary"
                                     >
                                         Password
                                     </label>
@@ -263,7 +263,7 @@ const Registration = () => {
                                             placeholder="Create a password"
                                             autoComplete="new-password"
                                             required
-                                            className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 pr-12 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
+                                            className="h-12 w-full rounded-xl border border-border bg-card px-4 pr-12 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-[#542cff] focus:ring-4 focus:ring-[#542cff]/10"
                                         />
 
                                         <button
@@ -271,7 +271,7 @@ const Registration = () => {
                                             onClick={() =>
                                                 setShowPassword((prev) => !prev)
                                             }
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition hover:text-text-secondary"
                                         >
                                             {showPassword ? (
                                                 <EyeOff size={19} />
@@ -293,7 +293,7 @@ const Registration = () => {
                                                 className={`flex h-4 w-4 items-center justify-center rounded-full border ${
                                                     requirement.valid
                                                         ? "border-emerald-500 bg-emerald-500 text-white"
-                                                        : "border-slate-300"
+                                                        : "border-border"
                                                 }`}
                                             >
                                                 {requirement.valid && (
@@ -305,7 +305,7 @@ const Registration = () => {
                                                 className={
                                                     requirement.valid
                                                         ? "text-emerald-600"
-                                                        : "text-slate-400"
+                                                        : "text-text-muted"
                                                 }
                                             >
                                                 {requirement.label}
@@ -338,7 +338,7 @@ const Registration = () => {
                             </form>
 
                             <div className="flex justify-center px-6 py-6 sm:px-10">
-                                <p className="text-sm text-slate-500">
+                                <p className="text-sm text-text-secondary">
                                     Already have an account?{" "}
                                     <a
                                         href="/login"
@@ -350,7 +350,7 @@ const Registration = () => {
                             </div>
 
                             {/* Terms */}
-                            <p className="mt-6 text-center text-xs leading-5 text-slate-400">
+                            <p className="mt-6 text-center text-xs leading-5 text-text-muted">
                                 By creating an account, you agree to our{" "}
                                 <a
                                     href="#"
@@ -378,7 +378,7 @@ const Registration = () => {
 const Benefit = ({ icon, title, description }) => {
     return (
         <div className="flex gap-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/10">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-card/10 text-white ring-1 ring-white/10">
                 {icon}
             </div>
 

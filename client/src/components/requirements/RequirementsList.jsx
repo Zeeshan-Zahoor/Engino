@@ -3,17 +3,17 @@ import useProjectStore from "../../stores/projectStore";
 import Avatar from "../../utils/Avatar";
 
 const statusStyles = {
-  "Plan Generated": "bg-green-50 text-success",
-  "AI Plan Ready": "bg-purple-50 text-primary",
-  "Needs Clarification": "bg-orange-50 text-warning",
-  "Pending": "bg-gray-50 text-gray-600",
-  "Approved": "bg-green-50 text-success",
+  "Plan Generated": "bg-success-surface text-success",
+  "AI Plan Ready": "bg-primary-light text-primary",
+  "Needs Clarification": "bg-warning-surface text-warning",
+  "Pending": "bg-subtle text-text-secondary",
+  "Approved": "bg-success-surface text-success",
 };
 
 const complexityStyles = {
-  High: "bg-red-50 text-danger",
-  Medium: "bg-orange-50 text-warning",
-  Low: "bg-green-50 text-success",
+  High: "bg-danger-surface text-danger",
+  Medium: "bg-warning-surface text-warning",
+  Low: "bg-success-surface text-success",
 };
 
 function RequirementsList({ 
@@ -25,7 +25,7 @@ function RequirementsList({
   const projects = useProjectStore(state => state.projects);
   console.log("Requirements: ", requirements)
   return (
-    <section className="min-w-0 overflow-hidden rounded-2xl border border-border bg-white transition-all">
+    <section className="min-w-0 overflow-hidden rounded-2xl border border-border bg-card transition-all">
       {/* Header */}
       <div className="border-b border-border px-5 py-4">
         <div className="flex items-center justify-between">

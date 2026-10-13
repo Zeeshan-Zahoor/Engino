@@ -17,8 +17,8 @@ const getInsightStyle = (severity) => {
     case "error":
       return {
         icon: AlertCircle,
-        iconClass: "text-red-500",
-        bgClass: "bg-red-50",
+        iconClass: "text-danger",
+        bgClass: "bg-danger-surface",
       };
 
     case "warning":
@@ -32,7 +32,7 @@ const getInsightStyle = (severity) => {
       return {
         icon: Info,
         iconClass: "text-blue-500",
-        bgClass: "bg-blue-50",
+        bgClass: "bg-info-surface",
       };
 
     case "success":
@@ -40,7 +40,7 @@ const getInsightStyle = (severity) => {
       return {
         icon: CheckCircle2,
         iconClass: "text-green-500",
-        bgClass: "bg-green-50",
+        bgClass: "bg-success-surface",
       };
   }
 };
@@ -125,7 +125,7 @@ const handleInsightClick = (insight) => {
 
 
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-2">
@@ -153,7 +153,7 @@ const handleInsightClick = (insight) => {
           </div>
         ) : insights.length === 0 ? (
           <div className="flex h-64 flex-col items-center justify-center px-6 text-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-success-surface">
               <CheckCircle2 className="text-green-500" size={22} />
             </div>
 
@@ -212,7 +212,7 @@ const handleInsightClick = (insight) => {
           onClick={() => setShowAllInsights(false)}
         >
           <div
-            className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl"
+            className="w-full max-w-2xl overflow-hidden rounded-2xl bg-card shadow-xl"
             onClick={(event) => event.stopPropagation()}
           >
             {/* Header */}
@@ -247,7 +247,7 @@ const handleInsightClick = (insight) => {
             <div className="max-h-[65vh] overflow-y-auto">
                   {insights.length === 0 ? (
                     <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
+                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-success-surface">
                         <CheckCircle2
                           size={22}
                           className="text-green-500"

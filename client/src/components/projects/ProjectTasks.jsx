@@ -2,16 +2,16 @@ import { ArrowRight, Check, Circle } from "lucide-react";
 import Avatar from "../../utils/Avatar";
 
 const priorityStyles = {
-  High: "bg-red-50 text-danger",
-  Medium: "bg-orange-50 text-warning",
-  Low: "bg-green-50 text-success",
+  High: "bg-danger-surface text-danger",
+  Medium: "bg-warning-surface text-warning",
+  Low: "bg-success-surface text-success",
 };
 
 function ProjectTasks({ project,onViewAll }) {
   const projectTasks = project?.tasks || [];
 
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <h2 className="text-base font-semibold text-text-primary">

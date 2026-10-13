@@ -6,9 +6,9 @@ import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 function StatusBadge({ status }) {
   const styles = {
-    "In Progress": "bg-blue-50 text-info",
-    Todo: "bg-purple-50 text-primary",
-    Done: "bg-green-50 text-success",
+    "In Progress": "bg-info-surface text-info",
+    Todo: "bg-primary-light text-primary",
+    Done: "bg-success-surface text-success",
   };
 
   return (
@@ -24,9 +24,9 @@ function StatusBadge({ status }) {
 
 function PriorityBadge({ priority }) {
   const styles = {
-    High: "bg-red-50 text-danger",
-    Medium: "bg-orange-50 text-warning",
-    Low: "bg-green-50 text-success",
+    High: "bg-danger-surface text-danger",
+    Medium: "bg-warning-surface text-warning",
+    Low: "bg-success-surface text-success",
   };
 
   return (
@@ -103,7 +103,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
 
   const isAdmin = isWorkspaceAdmin();
   return (
-    <div className="max-h-220 overflow-auto scrollbar-thin scrollbar-thumb-surface rounded-xl border border-border bg-white">
+    <div className="max-h-220 overflow-auto scrollbar-thin scrollbar-thumb-surface rounded-xl border border-border bg-card">
 
       {/* Header */}
       <div className="hidden border-b border-border bg-surface px-5 py-3 lg:grid lg:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] lg:items-center lg:gap-3">
@@ -233,7 +233,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
               {openMenuId === task._id && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-border bg-white p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.10)]"
+                  className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.10)]"
                 >
                   {/* Admin Actions */}
                   {isAdmin && (
@@ -244,7 +244,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
                           setOpenMenuId(null);
                           onEdit(task);
                         }}
-                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-text-primary transition hover:bg-gray-50"
+                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-text-primary transition hover:bg-subtle"
                       >
                         <div className="flex justify-center items-center gap-3">
                           <Pencil size={15} />
@@ -260,7 +260,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
                           setOpenMenuId(null);
                           onDelete(task);
                         }}
-                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-danger transition hover:bg-danger-surface"
                       >
                         <div className="flex justify-center items-center gap-3">
                           <Trash2 size={15} />

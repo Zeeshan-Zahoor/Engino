@@ -74,7 +74,7 @@ function Dashboard() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
             <StatsCard 
                 icon={FolderKanban}
-                iconClassName="bg-purple-50 text-primary"
+                iconClassName="bg-primary-light text-primary"
                 title="Projects"
                 value={projects?.length}
                 description={`${activeProjects.length} active`}
@@ -83,7 +83,7 @@ function Dashboard() {
 
             <StatsCard
                 icon={Sparkles}
-                iconClassName="bg-orange-50 text-warning"
+                iconClassName="bg-warning-surface text-warning"
                 title="AI Plans"
                 value={allAIPlans?.length} 
                 description="Workspace AI plans"
@@ -92,7 +92,7 @@ function Dashboard() {
 
             <StatsCard
                 icon={ListChecks}
-                iconClassName="bg-blue-50 text-info"
+                iconClassName="bg-info-surface text-info"
                 title="Tasks In Progress"
                 value={inProgressTasks?.length}
                 description={`${allTasks.length} Total`}
@@ -101,7 +101,7 @@ function Dashboard() {
 
             <StatsCard
                 icon={CircleCheck}
-                iconClassName="bg-green-50 text-success"
+                iconClassName="bg-success-surface text-success"
                 title="Tasks Completed"
                 value={completedTasks?.length}
                 description={`${allTasks.length} Total`}
@@ -110,7 +110,7 @@ function Dashboard() {
 
             <StatsCard
                 icon={Clock3}
-                iconClassName="bg-red-50 text-danger"
+                iconClassName="bg-danger-surface text-danger"
                 title="Tasks Due Today"
                 value={dueTodayTasks().length}
                 description={`${dueTodayTasks().filter(task => task.priority === "High").length} high priority`}

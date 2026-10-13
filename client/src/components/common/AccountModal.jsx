@@ -101,7 +101,7 @@ function AccountModal({
     };
 
     const inputClass =
-        "h-11 w-full rounded-lg border border-border bg-white px-3.5 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10";
+        "h-11 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10";
 
     const labelClass =
         "mb-2 block text-sm font-medium text-text-primary";
@@ -117,7 +117,7 @@ function AccountModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="account-modal-title"
-            className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xl"
+            className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
         >
             {/* Header */}
             <header className="flex items-start justify-between border-b border-border px-6 py-5 sm:px-8">
@@ -222,7 +222,7 @@ function AccountModal({
                             onClick={() => fileInputRef.current?.click()}
                             aria-label="Choose profile photo"
                             disabled={uploadingPhoto}
-                            className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-white text-primary shadow-md transition hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
+                            className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-card text-primary shadow-md transition hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
                             >
                             <Camera size={18} />
                         </button>
@@ -249,7 +249,7 @@ function AccountModal({
                             )}
 
                             {photoUploadError && (
-                            <p className="mt-2 text-sm text-red-600" role="alert">
+                            <p className="mt-2 text-sm text-danger" role="alert">
                                 {photoUploadError}
                             </p>
                         )}
@@ -269,7 +269,7 @@ function AccountModal({
                             type="button"
                             onClick={() => onRemovePhoto?.()}
                             disabled={uploadingPhoto}
-                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 text-xs font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-50"
+                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-red-200 bg-danger-surface px-3 text-xs font-semibold text-danger transition hover:bg-danger-surface disabled:opacity-50"
                         >
                             <Trash2 size={14} />
                             Remove
@@ -402,7 +402,7 @@ function AccountModal({
                             onClick={() =>
                                 setShowPassword((prev) => !prev)
                             }
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition hover:text-text-secondary"
                         >
                             {showPassword ? (
                                 <EyeOff size={19} />
@@ -440,7 +440,7 @@ function AccountModal({
                                 onClick={() =>
                                     setShowPassword((prev) => !prev)
                                 }
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition hover:text-text-secondary"
                             >
                                 {showPassword ? (
                                     <EyeOff size={19} />
@@ -480,7 +480,7 @@ function AccountModal({
                                 onClick={() =>
                                     setShowPassword((prev) => !prev)
                                 }
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition hover:text-text-secondary"
                             >
                                 {showPassword ? (
                                     <EyeOff size={19} />
@@ -498,13 +498,13 @@ function AccountModal({
             {/* Footer */}
 
             {profileSaveError && (
-                <p className="text-sm text-red-600 text-center" role="alert">
+                <p className="text-sm text-danger text-center" role="alert">
                     {profileSaveError}
                 </p>
             )}
 
             {passwordError && (
-                <p className="text-sm text-red-600 text-center" role="alert">
+                <p className="text-sm text-danger text-center" role="alert">
                     {passwordError}
                 </p>
             )}

@@ -208,7 +208,7 @@ const handleChangePassword = async ({ currentPassword, newPassword, confirmPassw
 
 
   return (
-    <aside className="flex min-h-screen w-64 flex-col border-r border-border bg-white">
+    <aside className="flex min-h-screen w-64 flex-col border-r border-border bg-sidebar">
       {/* Logo */}
       <div className="flex h-16 items-center px-6">
         <h1 className="text-xl font-bold text-primary">Engino</h1>

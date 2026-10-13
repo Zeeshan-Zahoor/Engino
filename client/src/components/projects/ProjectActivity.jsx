@@ -10,22 +10,22 @@ import { activities } from "../../data/activities";
 const activityConfig = {
   update: {
     icon: Pencil,
-    iconClass: "bg-blue-50 text-info",
+    iconClass: "bg-info-surface text-info",
   },
 
   task: {
     icon: CheckCircle2,
-    iconClass: "bg-green-50 text-success",
+    iconClass: "bg-success-surface text-success",
   },
 
   requirement: {
     icon: FilePlus2,
-    iconClass: "bg-purple-50 text-primary",
+    iconClass: "bg-primary-light text-primary",
   },
 
   member: {
     icon: UserPlus,
-    iconClass: "bg-orange-50 text-warning",
+    iconClass: "bg-warning-surface text-warning",
   },
 
   ai: {
@@ -37,7 +37,7 @@ const activityConfig = {
 function ProjectActivity({ projectId }) {
   const projectActivities = activities.filter(activity => activity.projectId === projectId);
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <h2 className="text-base font-semibold text-text-primary">

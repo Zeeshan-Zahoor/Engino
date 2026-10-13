@@ -40,7 +40,7 @@ function OverviewContent({ requirement, projects }) {
                     key={criteria}
                     className="flex items-start gap-2"
                   >
-                    <div className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-50 text-success">
+                    <div className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-success-surface text-success">
                       <Check size={9} strokeWidth={3} />
                     </div>
 

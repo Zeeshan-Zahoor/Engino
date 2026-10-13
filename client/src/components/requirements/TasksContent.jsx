@@ -21,7 +21,7 @@ function TasksContent({ requirement }) {
             {requirement.aiTasks.map((task) => (
                 <div
                 key={task._id}
-                className="rounded-xl border border-border bg-white p-4"
+                className="rounded-xl border border-border bg-card p-4"
                 >
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">

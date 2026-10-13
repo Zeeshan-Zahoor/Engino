@@ -9,7 +9,7 @@ const statusStyles = {
 function ProjectRequirements({ project, onViewAll }) {
   const projectRequirements = project?.requirements || [];
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <h2 className="text-base font-semibold text-text-primary">

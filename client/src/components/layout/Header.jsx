@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "../../utils/Avatar";
 import { useEffect, useRef, useState } from "react";
 import useNotificationStore from "../../stores/notificationStore";
+import useThemeStore from "../../stores/themeStore";
 
 function Header({
   title,
@@ -10,6 +11,7 @@ function Header({
   showBack = false,
   user,
 }) {
+  const { theme, toggleTheme } = useThemeStore();
   const navigate = useNavigate();
   const {
     notifications,
@@ -22,7 +24,6 @@ function Header({
     clearError,
   } = useNotificationStore();
 
-  const [theme, setTheme] = useState("light");
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const notificationRef = useRef(null);
 
@@ -46,13 +47,6 @@ function Header({
       document.removeEventListener("mousedown", handleOutsideClick);
     }
   }, []);
-  
-
-  useEffect(() => {
-    const selectedTheme = localStorage.getItem("theme") || "light";
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTheme(selectedTheme);
-  }, []);
 
   const handleNotificationClick = async (notification) => {
     try {
@@ -68,16 +62,8 @@ function Header({
     }
   }
 
-  const handleToggleTheme = () => {
-    setTheme(
-      theme === "light" ? "dark" : "light"
-    );
-    
-    localStorage.setItem("theme", theme);
-  }
-
   return (
-    <header className="flex h-20 items-center justify-between bg-white m-0">
+    <header className="flex h-20 items-center justify-between bg-background m-0">
       {/* Page Title */}
       <div className="flex gap-3">
         <div>
@@ -126,7 +112,7 @@ function Header({
           </button>
 
           {isNotificationsOpen && (
-            <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-border bg-white shadow-lg sm:w-96">
+            <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-border bg-card shadow-lg sm:w-96">
               <div className="flex items-center justify-between border-b border-border px-4 py-3">
                 <div>
                   <h3 className="font-semibold text-text-primary">Notifications</h3>
@@ -180,7 +166,7 @@ function Header({
                       type="button"
                       onClick={() => handleNotificationClick(notification)}
                       className={`flex w-full gap-3 border-b border-border px-4 py-3 text-left transition-colors hover:bg-surface ${
-                        !notification.isRead ? "bg-blue-50/60" : "bg-white"
+                        !notification.isRead ? "bg-info-surface/60" : "bg-card"
                       }`}
                     >
                       <div className="h-7 w-7 m-1">
@@ -213,7 +199,8 @@ function Header({
         {/* Theme */}
         <button
           type="button"
-          onClick={handleToggleTheme}
+          onClick={toggleTheme}
+          aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
           className="relative flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
         >
           {theme === "light" ? (

@@ -185,7 +185,7 @@ function AIWorkspace() {
   return (
     <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#5b2eff] via-[#4b24c9] to-[#17105c] p-6 text-white">
       {/* Background decoration */}
-      <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-card/10 blur-3xl" />
 
       <div className="relative flex min-h-[250px] items-center gap-8">
         {/* Content */}
@@ -196,7 +196,7 @@ function AIWorkspace() {
               AI Workspace
             </h2>
 
-            <span className="rounded-md bg-white/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
+            <span className="rounded-md bg-card/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
               Beta
             </span>
           </div>
@@ -206,7 +206,7 @@ function AIWorkspace() {
           </p>
 
           {/* Requirement input */}
-          <div className={`rounded-xl bg-white p-2 shadow-xl`}>
+          <div className="rounded-xl bg-card p-2 shadow-lg">
             {conversation.length > 0 && (
                   <div
                     ref={conversationRef} 
@@ -226,7 +226,7 @@ function AIWorkspace() {
                           }`}
                         >
                           {message.role === "assistant" ? (
-                            <div className="space-y-2 leading-6 text-text-primary [&_h1]:mb-2 [&_h1]:text-lg [&_h1]:font-semibold [&_h2]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:font-semibold [&_p]:mb-2 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_li]:mb-1 [&_strong]:font-semibold [&_code]:rounded [&_code]:bg-gray-200 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs [&_pre]:my-2 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-gray-900 [&_pre]:p-3 [&_pre]:text-xs [&_pre]:text-white">
+                            <div className="space-y-2 leading-6 text-text-primary [&_h1]:mb-2 [&_h1]:text-lg [&_h1]:font-semibold [&_h2]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:font-semibold [&_p]:mb-2 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_li]:mb-1 [&_strong]:font-semibold [&_code]:rounded [&_code]:bg-border [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs [&_pre]:my-2 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-code [&_pre]:p-3 [&_pre]:text-xs [&_pre]:text-white">
                               <ReactMarkdown>
                                 {message.content}
                               </ReactMarkdown>
@@ -248,7 +248,7 @@ function AIWorkspace() {
                   ? "Describe what you want to build or explore..."
                   : "Ask anything about software engineering..."
               }
-              className={`${conversation.length > 0 ? "py-2 h-10 border-t border-surface" : "py-2"} w-full resize-none bg-transparent px-3  text-sm text-text-primary outline-none placeholder:text-gray-400`}
+              className={`${conversation.length > 0 ? "py-2 h-10 border-t border-border" : "py-2"} w-full resize-none rounded-lg bg-transparent px-3 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none`}
               disabled={isSubmitting || isExploring}
             />
 
@@ -313,7 +313,7 @@ function AIWorkspace() {
                 type="button"
                 onClick={() => handleExampleClick(example)}
                 disabled={isSubmitting || isExploring}
-                className="rounded-md bg-white/90 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-white"
+                className="rounded-md bg-card/90 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-card"
               >
                 {example.label}
               </button>
@@ -324,7 +324,7 @@ function AIWorkspace() {
         {/* Illustration */}
         <div className="hidden w-64 shrink-0 items-center justify-center lg:flex">
           <div className="relative flex h-70 w-70 items-center justify-center">
-            <div className="absolute h-40 w-40 rounded-full bg-white/10 blur-3xl" />
+            <div className="absolute h-40 w-40 rounded-full bg-card/10 blur-3xl" />
 
             <img
               src={enginoAiLogo}

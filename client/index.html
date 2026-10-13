@@ -8,6 +8,14 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+      } catch {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

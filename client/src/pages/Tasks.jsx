@@ -212,7 +212,7 @@ function Tasks() {
         user={user}
       />    
 
-      <div className="flex items-center gap-1 rounded-lg border border-border bg-white p-1 w-fit">
+      <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 w-fit">
         <button
           type="button"
           onClick={() => setTaskScope("all")}

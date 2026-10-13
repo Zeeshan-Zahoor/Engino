@@ -103,7 +103,7 @@ function Team() {
         
         {/* Stats */}
         <div className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-xl border border-border bg-white p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">
@@ -120,7 +120,7 @@ function Team() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-white p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">
@@ -143,7 +143,7 @@ function Team() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-white p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">
@@ -164,7 +164,7 @@ function Team() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-white p-5">
+          <div className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">
@@ -183,7 +183,7 @@ function Team() {
         </div>
 
         {/* Members */}
-        <section className="overflow-hidden rounded-xl border border-border bg-white">
+        <section className="overflow-hidden rounded-xl border border-border bg-card">
           <div className="flex flex-col gap-4 border-b border-border p-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-base font-semibold text-text-primary">
@@ -208,7 +208,7 @@ function Team() {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   placeholder="Search members..."
-                  className="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10 sm:w-64"
+                  className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10 sm:w-64"
                 />
               </div>
 
@@ -216,7 +216,7 @@ function Team() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="h-10 rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none focus:border-primary"
+                className="h-10 rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none focus:border-primary"
               >
                 <option value="All">All Roles</option>
                 <option value="Admin">Admin</option>

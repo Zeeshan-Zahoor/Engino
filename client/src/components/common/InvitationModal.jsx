@@ -46,21 +46,21 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
     
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-    <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+    <div className="w-full max-w-md overflow-hidden rounded-2xl bg-card shadow-2xl">
 
       {/* Header */}
-      <div className="border-b border-slate-200 px-6 py-5">
+      <div className="border-b border-border px-6 py-5">
         <div className="flex items-start justify-between">
           <div>
             <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white">
               <UserPlus size={21} strokeWidth={2.2} />
             </div>
 
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-text-primary">
               Invite members
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-text-secondary">
               Add people to your workspace and start collaborating.
             </p>
           </div>
@@ -69,8 +69,8 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
             type="button"
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-lg
-                       text-slate-400 transition-colors
-                       hover:bg-slate-100 hover:text-slate-600"
+                       text-text-muted transition-colors
+                       hover:bg-subtle-strong hover:text-text-secondary"
           >
             <X size={18} />
           </button>
@@ -82,7 +82,7 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
 
         {/* Email */}
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
+          <label className="mb-2 block text-sm font-semibold text-text-primary">
             Email address
           </label>
 
@@ -92,18 +92,18 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
             value={formData.email}
             onChange={handleChange}
             placeholder="colleague@example.com"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50
-                       px-4 py-3 text-sm text-slate-900
+            className="w-full rounded-xl border border-border bg-subtle
+                       px-4 py-3 text-sm text-text-primary
                        outline-none transition
-                       placeholder:text-slate-400
-                       focus:border-primary focus:bg-white
+                       placeholder:text-text-muted
+                       focus:border-primary focus:bg-card
                        focus:ring-4 focus:ring-primary/10"
           />
         </div>
 
         {/* Role */}
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
+          <label className="mb-2 block text-sm font-semibold text-text-primary">
             Workspace role
           </label>
 
@@ -111,10 +111,10 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
             value={formData.role}
             name="role"
             onChange={handleChange}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50
-                       px-4 py-3 text-sm text-slate-900
+            className="w-full rounded-xl border border-border bg-subtle
+                       px-4 py-3 text-sm text-text-primary
                        outline-none transition
-                       focus:border-primary focus:bg-white
+                       focus:border-primary focus:bg-card
                        focus:ring-4 focus:ring-primary/10"
           >
             <option value="Member">Member</option>
@@ -129,7 +129,7 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
             className="mt-0.5 shrink-0 text-primary"
           />
 
-          <p className="text-sm leading-5 text-slate-600">
+          <p className="text-sm leading-5 text-text-secondary">
             An invitation email will be sent with a secure link to join
             this workspace.
           </p>
@@ -142,13 +142,13 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
      )}
 
       {/* Footer */}
-      <div className="flex items-center justify-end gap-3 border-t border-slate-200 px-6 py-4">
+      <div className="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
         <button
           type="button"
           onClick={onClose}
           className="rounded-xl px-4 py-2.5 text-sm font-semibold
-                     text-slate-600 transition-colors
-                     hover:bg-slate-100"
+                     text-text-secondary transition-colors
+                     hover:bg-subtle-strong"
         >
           Cancel
         </button>

@@ -127,7 +127,7 @@ const RequirementStep = ({
         {!isAdmin && (
           <div>
             <span className="font-semibold">Note: </span>
-            <div className="p-5 bg-orange-100 rounded-2xl">
+            <div className="p-5 bg-warning-surface rounded-2xl">
               <h5 className="text-sm">Only workspace admins can use Engino AI for requirement Analysis.</h5>
               <span className="text-xs text-text-secondary">You can see the requirements overview here.</span>
             </div>

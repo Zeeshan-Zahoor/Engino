@@ -10,7 +10,7 @@ function RequirementToolbar({
   setSearchInput,
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-white p-4 mb-3">
+    <section className="rounded-2xl border border-border bg-card p-4 mb-3">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
         {/* Search */}
         <div className="relative min-w-0 flex-1">
@@ -24,7 +24,7 @@ function RequirementToolbar({
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by title or keyword..."
-            className="h-10 w-full rounded-lg border border-border bg-white pl-9 pr-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+            className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
           />
         </div>
 

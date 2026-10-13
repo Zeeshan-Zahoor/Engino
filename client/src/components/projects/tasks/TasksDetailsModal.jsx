@@ -63,37 +63,37 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
   const statusConfig = {
     Todo: {
       label: "To Do",
-      className: "bg-blue-50 text-blue-600",
-      dotClassName: "bg-blue-500",
+      className: "bg-info-surface text-info",
+      dotClassName: "bg-info-surface0",
     },
     "In Progress": {
       label: "In Progress",
-      className: "bg-blue-50 text-blue-600",
-      dotClassName: "bg-blue-500",
+      className: "bg-info-surface text-info",
+      dotClassName: "bg-info-surface0",
     },
     Done: {
       label: "Done",
-      className: "bg-green-50 text-green-600",
-      dotClassName: "bg-green-500",
+      className: "bg-success-surface text-success",
+      dotClassName: "bg-success-surface0",
     },
   };
 
   const priorityConfig = {
     Low: {
-      className: "bg-green-50 text-green-600",
+      className: "bg-success-surface text-success",
     },
     Medium: {
-      className: "bg-orange-50 text-orange-600",
+      className: "bg-warning-surface text-warning",
     },
     High: {
-      className: "bg-red-50 text-red-600",
+      className: "bg-danger-surface text-danger",
     },
   };
 
   const complexityConfig = {
-    Low: "bg-green-50 text-green-600",
-    Medium: "bg-orange-50 text-orange-600",
-    High: "bg-red-50 text-red-600",
+    Low: "bg-success-surface text-success",
+    Medium: "bg-warning-surface text-warning",
+    High: "bg-danger-surface text-danger",
   };
 
   const status = statusConfig[task.status] || statusConfig["Todo"];
@@ -103,12 +103,12 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-6">
       {/* Modal */}
-      <div className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+      <div className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
 
         {/* ================= HEADER ================= */}
-        <div className="flex shrink-0 items-start justify-between border-b border-gray-100 px-6 py-5">
+        <div className="flex shrink-0 items-start justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-text-primary">
               Task Details
             </h2>
 
@@ -118,7 +118,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-lg p-2 text-text-muted transition hover:bg-subtle-strong hover:text-text-primary"
           >
             <X size={20} />
           </button>
@@ -137,7 +137,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   AI Generated
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-gray-400">
+                <div className="flex items-center gap-2 text-xs text-text-muted">
                   <span>
                     Created{" "}
                     {task.createdAt
@@ -157,11 +157,11 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                     type="text"
                     value={editedTask.title || ""}
                     onChange={(e) => updateField("title", e.target.value)}
-                    className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-xl font-semibold text-gray-900 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="mt-2 w-full rounded-lg border border-border px-3 py-2 text-xl font-semibold text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                     placeholder="Task title"
                   />
                 ) : (
-                  <h1 className="mt-2 text-xl font-semibold leading-7 text-gray-900">
+                  <h1 className="mt-2 text-xl font-semibold leading-7 text-text-primary">
                     {task.title}
                   </h1>
                 )}
@@ -171,11 +171,11 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                     value={editedTask.description || ""}
                     onChange={(e) => updateField("description", e.target.value)}
                     rows={3}
-                    className="mt-2 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm leading-5 text-gray-600 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="mt-2 w-full resize-none rounded-lg border border-border px-3 py-2 text-sm leading-5 text-text-secondary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                     placeholder="Task description"
                   />
                 ) : (
-                  <p className="mt-1.5 max-w-2xl text-sm leading-5 text-gray-500">
+                  <p className="mt-1.5 max-w-2xl text-sm leading-5 text-text-secondary">
                     {task.description || "No task description provided."}
                   </p>
                 )}
@@ -185,7 +185,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                 <button
                   type="button"
                   onClick={onEdit}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-text-primary shadow-sm transition hover:bg-subtle"
                 >
                   <Pencil size={15} />
                   Edit Task
@@ -202,7 +202,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   <select
                     value={editedTask.status || "Todo"}
                     onChange={(e) => updateField("status", e.target.value)}
-                    className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="h-11 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   >
                     <option value="Todo">To Do</option>
                     <option value="In Progress">In Progress</option>
@@ -228,7 +228,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   <select
                     value={editedTask.priority || "Medium"}
                     onChange={(e) => updateField("priority", e.target.value)}
-                    className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="h-11 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -253,7 +253,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   <select
                     value={editedTask.type || "Development"}
                     onChange={(e) => updateField("type", e.target.value)}
-                    className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="h-11 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   >
                     <option value="Feature">Feature</option>
                     <option value="Bug">Bug</option>
@@ -274,7 +274,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
               </PropertyBlock>
             </div>
 
-            <div className="grid grid-cols-2 gap-5 border-y border-gray-100 py-5 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-5 border-y border-border py-5 md:grid-cols-4">
 
               {/* ASSIGNEE */}
               {editMode ? (
@@ -288,7 +288,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
 
                       updateField("assignee", selectedMember?.userId || null);
                     }}
-                    className="h-10 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="h-10 w-full rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   >
                     <option value="">Unassigned</option>
 
@@ -329,13 +329,13 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                         : ""
                     }
                     onChange={(e) => updateField("dueDate", e.target.value)}
-                    className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="h-10 w-full rounded-lg border border-border px-3 text-sm text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   />
                 </PropertyBlock>
               ) : (
                 <InfoItem
                 icon={
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-500">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-subtle text-text-secondary">
                     <CalendarDays size={17} />
                   </div>
                 }
@@ -364,13 +364,13 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                         Number(e.target.value)
                       )
                     }
-                    className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="h-10 w-full rounded-lg border border-border px-3 text-sm text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   />
                 </PropertyBlock>
               ) : (
                 <InfoItem
                 icon={
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 text-gray-500">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-subtle text-text-secondary">
                     <Clock3 size={17} />
                   </div>
                 }
@@ -388,7 +388,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   <select
                     value={editedTask.complexity || "Medium"}
                     onChange={(e) => updateField("complexity", e.target.value)}
-                    className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                    className="h-10 w-full rounded-lg border border-border px-3 text-sm text-text-primary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -398,7 +398,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
               ) : (
                 <InfoItem
                   icon={
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-warning-surface text-orange-500">
                       <BarChart3 size={17} />
                     </div>
                   }
@@ -430,12 +430,12 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   value={editedTask.description || ""}
                   onChange={(e) => updateField("description", e.target.value)}
                   rows={5}
-                  className="mt-3 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-600 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+                  className="mt-3 w-full resize-none rounded-xl border border-border bg-subtle px-4 py-3 text-sm leading-6 text-text-secondary outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                   placeholder="Task description"
                 />
               ) : (
-                <div className="mt-3 rounded-xl bg-gray-50 px-4 py-4">
-                <p className="text-sm leading-6 text-gray-600">
+                <div className="mt-3 rounded-xl bg-subtle px-4 py-4">
+                <p className="text-sm leading-6 text-text-secondary">
                   {task.description ||
                     "No description has been provided for this task."}
                 </p>
@@ -445,12 +445,12 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
 
             {/* ================= TAGS ================= */}
             {editMode ? (
-              <div className="mt-3 rounded-xl border border-gray-200 p-4">
+              <div className="mt-3 rounded-xl border border-border p-4">
               <div className="flex flex-wrap gap-2">
                 {(editedTask.tags || []).map((tag, index) => (
                   <span
                     key={`${tag}-${index}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-subtle-strong px-3 py-1.5 text-xs font-medium text-text-secondary"
                   >
                     {tag}
 
@@ -462,7 +462,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                           editedTask.tags.filter((_, i) => i !== index)
                         )
                       }
-                      className="text-gray-400 hover:text-red-500"
+                      className="text-text-muted hover:text-danger"
                     >
                       <X size={13} />
                     </button>
@@ -482,20 +482,20 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   task.tags.map((tag, index) => (
                     <span
                       key={`${tag}-${index}`}
-                      className="rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                      className="rounded-full bg-subtle-strong px-3 py-1.5 text-xs font-medium text-text-secondary"
                     >
                       {tag}
                     </span>
                   ))
                 ) : (
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-text-muted">
                     No tags
                   </span>
                 )}
 
                 <button
                   type="button"
-                  className="rounded-full border border-dashed border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-500 transition hover:border-violet-400 hover:text-violet-600"
+                  className="rounded-full border border-dashed border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition hover:border-violet-400 hover:text-violet-600"
                 >
                   + Add tag
                 </button>
@@ -538,7 +538,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                   "No Requirement"
                 }
                 secondary={
-                  <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-primary">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-success-surface px-2 py-0.5 text-[11px] font-medium text-primary">
                     <CheckCircle2 size={11} />
                     {task.requirementId?.aiStatus}
                   </span>
@@ -556,12 +556,12 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
         )}
 
         {/* ================= FOOTER ================= */}
-        <div className="flex shrink-0 items-center justify-between gap-4 border-t border-gray-100 bg-white px-6 py-4">
+        <div className="flex shrink-0 items-center justify-between gap-4 border-t border-border bg-card px-6 py-4">
 
-          <div className="flex items-center gap-2 text-xs text-gray-400">
+          <div className="flex items-center gap-2 text-xs text-text-muted">
             <span>Task ID</span>
 
-            <span className="rounded-md bg-gray-50 px-2.5 py-1.5 font-mono text-[11px] text-gray-500">
+            <span className="rounded-md bg-subtle px-2.5 py-1.5 font-mono text-[11px] text-text-secondary">
               {task._id || task.id || "—"}
             </span>
           </div>
@@ -572,7 +572,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
                 <button
                   type="button"
                   onClick={cancelEditMode}
-                  className="rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+                  className="rounded-lg bg-subtle px-4 py-2.5 text-sm font-medium text-text-primary transition hover:bg-subtle-strong"
                 >
                   Cancel
                 </button>
@@ -591,7 +591,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-lg bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+                className="rounded-lg bg-subtle px-4 py-2.5 text-sm font-medium text-text-primary transition hover:bg-subtle-strong"
               >
                 Close
               </button>
@@ -607,7 +607,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
 const PropertyBlock = ({ label, children }) => {
   return (
     <div>
-      <p className="mb-2 text-xs font-medium text-gray-500">
+      <p className="mb-2 text-xs font-medium text-text-secondary">
         {label}
       </p>
 
@@ -625,7 +625,7 @@ const InfoItem = ({
 }) => {
   return (
     <div className="min-w-0">
-      <p className="mb-2 text-xs font-medium text-gray-500">
+      <p className="mb-2 text-xs font-medium text-text-secondary">
         {label}
       </p>
 
@@ -633,12 +633,12 @@ const InfoItem = ({
         {icon}
 
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold text-gray-800">
+          <div className="truncate text-sm font-semibold text-text-primary">
             {value}
           </div>
 
           {secondary && (
-            <div className="mt-0.5 truncate text-xs text-gray-400">
+            <div className="mt-0.5 truncate text-xs text-text-muted">
               {secondary}
             </div>
           )}
@@ -650,7 +650,7 @@ const InfoItem = ({
 
 const SectionLabel = ({ icon, label }) => {
   return (
-    <div className="flex items-center gap-2 text-xs font-semibold text-gray-600">
+    <div className="flex items-center gap-2 text-xs font-semibold text-text-secondary">
       {icon}
       <span>{label}</span>
     </div>
@@ -664,17 +664,17 @@ const ReferenceCard = ({
   secondary,
 }) => {
   return (
-    <div className="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
-      <div className="mb-3 flex items-center gap-2 text-xs font-medium text-gray-500">
+    <div className="rounded-xl border border-border bg-subtle/50 p-4">
+      <div className="mb-3 flex items-center gap-2 text-xs font-medium text-text-secondary">
         {icon}
         <span>{label}</span>
       </div>
 
-      <p className="text-sm font-semibold text-gray-800">
+      <p className="text-sm font-semibold text-text-primary">
         {title}
       </p>
 
-      <div className="mt-1 text-xs text-gray-400">
+      <div className="mt-1 text-xs text-text-muted">
         {secondary}
       </div>
     </div>

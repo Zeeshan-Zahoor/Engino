@@ -14,15 +14,15 @@ import { useEffect } from "react";
 import Avatar from "../../utils/Avatar";
 
 const priorityStyles = {
-  High: "bg-red-50 text-danger",
-  Medium: "bg-orange-50 text-warning",
-  Low: "bg-green-50 text-success",
+  High: "bg-danger-surface text-danger",
+  Medium: "bg-warning-surface text-warning",
+  Low: "bg-success-surface text-success",
 };
 
 const statusStyles = {
-  "In Progress": "bg-blue-50 text-info",
+  "In Progress": "bg-info-surface text-info",
   Todo: "bg-surface text-text-secondary",
-  Done: "bg-green-50 text-success",
+  Done: "bg-success-surface text-success",
 };
 
 const dueStyles = {
@@ -44,7 +44,7 @@ function MyTasks() {
     }
   }, [currentWorkspaceId, fetchAllTasks, allTasks.length]);
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>

@@ -14,8 +14,8 @@ import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 
 const avatarClasses = [
   "bg-purple-100 text-primary",
-  "bg-blue-100 text-info",
-  "bg-green-100 text-success",
+  "bg-info-surface text-info",
+  "bg-success-surface text-success",
 ];
 
 
@@ -50,7 +50,7 @@ function ProjectsList({
   const isAdmin = isWorkspaceAdmin();
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-white">
+    <section className="overflow-hidden rounded-2xl border border-border bg-card">
       {/* Desktop Header */}
       <div className="hidden grid-cols-[2.2fr_1.8fr_0.8fr_0.9fr_1fr_0.3fr] gap-4 border-b border-border bg-surface px-5 py-3 text-xs font-semibold uppercase tracking-wide text-text-secondary lg:grid">
         <span>Project</span>
@@ -167,11 +167,11 @@ function ProjectsList({
                               ${project?.status === "In Progress"
                                             ? "bg-primary-light text-primary"
                                             : project?.status === "On Hold"
-                                                            ? "bg-orange-50 text-warning"
+                                                            ? "bg-warning-surface text-warning"
                                                             : project?.status === "Planning"
-                                                                    ? "bg-blue-50 text-info"
+                                                                    ? "bg-info-surface text-info"
                                                                     : project?.status === "Completed"
-                                                                              ? "bg-green-50 text-success"
+                                                                              ? "bg-success-surface text-success"
                                                                               : "bg-surface text-text-secondary"
                               }`} 
                           >
@@ -228,7 +228,7 @@ function ProjectsList({
 
                           {openMenuId === project._id && (
                             <div
-                              className="absolute right-0 top-full z-30 mt-1 w-40 overflow-hidden rounded-lg border border-border bg-white py-1 shadow-lg"
+                              className="absolute right-0 top-full z-30 mt-1 w-40 overflow-hidden rounded-lg border border-border bg-card py-1 shadow-lg"
                               onClick={(e) => e.stopPropagation()}
                             >
                               <button
@@ -249,7 +249,7 @@ function ProjectsList({
                                   setOpenMenuId(null);
                                   onDeleteProject(project);
                                 }}
-                                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-danger hover:bg-red-50"
+                                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-danger hover:bg-danger-surface"
                               >
                                 <Trash size={14}/>
                                 Delete Project
@@ -299,9 +299,9 @@ function ProjectsList({
                               className={`rounded-md px-2 py-1 text-xs font-medium ${project?.status === "In Progress"
                                             ? "bg-primary-light text-primary"
                                             : project?.status === "On Hold"
-                                                            ? "bg-orange-50 text-warning"
+                                                            ? "bg-warning-surface text-warning"
                                                             : project?.status === "Planning"
-                                                                    ? "bg-blue-50 text-info"
+                                                                    ? "bg-info-surface text-info"
                                                                     : "bg-surface text-text-secondary"
                               }`}
                             >
@@ -432,7 +432,7 @@ function ProjectsList({
               setPageSize(Number(e.target.value));
               setCurrentPage(1)
             }}
-            className="h-8 rounded-lg border border-border bg-white px-2 text-xs text-text-primary outline-none focus:border-primary">
+            className="h-8 rounded-lg border border-border bg-card px-2 text-xs text-text-primary outline-none focus:border-primary">
             <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>

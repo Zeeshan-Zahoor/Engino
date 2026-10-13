@@ -37,7 +37,7 @@ function ProjectOverviewStats({ project }) {
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
       {/* Progress */}
-      <div className="rounded-2xl border border-border bg-white p-5">
+      <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-center justify-between">
           <p className="text-xs font-semibold text-text-primary">
             Progress
@@ -56,7 +56,7 @@ function ProjectOverviewStats({ project }) {
               )`,
             }}
           >
-            <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-white">
+            <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-card">
               <span className="text-lg font-bold text-text-primary">
                 {progress}%
               </span>
@@ -93,7 +93,7 @@ function ProjectOverviewStats({ project }) {
       </div>
 
       {/* Tasks */}
-      <div className="rounded-2xl border border-border bg-white p-5">
+      <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs font-semibold text-text-primary">
@@ -125,7 +125,7 @@ function ProjectOverviewStats({ project }) {
       </div>
 
       {/* Team */}
-      <div className="rounded-2xl border border-border bg-white p-5">
+      <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs font-semibold text-text-primary">
@@ -141,7 +141,7 @@ function ProjectOverviewStats({ project }) {
             </p>
           </div>
 
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-success">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-success-surface text-success">
             <Users size={20} strokeWidth={1.8} />
           </div>
         </div>
@@ -154,8 +154,8 @@ function ProjectOverviewStats({ project }) {
                 index === 0
                   ? "bg-purple-100 text-primary"
                   : index === 1
-                    ? "bg-blue-100 text-info"
-                    : "bg-orange-100 text-warning"
+                    ? "bg-info-surface text-info"
+                    : "bg-warning-surface text-warning"
               }`}
             >
               <Avatar user={member}/>
@@ -171,7 +171,7 @@ function ProjectOverviewStats({ project }) {
       </div>
 
       {/* Timeline */}
-      <div className="rounded-2xl border border-border bg-white p-5">
+      <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-xs font-semibold text-text-primary">
@@ -199,7 +199,7 @@ function ProjectOverviewStats({ project }) {
             </div>
           </div>
 
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-info">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-info-surface text-info">
             <CalendarDays size={20} strokeWidth={1.8} />
           </div>
         </div>

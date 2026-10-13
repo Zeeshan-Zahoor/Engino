@@ -8,7 +8,7 @@ function FilterButton({ children }) {
   return (
     <button
       type="button"
-      className="flex shrink-0 items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm font-medium text-text-primary transition hover:bg-surface"
+      className="flex shrink-0 items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-text-primary transition hover:bg-surface"
     >
       {children}
       <ChevronDown size={15} className="text-text-secondary" />
@@ -18,7 +18,7 @@ function FilterButton({ children }) {
 
 function TaskToolbar() {
   return (
-    <div className="rounded-xl border border-border bg-white p-3 mb-3">
+    <div className="rounded-xl border border-border bg-card p-3 mb-3">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
 
         {/* Filters */}
@@ -32,7 +32,7 @@ function TaskToolbar() {
             <input
               type="text"
               placeholder="Search tasks..."
-              className="h-10 w-full min-w-50 rounded-lg border border-border bg-white pl-10 pr-3 text-sm text-text-primary outline-none placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+              className="h-10 w-full min-w-50 rounded-lg border border-border bg-card pl-10 pr-3 text-sm text-text-primary outline-none placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
           </div>
           <div className="flex justify-center items-center gap-2">

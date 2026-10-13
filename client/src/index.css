@@ -7,9 +7,23 @@
 
   --color-background: #ffffff;
   --color-surface: #f2f2f6;
+  --color-sidebar: #ffffff;
+  --color-card: #ffffff;
+  --color-elevated: #ffffff;
+  --color-input: #ffffff;
+  --color-workspace: #f5f3ff;
+  --color-workspace-hover: #ede9fe;
+  --color-subtle: #f8f9fc;
+  --color-subtle-strong: #f2f4f7;
+  --color-info-surface: #eff8ff;
+  --color-success-surface: #ecfdf3;
+  --color-warning-surface: #fffaeb;
+  --color-danger-surface: #fef3f2;
+  --color-code: #111827;
 
   --color-text-primary: #11142d;
   --color-text-secondary: #667085;
+  --color-text-muted: #98a2b3;
 
   --color-border: #e7e7ef;
 
@@ -17,6 +31,42 @@
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
   --color-info: #3b82f6;
+}
+
+/* Dark theme: graphite black */
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-primary-light: #172554;
+
+  --color-background: #111111;
+  --color-surface: #242424;
+  --color-sidebar: #141414;
+  --color-card: #191919;
+  --color-elevated: #242424;
+  --color-input: #191919;
+  --color-workspace: #191919;
+  --color-workspace-hover: #242424;
+  --color-subtle: #202020;
+  --color-subtle-strong: #292929;
+  --color-info-surface: #172554;
+  --color-success-surface: #123524;
+  --color-warning-surface: #3a2a0a;
+  --color-danger-surface: #3a1717;
+  --color-code: #0b0b0b;
+
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #a3a3a3;
+  --color-text-muted: #737373;
+
+  --color-border: #303030;
+
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-info: #60a5fa;
 }
 
 * {
@@ -34,6 +84,37 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   font-family: "Inter", sans-serif;
+}
+
+/* Shared semantic surfaces keep the light theme intact while allowing the
+   graphite theme to change roles rather than every component individually. */
+input,
+textarea,
+select {
+  color: var(--color-text-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+html[data-theme="dark"] {
+  scrollbar-color: #404040 #111111;
+}
+
+html[data-theme="dark"] ::selection {
+  background: #1d4ed8;
+  color: #ffffff;
 }
 
 .loader {

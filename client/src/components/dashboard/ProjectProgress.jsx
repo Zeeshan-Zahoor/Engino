@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 const statusStyles = {
   "Planning": "bg-yellow-50 text-warning",
-  "In Progress": "bg-blue-50 text-info",
-  "On Hold": "bg-orange-50 text-orange-600",
-  "Completed": "bg-green-50 text-success",
+  "In Progress": "bg-info-surface text-info",
+  "On Hold": "bg-warning-surface text-warning",
+  "Completed": "bg-success-surface text-success",
 };
 
 function ProjectProgress({ projects }) {
@@ -13,7 +13,7 @@ function ProjectProgress({ projects }) {
   const navigate = useNavigate();
 
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>

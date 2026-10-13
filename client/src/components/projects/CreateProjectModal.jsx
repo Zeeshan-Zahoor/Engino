@@ -294,7 +294,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4 backdrop-blur-[2px]">
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-white shadow-2xl">
+      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
 
         {/* Header */}
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
@@ -336,7 +336,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                 placeholder="Enter project name"
                 value={formData.name}
                 onChange={handleNameChange}
-                className="h-11 w-full rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+                className="h-11 w-full rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </div>
 
@@ -375,7 +375,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
               }))
               }}
               placeholder="Describe the purpose and goals of this project..."
-              className="w-full resize-none rounded-lg border border-border bg-white px-3 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+              className="w-full resize-none rounded-lg border border-border bg-card px-3 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
 
             <p className="mt-1.5 text-xs text-text-secondary">
@@ -404,7 +404,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                     }
                   }}
                   placeholder="e.g. Provide students with a centralized learning platform"
-                  className="flex-1 rounded-lg border border-border bg-white px-3 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+                  className="flex-1 rounded-lg border border-border bg-card px-3 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
                  />
 
                  <button 
@@ -435,7 +435,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                       <button 
                         type="button"
                         onClick={() => removeGoal(index)}
-                        className="text-xs font-medium text-red-500 transition hover:text-red-600"
+                        className="text-xs font-medium text-danger transition hover:text-danger"
                       >
                         Remove
                       </button>
@@ -456,7 +456,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
               Technologies
             </label>
 
-            <div className="min-h-11 w-full rounded-lg border border-border bg-white px-3 py-2 transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
+            <div className="min-h-11 w-full rounded-lg border border-border bg-card px-3 py-2 transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
               
               <div className="flex flex-wrap items-center gap-2">
                 {formData.technologies.map((technology) => (
@@ -511,7 +511,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                     ...prev,
                     status: e.target.value,
                   }))}
-                  className="h-11 w-full appearance-none rounded-lg border border-border bg-white px-3 pr-10 text-sm text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                  className="h-11 w-full appearance-none rounded-lg border border-border bg-card px-3 pr-10 text-sm text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 >
                   <option value="Planning">Planning</option>
                   <option value="In Progress">In Progress</option>
@@ -542,7 +542,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                         startDate: e.target.value
                     }))
                   }}
-                  className="h-11 w-full rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                  className="h-11 w-full rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </div>
             </div>
@@ -567,7 +567,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                         targetDate: e.target.value
                     }))
                   }}
-                  className="h-11 w-full rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                  className="h-11 w-full rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </div>
             </div>
@@ -585,7 +585,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                       toggleMember(e.target.value);
                     }
                   }}
-                  className="h-11 w-full appearance-none rounded-lg border border-border bg-white px-3 pr-10 text-sm text-text-secondary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                  className="h-11 w-full appearance-none rounded-lg border border-border bg-card px-3 pr-10 text-sm text-text-secondary outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 >
                   <option value="">Select team members...</option>
 
@@ -643,11 +643,11 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
         {error && (
             <p className="text-danger text-center text-sm mb-2">{error}</p>
           )}
-        <div className="flex items-center justify-end gap-3 border-t border-border bg-white px-6 py-4">
+        <div className="flex items-center justify-end gap-3 border-t border-border bg-card px-6 py-4">
           <button
             type="button"
             onClick={onClose}
-            className="h-10 rounded-lg border border-border bg-white px-4 text-sm font-medium text-text-primary transition hover:bg-surface"
+            className="h-10 rounded-lg border border-border bg-card px-4 text-sm font-medium text-text-primary transition hover:bg-surface"
           >
             Cancel
           </button>

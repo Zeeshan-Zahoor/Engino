@@ -13,25 +13,25 @@ const actions = [
     title: "Create Project",
     description: "Start a new project",
     icon: FolderPlus,
-    iconClass: "bg-purple-50 text-primary",
+    iconClass: "bg-primary-light text-primary",
   },
   {
     title: "Generate AI Plan",
     description: "Turn a requirement into a plan",
     icon: Sparkles,
-    iconClass: "bg-orange-50 text-warning",
+    iconClass: "bg-warning-surface text-warning",
   },
   {
     title: "Create Task",
     description: "Add engineering work",
     icon: ListPlus,
-    iconClass: "bg-blue-50 text-info",
+    iconClass: "bg-info-surface text-info",
   },
   {
     title: "Manage Team",
     description: "Manage workspace members",
     icon: Users,
-    iconClass: "bg-green-50 text-success",
+    iconClass: "bg-success-surface text-success",
   },
 ];
 
@@ -40,7 +40,7 @@ function QuickActions() {
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
 
   return (
-    <section className="rounded-2xl border border-border bg-white">
+    <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
       <div className="px-5 py-4">
         <h2 className="text-base font-semibold text-text-primary">
