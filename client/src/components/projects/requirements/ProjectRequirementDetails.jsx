@@ -92,7 +92,9 @@ const ProjectRequirementDetails = () => {
             status:
               currentRequirement.aiStatus === "Needs Clarification"
                 ? "needs_clarification"
-                : "clear",
+                : currentRequirement.aiStatus === "Clear"
+                  ? "clear"
+                  : "needs_clarification",
             confidence: currentRequirement.aiConfidence,
             summary: currentRequirement.aiAnalysis.summary,
             questions: currentRequirement.aiAnalysis.questions || [],

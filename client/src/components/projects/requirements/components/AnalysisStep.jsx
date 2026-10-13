@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import StepHeader from "./StepHeader";
 import { isWorkspaceAdmin } from "../../../../utils/isWorkspaceAdmin";
 
@@ -44,6 +44,15 @@ const AnalysisStep = ({
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const clarificationInFlight = useRef(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStatus(
+      analysis?.status === "clear"
+        ? "clear"
+        : "needs_clarification"
+    );
+  }, [analysis?.status]);
 
   const handleAnswerChange = (index, value) => {
     setAnswers((prev) => ({
