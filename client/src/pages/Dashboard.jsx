@@ -28,7 +28,7 @@ function Dashboard() {
     const { allTasks, fetchAllTasks } = useTaskStore();
     const { currentWorkspaceId } = useWorkspaceStore();
     const { allAIPlans,  fetchAllPlans } = useAIPlanStore();
-    const { projects, fetchProjects } = useProjectStore();
+    const { projects, fetchProjects, isLoading: projectsLoading, error: projectsError, projectsFetched } = useProjectStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -61,7 +61,7 @@ function Dashboard() {
     <div className="space-y-6 px-8">
         <Header 
             title="Dashboard"
-            description="Welcome back, Zeeshan. Here's what's happening with your workspace."
+            description={`Welcome back, ${user?.name.trim().split(" ")[0] || ""}. Here's what's happening with your workspace.`}
             user={user}
         />
         
@@ -124,7 +124,7 @@ function Dashboard() {
 
         </div>
 
-        <ProjectProgress projects={projects || []}/>
+        <ProjectProgress projects={projects || []} loading={projectsLoading || !projectsFetched} error={projectsError}/>
         <RepositoryStatus />
 
         {/* <QuickActions /> */}

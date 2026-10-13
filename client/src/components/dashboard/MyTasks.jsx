@@ -12,6 +12,8 @@ import useWorkspaceStore from "../../stores/workspaceStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Avatar from "../../utils/Avatar";
+import EmptyState from "../common/EmptyState";
+import Loader from "../common/Loader";
 
 const priorityStyles = {
   High: "bg-danger-surface text-danger",
@@ -36,7 +38,7 @@ function MyTasks() {
   const navigate = useNavigate();
   const { currentWorkspaceId } = useWorkspaceStore();
   const { projects } = useProjectStore();
-  const { allTasks, fetchAllTasks } = useTaskStore();
+  const { allTasks, fetchAllTasks, isLoading, error, allTasksFetched } = useTaskStore();
   
   useEffect(() => {
     if(allTasks.length === 0) {
@@ -71,7 +73,14 @@ function MyTasks() {
 
       {/* Tasks */}
       <div className="divide-y divide-border">
-        {(allTasks.slice(0, 5)).map((task) => {
+        {isLoading || !allTasksFetched ? (
+          <div className="flex h-40 items-center justify-center"><Loader color="text-primary" /></div>
+        ) : error ? (
+          <EmptyState icon={Circle} title="Tasks are unavailable" description={error} compact />
+        ) : allTasks.length === 0 ? (
+          <EmptyState icon={CheckCircle2} title="No tasks yet" description="Tasks created across your workspace will appear here." actionLabel="View tasks" onAction={() => navigate("/tasks")} compact />
+        ) : (
+        allTasks.slice(0, 5).map((task) => {
           const dueDate = new Date(task.dueDate);
           const today =  new Date();
 
@@ -193,7 +202,8 @@ function MyTasks() {
               />
             </button>
           )
-      })}
+      })
+      )}
       </div>
     </section>
   );

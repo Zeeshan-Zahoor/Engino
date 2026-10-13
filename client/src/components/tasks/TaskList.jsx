@@ -3,6 +3,8 @@ import Avatar from "../../utils/Avatar";
 import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 import { useState } from "react";
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
+import EmptyState from "../common/EmptyState";
+import Loader from "../common/Loader";
 
 function StatusBadge({ status }) {
   const styles = {
@@ -40,7 +42,7 @@ function PriorityBadge({ priority }) {
   );
 }
 
-function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask, insightFilter, onEdit, onDelete }) {
+function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask, insightFilter, loading, error, hasWorkspaceTasks, hasScopeTasks, onClearFilters, onEdit, onDelete }) {
 
   const [openMenuId, setOpenMenuId] = useState(null);
 
@@ -143,7 +145,20 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
       </div>
 
       {/* Rows */}
-      {filteredTasks?.map((task) => {
+      {loading ? (
+        <div className="flex h-40 items-center justify-center"><Loader color="text-primary" /></div>
+      ) : error ? (
+        <EmptyState icon={CheckSquare} title="Tasks are unavailable" description={error} compact />
+      ) : filteredTasks.length === 0 ? (
+        <EmptyState
+          icon={CheckSquare}
+          title={!hasWorkspaceTasks ? "No tasks yet" : insightFilter || !hasScopeTasks ? "No matching tasks" : "No tasks in this view"}
+          description={!hasWorkspaceTasks ? "Tasks created across your workspace will appear here." : "Try another task view or clear the current filter."}
+          actionLabel={hasWorkspaceTasks ? "Clear filters" : undefined}
+          onAction={hasWorkspaceTasks ? onClearFilters : undefined}
+          compact
+        />
+      ) : filteredTasks.map((task) => {
         return (
           <div
           role="button"

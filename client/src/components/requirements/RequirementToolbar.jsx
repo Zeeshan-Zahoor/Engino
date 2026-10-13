@@ -8,6 +8,7 @@ import {
 function RequirementToolbar({
   searchInput,
   setSearchInput,
+  onClear,
 }) {
   return (
     <section className="rounded-2xl border border-border bg-card p-4 mb-3">
@@ -37,6 +38,8 @@ function RequirementToolbar({
 
           <button
             type="button"
+            onClick={onClear}
+            disabled={!searchInput}
             className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-text-secondary transition hover:bg-surface hover:text-text-primary"
           >
             <X size={14} />

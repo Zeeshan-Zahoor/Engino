@@ -6,6 +6,7 @@ const useTaskStore = create((set) => ({
     allTasks: [],
     isLoading: false,
     error: null,
+    allTasksFetched: false,
 
     fetchAllTasks: async (workspaceId) => {
         set({ isLoading: true, error: null });
@@ -16,6 +17,7 @@ const useTaskStore = create((set) => ({
                 allTasks: response.data.allTasks,
                 isLoading: false,
                 error: null,
+                allTasksFetched: true,
             });
 
             return response.data;
@@ -24,6 +26,8 @@ const useTaskStore = create((set) => ({
             console.log(error.response);
             set({
                 error: error.response?.data?.message || "Failed to fetch all tasks. Try Again.",
+                isLoading: false,
+                allTasksFetched: true,
             });
 
             throw error;

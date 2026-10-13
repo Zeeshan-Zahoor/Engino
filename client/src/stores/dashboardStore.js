@@ -5,6 +5,7 @@ const useDashboardStore = create((set) => ({
   insights: [],
   isLoading: false,
   error: null,
+  insightsFetched: false,
 
   fetchInsights: async (workspaceId) => {
     set({
@@ -21,6 +22,7 @@ const useDashboardStore = create((set) => ({
         insights: response.data.insights || [],
         isLoading: false,
         error: null,
+        insightsFetched: true,
       });
 
       return response.data;
@@ -31,6 +33,7 @@ const useDashboardStore = create((set) => ({
         error:
           error.response?.data?.message ||
           "Failed to load dashboard insights.",
+        insightsFetched: true,
       });
       console.log(error.response);
       throw error;

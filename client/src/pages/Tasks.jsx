@@ -6,7 +6,7 @@ import TaskToolbar from "../components/tasks/TaskToolbar";
 import TaskList from "../components/tasks/TaskList";
 import TaskDetailsPanel from "../components/tasks/TaskDetailsPanel";
 import useTaskStore from "../stores/taskStore";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useWorkspaceStore from "../stores/workspaceStore";
 import useAuthStore from "../stores/authStore";
 import useProjectStore from "../stores/projectStore";
@@ -28,9 +28,11 @@ function Tasks() {
     deleteTask: removeTask,
     isLoading,
     error,
+    allTasksFetched,
   } = useTaskStore();
   const { currentWorkspaceId } = useWorkspaceStore();
   const { showToast } = useToastStore();
+  const navigate = useNavigate();
 
   const [selectedTask, setSelectedTask] = useState(null);
   const [searchParams] = useSearchParams();
@@ -262,6 +264,14 @@ function Tasks() {
               selectedTask={selectedTask}
               setSelectedTask={setSelectedTask}
               insightFilter={insightFilter}
+              loading={isLoading || !allTasksFetched}
+              error={error}
+              hasWorkspaceTasks={allTasks.length > 0}
+              hasScopeTasks={scopedTasks.length > 0}
+              onClearFilters={() => {
+                setTaskScope("all");
+                navigate("/tasks");
+              }}
               onEdit={handleEditTask}
               onDelete={handleDeleteTask}
             />

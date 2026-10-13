@@ -1,4 +1,5 @@
 import { ArrowRight, FileText } from "lucide-react";
+import EmptyState from "../common/EmptyState";
 
 const statusStyles = {
   "Completed": "bg-success/10 text-success",
@@ -28,7 +29,10 @@ function ProjectRequirements({ project, onViewAll }) {
 
       {/* Requirements */}
       <div className="divide-y divide-border overflow-y-auto max-h-80 scrollbar-thin scrollbar-thumb-surface">
-        {projectRequirements.map((requirement) => (
+        {projectRequirements.length === 0 ? (
+          <EmptyState icon={FileText} title="No requirements yet" description="Requirements for this project will appear here." actionLabel="View requirements" onAction={onViewAll} compact />
+        ) : (
+        projectRequirements.map((requirement) => (
           <div
             key={requirement._id}
             className="flex items-center gap-3 px-5 py-3.5"
@@ -60,7 +64,8 @@ function ProjectRequirements({ project, onViewAll }) {
               </span>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
     </section>
   );

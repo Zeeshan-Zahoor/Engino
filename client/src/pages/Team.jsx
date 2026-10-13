@@ -10,6 +10,7 @@ import {
 import Header from "../components/layout/Header";
 import Avatar from "../utils/Avatar";
 import TeamMemberDetailsPanel from "../components/team/TeamMemberDetailsPanel";
+import EmptyState from "../components/common/EmptyState";
 
 import { isWorkspaceAdmin } from "../utils/isWorkspaceAdmin"
 
@@ -23,6 +24,9 @@ function Team() {
     currentWorkspaceId,
     workspaceMembers,
     getWorkspaceMembers,
+    isLoading: membersLoading,
+    error: membersError,
+    membersFetched,
   } = useWorkspaceStore();
 
   const {
@@ -235,21 +239,19 @@ function Team() {
 
           {/* Members */}
           <div className="divide-y divide-border">
-            {filteredMembers.length === 0 ? (
-              <div className="px-5 py-12 text-center">
-                <Users
-                  size={28}
-                  className="mx-auto mb-3 text-text-secondary"
-                />
-
-                <p className="text-sm font-medium text-text-primary">
-                  No members found
-                </p>
-
-                <p className="mt-1 text-sm text-text-secondary">
-                  Try changing your search or filter.
-                </p>
-              </div>
+            {membersLoading || !membersFetched ? (
+              <div className="flex h-40 items-center justify-center text-sm text-text-secondary">Loading members...</div>
+            ) : membersError ? (
+              <EmptyState icon={Users} title="Members are unavailable" description={membersError} compact />
+            ) : filteredMembers.length === 0 ? (
+              <EmptyState
+                icon={Users}
+                title={members.length > 0 ? "No matching members" : "No members yet"}
+                description={members.length > 0 ? "Try changing your search or role filter." : "Workspace members will appear here once they are added."}
+                actionLabel={members.length > 0 ? "Clear filters" : undefined}
+                onAction={members.length > 0 ? () => { setSearchInput(""); setRoleFilter("All"); } : undefined}
+                compact
+              />
             ) : (
               filteredMembers.map((membership) => {
                 const user = membership.userId;

@@ -21,6 +21,7 @@ import CreateRequirementModal from "./requirements/CreateRequirementModal";
 
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
 import DeleteRequirementModal from "./requirements/DeleteRequirementModal";
+import EmptyState from "../common/EmptyState";
 
 function Requirements({ project }) {
     const navigate = useNavigate();
@@ -315,7 +316,13 @@ function Requirements({ project }) {
 
           {/* Table Body */}
           <tbody>
-            {requirements.map((requirement, index) => {
+            {requirements.length === 0 ? (
+              <tr>
+                <td colSpan="5">
+                  <EmptyState icon={FileText} title="No requirements yet" description="Create a requirement to start an AI-assisted plan for this project." actionLabel={isAdmin ? "New requirement" : undefined} onAction={isAdmin ? handleCreateRequirement : undefined} compact />
+                </td>
+              </tr>
+            ) : requirements.map((requirement, index) => {
               const allTasks = project.tasks || [];
               const tasks = allTasks.filter(task => task.requirementId === requirement._id);
 

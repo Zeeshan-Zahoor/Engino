@@ -1,5 +1,6 @@
 import { ArrowRight, Check, Circle } from "lucide-react";
 import Avatar from "../../utils/Avatar";
+import EmptyState from "../common/EmptyState";
 
 const priorityStyles = {
   High: "bg-danger-surface text-danger",
@@ -30,7 +31,10 @@ function ProjectTasks({ project,onViewAll }) {
 
       {/* Task list */}
       <div className="divide-y divide-border overflow-y-auto max-h-80 scrollbar-thin scrollbar-thumb-surface">
-        {projectTasks.slice(0, 5).map((task) => (
+        {projectTasks.length === 0 ? (
+          <EmptyState icon={Circle} title="No tasks yet" description="Tasks for this project will appear here." actionLabel="View tasks" onAction={onViewAll} compact />
+        ) : (
+        projectTasks.slice(0, 5).map((task) => (
           <div
             key={task._id}
             className="grid grid-cols-[auto_minmax(0,1fr)] gap-5 px-5 py-3.5 sm:grid-cols-[auto_minmax(0,1fr)_90px_75px_90px] sm:items-center"
@@ -101,7 +105,8 @@ function ProjectTasks({ project,onViewAll }) {
               </span>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
     </section>
   );

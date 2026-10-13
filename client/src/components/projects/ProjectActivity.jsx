@@ -4,8 +4,10 @@ import {
   FilePlus2,
   Pencil,
   UserPlus,
+  History,
 } from "lucide-react";
 import { activities } from "../../data/activities";
+import EmptyState from "../common/EmptyState";
 
 const activityConfig = {
   update: {
@@ -54,7 +56,9 @@ function ProjectActivity({ projectId }) {
 
       {/* Activity */}
       <div className="px-5">
-        {projectActivities.map((activity, index) => {
+        {projectActivities.length === 0 ? (
+          <EmptyState icon={History} title="No activity yet" description="Project updates and execution activity will appear here." compact />
+        ) : projectActivities.map((activity, index) => {
           const config = activityConfig[activity.type];
           const Icon = config.icon;
 

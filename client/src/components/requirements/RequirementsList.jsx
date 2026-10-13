@@ -1,6 +1,8 @@
 import { Clock3, FileText } from "lucide-react";
 import useProjectStore from "../../stores/projectStore";
 import Avatar from "../../utils/Avatar";
+import EmptyState from "../common/EmptyState";
+import Loader from "../common/Loader";
 
 const statusStyles = {
   "Plan Generated": "bg-success-surface text-success",
@@ -20,6 +22,11 @@ function RequirementsList({
   requirements,
   selectedRequirement,
   setSelectedRequirement,
+  loading,
+  error,
+  hasRequirements,
+  hasSearch,
+  onClearSearch,
  }) {
 
   const projects = useProjectStore(state => state.projects);
@@ -52,7 +59,21 @@ function RequirementsList({
 
       {/* List */}
       <div className="divide-y divide-border">
-        {requirements.map((requirement) => (
+        {loading ? (
+          <div className="flex h-40 items-center justify-center"><Loader color="text-primary" /></div>
+        ) : error ? (
+          <EmptyState icon={FileText} title="Requirements are unavailable" description={error} compact />
+        ) : requirements.length === 0 ? (
+          <EmptyState
+            icon={FileText}
+            title={hasRequirements && hasSearch ? "No matching requirements" : "No requirements yet"}
+            description={hasRequirements && hasSearch ? "Try a different search or clear the search field." : "Create a requirement to start an AI-assisted engineering plan."}
+            actionLabel={hasRequirements && hasSearch ? "Clear search" : undefined}
+            onAction={hasRequirements && hasSearch ? onClearSearch : undefined}
+            compact
+          />
+        ) : (
+        requirements.map((requirement) => (
           <button
             key={requirement._id}
             onClick={() => setSelectedRequirement(requirement)}
@@ -176,7 +197,8 @@ function RequirementsList({
               </div>
             </div>
           </button>
-        ))}
+        ))
+        )}
       </div>
 
     </section>

@@ -1,5 +1,6 @@
 import { ArrowRight, CheckCircle2, FolderKanban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import EmptyState from "../common/EmptyState";
 
 const statusStyles = {
   "Planning": "bg-yellow-50 text-warning",
@@ -8,7 +9,7 @@ const statusStyles = {
   "Completed": "bg-success-surface text-success",
 };
 
-function ProjectProgress({ projects }) {
+function ProjectProgress({ projects, loading = false, error = null }) {
 
   const navigate = useNavigate();
 
@@ -38,7 +39,14 @@ function ProjectProgress({ projects }) {
 
       {/* Projects */}
       <div className="grid gap-4 p-5 sm:grid-cols-2">
-        {(projects.slice(0, 4)).map((project) => {
+        {loading ? (
+          <div className="col-span-full flex h-32 items-center justify-center text-sm text-text-secondary">Loading projects...</div>
+        ) : error ? (
+          <EmptyState icon={FolderKanban} title="Projects are unavailable" description={error} compact />
+        ) : projects.length === 0 ? (
+          <div className="col-span-full"><EmptyState icon={FolderKanban} title="No projects yet" description="Create a project to start tracking engineering progress." actionLabel="View projects" onAction={() => navigate("/projects")} compact /></div>
+        ) : (
+        projects.slice(0, 4).map((project) => {
           const tasks = project.tasks || [];
 
           const completedTasks = tasks.filter(
@@ -107,7 +115,8 @@ function ProjectProgress({ projects }) {
             </div>
           </button>
           )
-        })}
+        })
+        )}
       </div>
     </section>
   );

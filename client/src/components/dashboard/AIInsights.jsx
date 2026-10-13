@@ -11,6 +11,7 @@ import useWorkspaceStore from "../../stores/workspaceStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "../common/Loader";
+import EmptyState from "../common/EmptyState";
 
 const getInsightStyle = (severity) => {
   switch (severity) {
@@ -60,6 +61,8 @@ function AIInsights() {
   const isInsightsLoading = useDashboardStore(
     (state) => state.isLoading
   ); 
+  const insightsError = useDashboardStore((state) => state.error);
+  const insightsFetched = useDashboardStore((state) => state.insightsFetched);
 
   const [showAllInsights, setShowAllInsights] = useState(false);
 
@@ -147,24 +150,21 @@ const handleInsightClick = (insight) => {
 
       {/* Insights */}
       <div className="divide-y divide-border max-h-70 overflow-y-scroll scrollbar-thin scrollbar-thumb-surface">
-        {isInsightsLoading ? (
+        {isInsightsLoading || !insightsFetched ? (
           <div className="flex h-64 items-center justify-center">
             <Loader color="text-primary"/>
           </div>
+        ) : insightsError ? (
+          <EmptyState
+            icon={AlertCircle}
+            title="Insights are unavailable"
+            description={insightsError}
+            actionLabel="Try again"
+            onAction={() => fetchInsights(currentWorkspaceId)}
+            compact
+          />
         ) : insights.length === 0 ? (
-          <div className="flex h-64 flex-col items-center justify-center px-6 text-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-success-surface">
-              <CheckCircle2 className="text-green-500" size={22} />
-            </div>
-
-            <p className="text-sm font-semibold text-text-primary">
-              Everything looks good
-            </p>
-
-            <p className="mt-1 text-sm text-text-secondary">
-              There are no important issues requiring your attention right now.
-            </p>
-          </div>
+          <EmptyState icon={CheckCircle2} title="Everything looks good" description="There are no important issues requiring your attention right now." tone="success" compact />
         ) : (
           insights.map((insight) => {
             const {
@@ -245,23 +245,10 @@ const handleInsightClick = (insight) => {
 
             {/* Insights */}
             <div className="max-h-[65vh] overflow-y-auto">
-                  {insights.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-success-surface">
-                        <CheckCircle2
-                          size={22}
-                          className="text-green-500"
-                        />
-                      </div>
-
-                      <p className="text-sm font-semibold text-text-primary">
-                        Everything looks good
-                      </p>
-
-                      <p className="mt-1 max-w-sm text-sm text-text-secondary">
-                        There are no important issues requiring your attention right now.
-                      </p>
-                    </div>
+                  {insightsError ? (
+                    <EmptyState icon={AlertCircle} title="Insights are unavailable" description={insightsError} actionLabel="Try again" onAction={() => fetchInsights(currentWorkspaceId)} />
+                  ) : insights.length === 0 ? (
+                    <EmptyState icon={CheckCircle2} title="Everything looks good" description="There are no important issues requiring your attention right now." tone="success" />
                   ) : (
                     <div className="divide-y divide-border">
                       {insights.map((insight) => {

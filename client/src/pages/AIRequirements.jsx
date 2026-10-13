@@ -16,6 +16,8 @@ function AIRequirements() {
     fetchRequirement,
     currentRequirement,
     isLoading,
+    error,
+    workspaceRequirementsFetched,
   } = useRequirementStore();
   const { currentWorkspaceId } = useWorkspaceStore();
 
@@ -62,6 +64,7 @@ function AIRequirements() {
         <RequirementToolbar 
              searchInput={searchInput}
              setSearchInput={setSearchInput}  
+             onClear={() => setSearchInput("")}
         />
 
         <div className={`grid items-start gap-4 ${
@@ -73,6 +76,11 @@ function AIRequirements() {
               requirements={searchedRequirements}
               selectedRequirement={selectedRequirement}
               setSelectedRequirement={setSelectedRequirement}
+              loading={isLoading || !workspaceRequirementsFetched}
+              error={error}
+              hasRequirements={workspaceRequirements.length > 0}
+              hasSearch={searchInput.trim().length > 0}
+              onClearSearch={() => setSearchInput("")}
             />  
 
             {/* will get the selected requirement from store later */}

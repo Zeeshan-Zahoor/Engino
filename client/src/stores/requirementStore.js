@@ -8,6 +8,7 @@ const useRequirementStore = create((set) => ({
     workspaceRequirements: [],
     requirementsProjectId: null,
     currentRequirement: null,
+    workspaceRequirementsFetched: false,
 
     fetchWorkspaceRequirements: async (workspaceId) => {
         set({ isLoading: true, error: null, workspaceRequirements: [] });
@@ -17,6 +18,7 @@ const useRequirementStore = create((set) => ({
                 isLoading: false,
                 error: null,
                 workspaceRequirements: response?.data?.requirements,
+                workspaceRequirementsFetched: true,
             });
 
             return response.data;
@@ -25,6 +27,7 @@ const useRequirementStore = create((set) => ({
             set({
                 error: error.response?.data?.message || "Failed to fetch workspace requirements.",
                 isLoading: false,
+                workspaceRequirementsFetched: true,
             });
             console.log(error.response);
             throw error;

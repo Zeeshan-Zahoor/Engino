@@ -28,6 +28,7 @@ import { getRelativeEstimatedTime } from "../../utils/getRelativeTime";
 import TaskDetailsModal from "./tasks/TasksDetailsModal";
 import DeleteTaskModal from "./tasks/DeleteTaskModal";
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
+import EmptyState from "../common/EmptyState";
 
 function Tasks({ project }) {
     const { currentWorkspaceId } = useWorkspaceStore();
@@ -302,7 +303,13 @@ function Tasks({ project }) {
 
           {/* Table Body */}
           <tbody>
-            {tasks.map((task, index) => (
+            {tasks.length === 0 ? (
+              <tr>
+                <td colSpan="7">
+                  <EmptyState icon={ListTodo} title="No tasks yet" description="Create a task to start tracking execution for this project." actionLabel={isAdmin ? "New task" : undefined} onAction={isAdmin ? () => setOpenCreateTaskModal(true) : undefined} compact />
+                </td>
+              </tr>
+            ) : tasks.map((task, index) => (
               <tr
                 key={task._id}
                 onClick={() => {

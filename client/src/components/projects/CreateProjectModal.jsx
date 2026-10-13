@@ -486,7 +486,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                       ? "e.g. React, Node.js, MongoDB..."
                       : "Add technology..."
                   }
-                  className="min-w-[180px] flex-1 bg-transparent py-1 text-sm text-text-primary outline-none placeholder:text-text-secondary"
+                  className="min-w-[180px] flex-1 bg-transparent py-1 text-sm text-text-primary placeholder:text-text-secondary !outline-none focus:!outline-none focus-visible:!outline-none"
                 />
               </div>
             </div>

@@ -8,6 +8,7 @@ const useProjectStore = create((set, get) => ({
     selectedTabIndex: 0,
     isLoading: false,
     error: null,
+    projectsFetched: false,
 
     setTabIndex: (index) => set({
         selectedTabIndex: index,
@@ -55,6 +56,7 @@ const useProjectStore = create((set, get) => ({
             set({
                 isLoading: false,
                 projects: response?.data?.projects,
+                projectsFetched: true,
             });
 
             return response?.data;
@@ -63,6 +65,7 @@ const useProjectStore = create((set, get) => ({
             set({
                 error: error.response?.data?.message || "Error fetching projects. Try again.",
                 isLoading: false,
+                projectsFetched: true,
             });
 
             throw error;

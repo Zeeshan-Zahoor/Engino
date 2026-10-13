@@ -13,17 +13,25 @@ const useWorkspaceStore = create(
         isLoading: false,
         error: null,
         workspaceMembers: [],
+        membersFetched: false,
 
         fetchWorkspaces: async () => {
             try {
                 set({ isLoading: true, error: null });
                 const response = await api.get('/workspaces');
             
-                const workspaces = response.data.workspaces;
-
+                const workspaces = response.data.workspaces || [];
+                const currentWorkspaceId = get().currentWorkspaceId;
+                const selectedWorkspaceExists = workspaces.some(
+                    (workspace) => workspace._id === currentWorkspaceId
+                );
                 set({
                     workspaces,
+                    currentWorkspaceId: selectedWorkspaceExists
+                        ? currentWorkspaceId
+                        : workspaces[0]?._id || null,
                     isLoading: false,
+                    error: null,
                 });
 
                 return response.data;
@@ -63,6 +71,17 @@ const useWorkspaceStore = create(
         getWorkspaceMembers: async () => {
             const { currentWorkspaceId } = get();
 
+            if (!currentWorkspaceId) {
+                set({
+                    workspaceMembers: [],
+                    membersFetched: true,
+                    isLoading: false,
+                    error: null,
+                });
+
+                return { workspaceMembers: [] };
+            }
+
             try {
                 set({ isLoading: true, error: null });
                 const response = await api.get(`workspaces/${currentWorkspaceId}/team`);
@@ -70,6 +89,7 @@ const useWorkspaceStore = create(
                 set({
                     workspaceMembers: response.data.workspaceMembers,
                     isLoading: false,
+                    membersFetched: true,
                 });
             
                 return response.data;
@@ -78,6 +98,7 @@ const useWorkspaceStore = create(
                 set({
                     error: error.response?.data?.message || "Failed to load workspace members",
                     isLoading: false,
+                    membersFetched: true,
                 });
 
                 throw error;

@@ -20,7 +20,7 @@ import useAuthStore from "../stores/authStore"
 
 import { isWorkspaceAdmin } from "../utils/isWorkspaceAdmin"
 function Projects() {
-    const { projects, fetchProjects, isLoading, error } = useProjectStore();
+    const { projects, fetchProjects, isLoading, error, projectsFetched } = useProjectStore();
     const { currentWorkspaceId } = useWorkspaceStore();
     const { user } = useAuthStore();
 
@@ -41,6 +41,12 @@ function Projects() {
     const handleCreateProject = () => {
         setEditingProject(null);
         setIsCreateModalOpen(true);
+    };
+
+    const clearFilters = () => {
+        setSearchInput("");
+        setSelectedStatus("All");
+        setSortBy("Recently Updated");
     };
 
     const handleEditProject = (project) => {
@@ -186,8 +192,12 @@ function Projects() {
 
         <ProjectsList 
             filteredProjects={sortedProjects}
-            loading={isLoading}
+            loading={isLoading || !projectsFetched}
             error={error}
+            hasProjects={projects.length > 0}
+            hasActiveFilters={searchInput !== "" || selectedStatus !== "All"}
+            onClearFilters={clearFilters}
+            onCreateProject={handleCreateProject}
             onEditProject={handleEditProject}
             onDeleteProject={handleDeleteProject}
         />

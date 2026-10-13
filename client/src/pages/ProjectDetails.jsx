@@ -18,12 +18,15 @@ import useAuthStore from "../stores/authStore"
 import Requirements from "../components/projects/Requirements"
 import DeleteProjectModal from "../components/projects/DeleteProjectModal"
 import { useNavigate } from "react-router-dom"
+import { FolderKanban } from "lucide-react";
+import EmptyState from "../components/common/EmptyState";
+import Loader from "../components/common/Loader";
 
 const tabs = ["Overview", "AI Requirements", "Tasks", "Team"];
 
 function ProjectDetails() {
   const { projectId } = useParams();
-  const { activeProject, fetchProject, selectedTabIndex, setTabIndex } = useProjectStore();
+  const { activeProject, fetchProject, selectedTabIndex, setTabIndex, isLoading, error } = useProjectStore();
   const { currentWorkspaceId } = useWorkspaceStore();
   const { user } = useAuthStore();
   const navigate = useNavigate();
@@ -38,6 +41,18 @@ function ProjectDetails() {
     fetchProject(currentWorkspaceId, projectId);
 
   }, [fetchProject, projectId, currentWorkspaceId]);
+
+  if (isLoading && !activeProject) {
+    return <div className="space-y-6 px-8"><Header title="Project" showBack user={user} /><div className="flex h-64 items-center justify-center"><Loader color="text-primary" size={30} /></div></div>;
+  }
+
+  if (error && !activeProject) {
+    return <div className="space-y-6 px-8"><Header title="Project" showBack user={user} /><section className="rounded-2xl border border-border bg-card"><EmptyState icon={FolderKanban} title="Project is unavailable" description={error} actionLabel="View projects" onAction={() => navigate("/projects")} /></section></div>;
+  }
+
+  if (!activeProject) {
+    return <div className="space-y-6 px-8"><Header title="Project" showBack user={user} /><section className="rounded-2xl border border-border bg-card"><EmptyState icon={FolderKanban} title="Project not found" description="This project may have been removed or you may no longer have access to it." actionLabel="View projects" onAction={() => navigate("/projects")} /></section></div>;
+  }
 
   const handleEditProject = () => {
     setIsEditModalOpen(true);

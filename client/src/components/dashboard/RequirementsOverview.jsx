@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import { getRelativeTime } from "../../utils/getRelativeTime";
+import EmptyState from "../common/EmptyState";
+import Loader from "../common/Loader";
+import { FileText } from "lucide-react";
 
 const statusStyles = {
   "AI Plan Ready": "bg-primary-light text-primary",
@@ -20,8 +23,8 @@ function RequirementsOverview() {
   const navigate = useNavigate();
   const { currentWorkspaceId } = useWorkspaceStore();
   const { projects } = useProjectStore();
-  const { workspaceRequirements, fetchWorkspaceRequirements } = useRequirementStore();
-  const { allTasks, fetchAllTasks } = useTaskStore();
+  const { workspaceRequirements, fetchWorkspaceRequirements, isLoading: requirementsLoading, error: requirementsError, workspaceRequirementsFetched } = useRequirementStore();
+  const { allTasks, fetchAllTasks, isLoading: tasksLoading, error: tasksError, allTasksFetched } = useTaskStore();
 
   useEffect(() => {
     if(workspaceRequirements.length === 0) {
@@ -62,8 +65,14 @@ function RequirementsOverview() {
 
       {/* Requirements */}
       <div className="divide-y divide-border">
-        {/* temporary until we get exact timestamps from mongodb */}
-        {(workspaceRequirements.slice(0, 5)).map((requirement) => {
+        {(requirementsLoading || tasksLoading || !workspaceRequirementsFetched || !allTasksFetched) ? (
+          <div className="flex h-40 items-center justify-center"><Loader color="text-primary" /></div>
+        ) : requirementsError || tasksError ? (
+          <EmptyState icon={FileText} title="Requirements are unavailable" description={requirementsError || tasksError} compact />
+        ) : workspaceRequirements.length === 0 ? (
+          <EmptyState icon={FileText} title="No requirements yet" description="Create a requirement to start turning product ideas into execution plans." actionLabel="View requirements" onAction={() => navigate("/requirements")} compact />
+        ) : (
+        workspaceRequirements.slice(0, 5).map((requirement) => {
           const tasks = allTasks.filter(task => task.requirementId === requirement._id);
           return (
             <button
@@ -136,7 +145,8 @@ function RequirementsOverview() {
               />
           </button>
           )
-        })}
+        })
+        )}
       </div>
     </section>
   );

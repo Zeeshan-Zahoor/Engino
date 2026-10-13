@@ -206,7 +206,7 @@ function AIWorkspace() {
           </p>
 
           {/* Requirement input */}
-          <div className="rounded-xl bg-card p-2 shadow-lg">
+          <div className="rounded-xl bg-background p-2 shadow-lg">
             {conversation.length > 0 && (
                   <div
                     ref={conversationRef} 
@@ -248,7 +248,7 @@ function AIWorkspace() {
                   ? "Describe what you want to build or explore..."
                   : "Ask anything about software engineering..."
               }
-              className={`${conversation.length > 0 ? "py-2 h-10 border-t border-border" : "py-2"} w-full resize-none rounded-lg bg-transparent px-3 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none`}
+              className={`${conversation.length > 0 ? "py-2 h-10 border-t border-border" : "py-2"} w-full resize-none rounded-lg bg-transparent px-3 text-sm text-text-primary placeholder:text-text-muted transition-colors !outline-none focus:!outline-none focus-visible:!outline-none`}
               disabled={isSubmitting || isExploring}
             />
 
@@ -257,7 +257,7 @@ function AIWorkspace() {
                 type="button"
                 onClick={handleExploreWithAI}
                 disabled={isSubmitting || isExploring || !prompt.trim()}
-                className="flex items-center gap-2 rounded-lg border border-primary px-5 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary-light"
+                className="flex items-center gap-2 rounded-lg border border-primary px-5 py-2.5 text-sm font-semibold text-primary transition bg-bg-background hover:bg-primary-light"
               >
                 {isExploring ? (
                   <>
@@ -313,7 +313,7 @@ function AIWorkspace() {
                 type="button"
                 onClick={() => handleExampleClick(example)}
                 disabled={isSubmitting || isExploring}
-                className="rounded-md bg-card/90 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-card"
+                className="rounded-md bg-background px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-card"
               >
                 {example.label}
               </button>

@@ -4,6 +4,7 @@ import {
   MoreVertical,
   Edit2,
   Trash,
+  FolderKanban,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ import Avatar from "../../utils/Avatar";
 import { getRelativeTime } from "../../utils/getRelativeTime";
 import Loader from "../common/Loader";
 import { isWorkspaceAdmin } from "../../utils/isWorkspaceAdmin";
+import EmptyState from "../common/EmptyState";
 
 const avatarClasses = [
   "bg-purple-100 text-primary",
@@ -23,6 +25,10 @@ function ProjectsList({
   filteredProjects,
   loading,
   error,
+  hasProjects,
+  hasActiveFilters,
+  onClearFilters,
+  onCreateProject,
   onEditProject,
   onDeleteProject,
 }) {
@@ -63,14 +69,21 @@ function ProjectsList({
 
       {/* Projects */}
       <div className="divide-y divide-border">
-        {error && (
-          <p className="text-danger text-sm text-center my-3">{error}</p>
-        )}
-
         {loading ? (
                   <div className="min-h-30 flex justify-center items-center">
                     <Loader size={25} color="text-primary"/>
                   </div>
+              ) : error ? (
+                <EmptyState icon={FolderKanban} title="Projects are unavailable" description={error} compact />
+              ) : paginatedProjects.length === 0 ? (
+                <EmptyState
+                  icon={FolderKanban}
+                  title={hasProjects && hasActiveFilters ? "No matching projects" : "No projects yet"}
+                  description={hasProjects && hasActiveFilters ? "Try a different search or clear the current filters." : "Create a project to begin organizing your engineering work."}
+                  actionLabel={hasProjects && hasActiveFilters ? "Clear filters" : isAdmin ? "New project" : undefined}
+                  onAction={hasProjects && hasActiveFilters ? onClearFilters : isAdmin ? onCreateProject : undefined}
+                  compact
+                />
               ) : (
                   paginatedProjects?.map((project) => {
                     let team = project.team;
