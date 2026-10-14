@@ -88,30 +88,32 @@ function RequirementsOverview() {
                   `/projects/${requirement.projectId}/requirements/${requirement._id}`
                 )
               }}
-              className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-surface"
+              className="flex w-full flex-wrap items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-surface sm:items-center sm:gap-4 lg:flex-wrap xl:flex-nowrap"
             >
-              {/* Requirement */}
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-text-primary">
-                  {requirement.name}
-                </p>
+              <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 lg:basis-full lg:flex-none xl:basis-auto xl:flex-1">
+                {/* Requirement */}
+                <div className="min-w-0 flex-1">
+                  <p className="break-words text-sm font-semibold text-text-primary">
+                    {requirement.name}
+                  </p>
 
-                <p className="mt-1 text-xs text-text-secondary">
-                  {projects.find(project => (project._id === requirement.projectId))?.name}
-                </p>
-              </div>
+                  <p className="mt-1 break-words text-xs text-text-secondary">
+                    {projects.find(project => (project._id === requirement.projectId))?.name}
+                  </p>
+                </div>
 
-              {/*AI Status */}
-              <div className="w-36">
-                <span
-                  className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[requirement.aiStatus]}`}
-                >
-                  {requirement.aiStatus}
-                </span>
+                {/* AI Status */}
+                <div className="w-fit max-w-full shrink-0 sm:w-36">
+                  <span
+                    className={`inline-flex max-w-full whitespace-normal break-words rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[requirement.aiStatus]}`}
+                  >
+                    {requirement.aiStatus}
+                  </span>
+                </div>
               </div>
 
               {/* Complexity */}
-              <div className="w-20">
+              <div className="hidden w-20 sm:block">
                 <p className="text-xs font-medium text-text-primary">
                   {requirement.complexity}
                 </p>
@@ -122,7 +124,7 @@ function RequirementsOverview() {
               </div>
 
               {/* Tasks */}
-              <div className="w-20">
+              <div className="hidden w-20 sm:block">
                 <p className="text-xs font-medium text-text-primary">
                   {tasks.length}
                 </p>
@@ -133,7 +135,7 @@ function RequirementsOverview() {
               </div>
 
               {/* Updated */}
-              <div className="w-20">
+              <div className="hidden w-20 sm:block">
                 <p className="text-xs text-text-secondary">
                   {getRelativeTime(requirement.updatedAt)}
                 </p>
@@ -141,7 +143,7 @@ function RequirementsOverview() {
 
               <ArrowRight
                 size={16}
-                className="shrink-0 text-text-secondary"
+                className="mt-1 shrink-0 text-text-secondary sm:mt-0"
               />
           </button>
           )

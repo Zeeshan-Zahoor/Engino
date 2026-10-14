@@ -332,7 +332,7 @@ const ProjectRequirementDetails = () => {
     <div className="min-h-screen bg-background">
       {/* Page Header */}
       <div className="border-b border-border bg-background">
-        <div className="flex items-center justify-between px-8 py-5">
+        <div className="flex items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-4">
             <button
               type="button"
@@ -367,7 +367,7 @@ const ProjectRequirementDetails = () => {
 
 
       {/* Main Layout */}
-      <div className="px-8 py-8">
+      <div className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex gap-8">
           
           {/* Workflow Navigation */}

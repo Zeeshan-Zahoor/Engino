@@ -43,15 +43,15 @@ function ProjectDetails() {
   }, [fetchProject, projectId, currentWorkspaceId]);
 
   if (isLoading && !activeProject) {
-    return <div className="space-y-6 px-8"><Header title="Project" showBack user={user} /><div className="flex h-64 items-center justify-center"><Loader color="text-primary" size={30} /></div></div>;
+    return <div className="space-y-6 px-4 sm:px-6 lg:px-8"><Header title="Project" showBack user={user} /><div className="flex h-64 items-center justify-center"><Loader color="text-primary" size={30} /></div></div>;
   }
 
   if (error && !activeProject) {
-    return <div className="space-y-6 px-8"><Header title="Project" showBack user={user} /><section className="rounded-2xl border border-border bg-card"><EmptyState icon={FolderKanban} title="Project is unavailable" description={error} actionLabel="View projects" onAction={() => navigate("/projects")} /></section></div>;
+    return <div className="space-y-6 px-4 sm:px-6 lg:px-8"><Header title="Project" showBack user={user} /><section className="rounded-2xl border border-border bg-card"><EmptyState icon={FolderKanban} title="Project is unavailable" description={error} actionLabel="View projects" onAction={() => navigate("/projects")} /></section></div>;
   }
 
   if (!activeProject) {
-    return <div className="space-y-6 px-8"><Header title="Project" showBack user={user} /><section className="rounded-2xl border border-border bg-card"><EmptyState icon={FolderKanban} title="Project not found" description="This project may have been removed or you may no longer have access to it." actionLabel="View projects" onAction={() => navigate("/projects")} /></section></div>;
+    return <div className="space-y-6 px-4 sm:px-6 lg:px-8"><Header title="Project" showBack user={user} /><section className="rounded-2xl border border-border bg-card"><EmptyState icon={FolderKanban} title="Project not found" description="This project may have been removed or you may no longer have access to it." actionLabel="View projects" onAction={() => navigate("/projects")} /></section></div>;
   }
 
   const handleEditProject = () => {
@@ -67,7 +67,7 @@ function ProjectDetails() {
   }
 
   return (
-    <div className="space-y-6 px-8">
+    <div className="space-y-6 px-4 sm:px-6 lg:px-8">
         <Header 
             title={activeProject?.name}
             showBack={true}

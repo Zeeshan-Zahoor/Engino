@@ -106,44 +106,46 @@ function MyTasks() {
               key={task._id}
               type="button"
               onClick={() => navigate(`/tasks?taskId=${task._id}`)}
-              className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-surface"
+              className="flex w-full flex-wrap items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-surface sm:items-center sm:gap-4 lg:flex-wrap xl:flex-nowrap"
             >
-              {/* Status Icon */}
-              <div className="shrink-0">
-                {task.status === "Done" ? (
-                  <CheckCircle2 
-                    size={18}
-                    className="text-success"
-                    strokeWidth={1.8}
-                  />
-                ) : task.status === "In Progress" ? (
-                  <Clock3
-                    size={18}
-                    className="text-info"
-                    strokeWidth={1.8}
-                  />
-                ) : (
-                  <Circle
-                    size={18}
-                    className="text-text-secondary"
-                    strokeWidth={1.8}
-                  />
-                )}
-              </div>
+              <div className="flex min-w-0 flex-1 items-start gap-3 lg:basis-full lg:flex-none xl:basis-auto xl:flex-1">
+                {/* Status Icon */}
+                <div className="mt-0.5 shrink-0 sm:mt-0">
+                  {task.status === "Done" ? (
+                    <CheckCircle2
+                      size={18}
+                      className="text-success"
+                      strokeWidth={1.8}
+                    />
+                  ) : task.status === "In Progress" ? (
+                    <Clock3
+                      size={18}
+                      className="text-info"
+                      strokeWidth={1.8}
+                    />
+                  ) : (
+                    <Circle
+                      size={18}
+                      className="text-text-secondary"
+                      strokeWidth={1.8}
+                    />
+                  )}
+                </div>
 
-              {/* Task Info */}
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-text-primary">
-                  {task.title}
-                </p>
+                {/* Task Info */}
+                <div className="min-w-0 flex-1">
+                  <p className="break-words text-sm font-semibold text-text-primary">
+                    {task.title}
+                  </p>
 
-                <p className="mt-1 truncate text-xs text-text-secondary">
-                  {(projects.find(project => project._id === task.projectId))?.name}
-                </p>
+                  <p className="mt-1 break-words text-xs text-text-secondary">
+                    {(projects.find(project => project._id === task.projectId))?.name}
+                  </p>
+                </div>
               </div>
 
               {/* Assignee */}
-              <div className="flex w-20 items-center gap-2">
+              <div className="hidden w-20 items-center gap-2 md:flex lg:hidden xl:flex">
                 {task.assignee ? (
                   <>
                     <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-semibold text-primary">
@@ -163,7 +165,7 @@ function MyTasks() {
               </div>
 
               {/* Priority */}
-              <div className="w-16">
+              <div className="hidden w-16 sm:block">
                 <span
                   className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${priorityStyles[task.priority]}`}
                 >
@@ -172,7 +174,7 @@ function MyTasks() {
               </div>
 
               {/* Status */}
-              <div className="w-24">
+              <div className="hidden w-24 sm:block">
                 <span
                   className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${statusStyles[task.status]}`}
                 >
@@ -182,14 +184,14 @@ function MyTasks() {
 
               {/* Due Date */}
               {task.dueDate ? (
-                <div className={`flex w-24 items-center gap-1 ${dueClass}`}>
+                <div className={`hidden w-24 items-center gap-1 md:flex lg:hidden xl:flex ${dueClass}`}>
                   <CalendarDays size={13} />
                   <span className="text-xs font-medium">
                     {new Date(task.dueDate).toLocaleDateString()}
                   </span>
                 </div>
               ) : (
-                <div className={`flex w-24 items-center gap-1 text-primary`}>
+                <div className="hidden w-24 items-center gap-1 text-primary md:flex lg:hidden xl:flex">
                   <span className="text-xs font-medium">
                     Not Set
                   </span>
@@ -198,7 +200,7 @@ function MyTasks() {
 
               <ArrowRight
                 size={15}
-                className="shrink-0 text-text-secondary"
+                className="mt-1 shrink-0 text-text-secondary sm:mt-0"
               />
             </button>
           )

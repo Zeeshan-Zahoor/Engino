@@ -94,9 +94,17 @@ function Requirements({ project }) {
         }
 
         const rect = e.currentTarget.getBoundingClientRect();
+        const menuWidth = 220;
+        const viewportPadding = 8;
         setMenuPosition({
             top: rect.bottom + 8,
-            left: rect.right - 220,
+            left: Math.max(
+              viewportPadding,
+              Math.min(
+                rect.right - menuWidth,
+                window.innerWidth - menuWidth - viewportPadding
+              )
+            ),
         })
 
         setOpenMenuId(requirementId)
@@ -281,7 +289,7 @@ function Requirements({ project }) {
       </div>
 
       {/* Requirements Table */}
-      <div className="relative mt-5 overflow-x-auto rounded-lg border border-border">
+      <div className="relative mt-5 hidden overflow-x-auto rounded-lg border border-border lg:block">
         <table className="w-full min-w-[850px] text-left">
 
           {/* Table Header */}
@@ -449,6 +457,86 @@ function Requirements({ project }) {
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-5 space-y-3 lg:hidden">
+        {requirements.length === 0 ? (
+          <EmptyState
+            icon={FileText}
+            title="No requirements yet"
+            description="Create a requirement to start an AI-assisted plan for this project."
+            actionLabel={isAdmin ? "New requirement" : undefined}
+            onAction={isAdmin ? handleCreateRequirement : undefined}
+            compact
+          />
+        ) : (
+          requirements.map((requirement) => {
+            const tasks = (project.tasks || []).filter(
+              (task) => task.requirementId === requirement._id
+            );
+
+            return (
+              <article
+                key={requirement._id}
+                className="rounded-xl border border-border bg-card p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/projects/${project._id}/requirements/${requirement._id}`)}
+                    className="min-w-0 flex-1 text-left"
+                  >
+                    <p className="break-words text-sm font-semibold text-text-primary">
+                      {requirement.name}
+                    </p>
+                    <p className="mt-1 line-clamp-3 break-words text-xs leading-5 text-text-secondary">
+                      {requirement.description}
+                    </p>
+                  </button>
+                  <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClass(requirement.aiStatus)}`}>
+                    {requirement.aiStatus}
+                  </span>
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-text-secondary">
+                  <span>{tasks.length} tasks</span>
+                  <span>{requirement.updatedAt ? new Date(requirement.updatedAt).toLocaleDateString() : "Not updated"}</span>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/projects/${project._id}/requirements/${requirement._id}`)}
+                    className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-text-primary hover:bg-surface"
+                  >
+                    <Eye size={14} /> Open
+                  </button>
+                  {isAdmin && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handleEditRequirement(requirement)}
+                        className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-text-primary hover:bg-surface"
+                      >
+                        <Pencil size={14} /> Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedRequirement(requirement);
+                          setOpenDeleteModal(true);
+                        }}
+                        className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-danger/20 px-3 py-2 text-xs font-semibold text-danger hover:bg-danger-surface"
+                      >
+                        <Trash2 size={14} /> Delete
+                      </button>
+                    </>
+                  )}
+                </div>
+              </article>
+            );
+          })
+        )}
       </div>
 
 

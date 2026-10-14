@@ -22,7 +22,7 @@ function ProjectOverviewHeader({ project, onEdit, onDelete }) {
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-xl font-semibold text-text-primary">
+              <h1 className="break-words text-xl font-semibold text-text-primary">
                 {project?.name}
               </h1>
 
@@ -31,7 +31,7 @@ function ProjectOverviewHeader({ project, onEdit, onDelete }) {
               </span>
             </div>
 
-            <p className="mt-1.5 max-w-2xl text-sm text-text-secondary">
+            <p className="mt-1.5 max-w-2xl break-words text-sm text-text-secondary">
               {project?.description}
             </p>
 
@@ -59,7 +59,7 @@ function ProjectOverviewHeader({ project, onEdit, onDelete }) {
 
         {/* Actions */}
         {isAdmin && (
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex w-full shrink-0 flex-wrap items-center gap-2 lg:w-auto">
             <button
               type="button"
               onClick={onEdit}

@@ -130,11 +130,11 @@ const handleInsightClick = (insight) => {
   return (
     <section className="rounded-2xl border border-border bg-card">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4">
-        <div className="flex items-center gap-2">
+      <div className="flex min-w-0 items-center justify-between gap-3 px-5 py-4">
+        <div className="flex min-w-0 items-center gap-2">
           <Sparkles size={18} className="text-primary" />
 
-          <h2 className="text-base font-semibold text-text-primary">
+          <h2 className="min-w-0 text-base font-semibold text-text-primary">
             AI Insights
           </h2>
         </div>
@@ -142,7 +142,7 @@ const handleInsightClick = (insight) => {
         <button
           type="button"
           onClick={() => setShowAllInsights(true)}
-          className="text-xs font-semibold text-primary hover:text-primary-dark"
+          className="shrink-0 text-xs font-semibold text-primary hover:text-primary-dark"
         >
           View all
         </button>
@@ -178,7 +178,7 @@ const handleInsightClick = (insight) => {
                 key={insight._id || `${insight.type}-${insight.title}`}
                 type="button"
                 onClick={() => handleInsightClick(insight)}
-                className="flex w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-surface"
+                className="flex w-full min-w-0 items-center gap-3 px-5 py-4 text-left transition hover:bg-surface sm:gap-4"
               >
                 <div
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${bgClass}`}
@@ -187,11 +187,11 @@ const handleInsightClick = (insight) => {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-text-primary">
+                  <p className="break-words text-sm font-semibold text-text-primary">
                     {insight.title}
                   </p>
 
-                  <p className="mt-0.5 truncate text-xs text-text-secondary">
+                  <p className="mt-0.5 line-clamp-2 break-words text-xs text-text-secondary">
                     {insight.description}
                   </p>
                 </div>

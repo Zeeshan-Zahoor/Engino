@@ -206,7 +206,7 @@ function Tasks() {
   }, [taskScope, selectedTask?._id]);
 
   return (
-    <div className="space-y-6 px-8">
+    <div className="space-y-6 px-4 sm:px-6 lg:px-8">
       <Header
         title="Tasks"
         description="Track, manage and execute all engineering tasks across projects."

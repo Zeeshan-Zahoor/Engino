@@ -351,12 +351,12 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                         Change Workspace Role
                       </p>
 
-                      <div className="mt-2 flex items-center gap-2">
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
                         <select
                           value={selectedRole}
                           onChange={(e) => setSelectedRole(e.target.value)}
                           disabled={workspaceLoading}
-                          className="h-9 flex-1 rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none focus:border-primary"
+                          className="h-9 min-w-[120px] flex-1 rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none focus:border-primary"
                         >
                           <option value="Member">Member</option>
                           <option value="Admin">Admin</option>

@@ -97,7 +97,7 @@ function Team() {
   };
 
   return (
-    <div className="space-y-6 px-8">
+    <div className="space-y-6 px-4 sm:px-6 lg:px-8">
       <Header 
         title={"Team"}
         description={"Manage your workspace members and view their workload."}

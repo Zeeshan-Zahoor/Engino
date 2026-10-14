@@ -183,16 +183,16 @@ function AIWorkspace() {
   }
 
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#5b2eff] via-[#4b24c9] to-[#17105c] p-6 text-white">
+    <section className="relative min-w-0 overflow-hidden rounded-2xl bg-gradient-to-br from-[#5b2eff] via-[#4b24c9] to-[#17105c] p-4 text-white sm:p-6">
       {/* Background decoration */}
       <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-card/10 blur-3xl" />
 
-      <div className="relative flex min-h-[250px] items-center gap-8">
+      <div className="relative flex min-h-[250px] min-w-0 items-center gap-4 lg:gap-8">
         {/* Content */}
-        <div className="flex-1">
-          <div className="mb-2 flex items-center gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 flex min-w-0 flex-wrap items-center gap-2">
             <Sparkles size={20} />
-            <h2 className="text-xl font-semibold">
+            <h2 className="min-w-0 text-xl font-semibold">
               AI Workspace
             </h2>
 
@@ -201,7 +201,7 @@ function AIWorkspace() {
             </span>
           </div>
 
-          <p className="mb-5 max-w-xl text-sm leading-6 text-white/80">
+          <p className="mb-5 max-w-xl break-words text-sm leading-6 text-white/80">
             Explore ideas with AI or turn your idea into an execution plan.
           </p>
 
@@ -210,7 +210,7 @@ function AIWorkspace() {
             {conversation.length > 0 && (
                   <div
                     ref={conversationRef} 
-                    className="mb-2 max-w-200 max-h-72 space-y-3 overflow-auto px-3 pt-2 scrollbar-none overfl">
+                    className="mb-2 max-h-72 max-w-full space-y-3 overflow-auto px-3 pt-2 scrollbar-none">
                     {conversation.map((message, index) => (
                       <div
                         key={index}
@@ -218,8 +218,8 @@ function AIWorkspace() {
                           message.role === "user" ? "justify-end" : "justify-start"
                         }`}
                       >
-                        <div
-                          className={`max-w-[85%] rounded-xl px-4 py-2.5 text-sm ${
+                          <div
+                          className={`max-w-[85%] break-words rounded-xl px-4 py-2.5 text-sm ${
                             message.role === "user"
                               ? "bg-primary text-white"
                               : "bg-surface text-text-primary"
@@ -248,16 +248,16 @@ function AIWorkspace() {
                   ? "Describe what you want to build or explore..."
                   : "Ask anything about software engineering..."
               }
-              className={`${conversation.length > 0 ? "py-2 h-10 border-t border-border" : "py-2"} w-full resize-none rounded-lg bg-transparent px-3 text-sm text-text-primary placeholder:text-text-muted transition-colors !outline-none focus:!outline-none focus-visible:!outline-none`}
+              className={`${conversation.length > 0 ? "h-10 border-t border-border py-2" : "py-2"} block min-h-20 w-full resize-none rounded-lg bg-transparent px-3 text-sm text-text-primary placeholder:text-text-muted transition-colors !outline-none focus:!outline-none focus-visible:!outline-none`}
               disabled={isSubmitting || isExploring}
             />
 
-            <div className="flex justify-end gap-2">
+              <div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
               <button
                 type="button"
                 onClick={handleExploreWithAI}
                 disabled={isSubmitting || isExploring || !prompt.trim()}
-                className="flex items-center gap-2 rounded-lg border border-primary px-5 py-2.5 text-sm font-semibold text-primary transition bg-bg-background hover:bg-primary-light"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-primary px-4 py-2.5 text-sm font-semibold text-primary transition bg-bg-background hover:bg-primary-light sm:w-auto sm:px-5"
               >
                 {isExploring ? (
                   <>
@@ -283,7 +283,7 @@ function AIWorkspace() {
                   type="button"
                   onClick={handleGeneratePlan}
                   disabled={isSubmitting || isExploring || !prompt.trim()}
-                  className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark sm:w-auto sm:px-5"
                 >
                   {isSubmitting ? (
                     <>
@@ -302,8 +302,8 @@ function AIWorkspace() {
           </div>
 
           {/* Examples */}
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="text-xs text-white/70">
+          <div className="mt-4 flex min-w-0 flex-wrap items-center gap-2">
+            <span className="max-w-full text-xs text-white/70">
               Not sure? Try an example:
             </span>
 
@@ -313,7 +313,7 @@ function AIWorkspace() {
                 type="button"
                 onClick={() => handleExampleClick(example)}
                 disabled={isSubmitting || isExploring}
-                className="rounded-md bg-background px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-card"
+                className="max-w-full break-words rounded-md bg-background px-3 py-1.5 text-left text-xs font-medium text-primary transition hover:bg-card"
               >
                 {example.label}
               </button>

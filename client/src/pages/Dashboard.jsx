@@ -58,7 +58,7 @@ function Dashboard() {
     };
 
   return (
-    <div className="space-y-6 px-8">
+    <div className="space-y-6 px-4 sm:px-6 lg:px-8">
         <Header 
             title="Dashboard"
             description={`Welcome back, ${user?.name.trim().split(" ")[0] || ""}. Here's what's happening with your workspace.`}
@@ -71,7 +71,7 @@ function Dashboard() {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-4 min-[360px]:grid-cols-2 lg:grid-cols-5">
             <StatsCard 
                 icon={FolderKanban}
                 iconClassName="bg-primary-light text-primary"

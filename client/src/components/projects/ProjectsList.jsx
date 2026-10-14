@@ -282,7 +282,7 @@ function ProjectsList({
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-2">
                               <div>
-                                <p className="text-sm font-semibold text-text-primary">
+                                <p className="truncate text-sm font-semibold text-text-primary">
                                   {project?.name}
                                 </p>
 
@@ -291,15 +291,54 @@ function ProjectsList({
                                 </p>
                               </div>
 
-                              <button
-                                type="button"
-                                className="shrink-0 text-text-secondary"
-                              >
+                               <button
+                                 type="button"
+                                 aria-label={`Actions for ${project?.name}`}
+                                 onClick={(e) => {
+                                   e.stopPropagation();
+                                   setOpenMenuId((current) =>
+                                     current === project._id ? null : project._id
+                                   );
+                                 }}
+                                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-text-secondary hover:bg-surface hover:text-text-primary"
+                               >
                                 <MoreVertical size={17} />
                               </button>
                             </div>
 
-                            <p className="mt-2 text-sm leading-4 text-text-secondary">
+                             {openMenuId === project._id && (
+                               <div
+                                 className="relative z-30 mt-2 w-full overflow-hidden rounded-lg border border-border bg-card py-1 shadow-lg"
+                                 onClick={(e) => e.stopPropagation()}
+                               >
+                                 <button
+                                   type="button"
+                                   disabled={!isAdmin}
+                                   onClick={() => {
+                                     setOpenMenuId(null);
+                                     onEditProject(project);
+                                   }}
+                                   className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-text-primary hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+                                 >
+                                   <Edit2 size={14} />
+                                   Edit Project
+                                 </button>
+                                 <button
+                                   type="button"
+                                   disabled={!isAdmin}
+                                   onClick={() => {
+                                     setOpenMenuId(null);
+                                     onDeleteProject(project);
+                                   }}
+                                   className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-danger hover:bg-danger-surface disabled:cursor-not-allowed disabled:opacity-50"
+                                 >
+                                   <Trash size={14} />
+                                   Delete Project
+                                 </button>
+                               </div>
+                             )}
+
+                             <p className="mt-2 line-clamp-2 break-words text-sm leading-4 text-text-secondary">
                               {project?.description}
                             </p>
                           </div>

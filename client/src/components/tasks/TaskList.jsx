@@ -345,11 +345,50 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
                 </div>
               </div>
 
-              <MoreVertical
-                size={16}
-                className="shrink-0 text-text-secondary"
-              />
+              <button
+                type="button"
+                aria-label={`Actions for ${task.title}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setOpenMenuId(openMenuId === task._id ? null : task._id);
+                }}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-text-secondary hover:bg-surface"
+              >
+                <MoreVertical size={16} />
+              </button>
             </div>
+
+            {openMenuId === task._id && (
+              <div
+                onClick={(event) => event.stopPropagation()}
+                className="mt-3 overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-lg"
+              >
+                {isAdmin && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpenMenuId(null);
+                        onEdit(task);
+                      }}
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-text-primary hover:bg-subtle"
+                    >
+                      <Pencil size={15} /> Edit Task
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpenMenuId(null);
+                        onDelete(task);
+                      }}
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium text-danger hover:bg-danger-surface"
+                    >
+                      <Trash2 size={15} /> Delete Task
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
         )

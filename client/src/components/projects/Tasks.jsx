@@ -261,7 +261,7 @@ function Tasks({ project }) {
       </div>
 
       {/* Table */}
-      <div className="mt-5 overflow-x-auto rounded-lg border border-border">
+      <div className="mt-5 hidden overflow-x-auto rounded-lg border border-border lg:block">
         <table className="w-full min-w-[950px] text-left">
 
           {/* Table Head */}
@@ -467,6 +467,86 @@ function Tasks({ project }) {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-5 space-y-3 lg:hidden">
+        {tasks.length === 0 ? (
+          <EmptyState
+            icon={ListTodo}
+            title="No tasks yet"
+            description="Create a task to start tracking execution for this project."
+            actionLabel={isAdmin ? "New task" : undefined}
+            onAction={isAdmin ? () => setOpenCreateTaskModal(true) : undefined}
+            compact
+          />
+        ) : (
+          tasks.map((task) => (
+            <article key={task._id} className="rounded-xl border border-border bg-card p-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditMode(false);
+                  setSelectedTask(task);
+                }}
+                className="w-full text-left"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground">Task</p>
+                    <h3 className="mt-1 break-words text-sm font-semibold text-foreground">{task.title}</h3>
+                  </div>
+                  <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClass(task.status)}`}>
+                    {task.status}
+                  </span>
+                </div>
+                <p className="mt-2 line-clamp-3 break-words text-xs leading-5 text-muted-foreground">{task.description}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className={`rounded-full px-2 py-1 text-xs font-medium ${getPriorityClass(task.priority)}`}>{task.priority}</span>
+                  <span className="rounded-full bg-surface px-2 py-1 text-xs text-text-secondary">
+                    {task.assignee?.name || "Unassigned"}
+                  </span>
+                  <span className="rounded-full bg-surface px-2 py-1 text-xs text-text-secondary">
+                    {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No due date"}
+                  </span>
+                </div>
+              </button>
+
+              <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditMode(false);
+                    handleFetchTask(task._id);
+                  }}
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-text-primary hover:bg-surface"
+                >
+                  <Eye size={14} /> View
+                </button>
+                {isAdmin && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleFetchTask(task._id);
+                        setEditMode(true);
+                      }}
+                      className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-text-primary hover:bg-surface"
+                    >
+                      <Pencil size={14} /> Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTask(task)}
+                      className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-danger/20 px-3 py-2 text-xs font-semibold text-danger hover:bg-danger/10"
+                    >
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </>
+                )}
+              </div>
+            </article>
+          ))
+        )}
       </div>
 
 

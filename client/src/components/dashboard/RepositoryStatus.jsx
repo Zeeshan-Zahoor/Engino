@@ -8,15 +8,15 @@ function RepositoryStatus() {
 
       <div className="relative">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-start justify-between gap-4">
+          <div className="flex min-w-0 items-start gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-light text-primary">
               <FaGithub size={20} strokeWidth={1.8} />
             </div>
 
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-semibold text-text-primary">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="break-words text-base font-semibold text-text-primary">
                   Repository Status
                 </h2>
 
@@ -39,12 +39,12 @@ function RepositoryStatus() {
               <LockKeyhole size={15} strokeWidth={1.8} />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold text-text-primary">
                 Connect your repository
               </p>
 
-              <p className="mt-1 max-w-2xl text-sm leading-5 text-text-secondary">
+              <p className="mt-1 max-w-2xl break-words text-sm leading-5 text-text-secondary">
                 Engino will soon understand your codebase, dependencies,
                 architecture, and repository structure to provide deeper
                 engineering insights.
@@ -54,7 +54,7 @@ function RepositoryStatus() {
         </div>
 
         {/* Footer */}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           <p className="text-xs text-text-secondary">
             GitHub integration
           </p>

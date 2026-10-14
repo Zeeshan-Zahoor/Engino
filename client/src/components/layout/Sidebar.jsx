@@ -1,4 +1,4 @@
-import { LogOut, UserPlus } from "lucide-react";
+import { LogOut, UserPlus, X } from "lucide-react";
 import { sidebarNavigation } from "../../config/navigation";
 import { NavLink } from "react-router-dom";
 import LogoutConfirmModal from "../common/LogoutConfirmationModal";
@@ -14,7 +14,7 @@ import AccountModal from "../common/AccountModal";
 import Avatar from "../../utils/Avatar";
 import api from "../../lib/api";
 
-function Sidebar() {
+function Sidebar({ isOpen = false, onClose }) {
   const { user, logout, updateUser } = useAuthStore();
   const { workspaces, currentWorkspaceId } = useWorkspaceStore();
   const { showToast } =  useToastStore();
@@ -208,10 +208,25 @@ const handleChangePassword = async ({ currentPassword, newPassword, confirmPassw
 
 
   return (
-    <aside className="flex min-h-screen w-64 flex-col border-r border-border bg-sidebar">
+    <aside
+      id="authenticated-navigation"
+      aria-label="Primary navigation"
+      className={`fixed inset-y-0 left-0 z-50 flex h-screen max-h-screen w-64 max-w-[85vw] flex-col overflow-y-auto border-r border-border bg-sidebar transition-transform duration-200 ease-out lg:static lg:h-screen lg:max-w-none lg:shrink-0 lg:translate-x-0 lg:transition-none ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       {/* Logo */}
-      <div className="flex h-16 items-center px-6">
+      <div className="flex h-16 shrink-0 items-center justify-between px-6">
         <h1 className="text-xl font-bold text-primary">Engino</h1>
+
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={onClose}
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface hover:text-text-primary lg:hidden"
+        >
+          <X size={20} strokeWidth={2} />
+        </button>
       </div>
 
       {/* Workspace Switcher*/}
@@ -248,6 +263,7 @@ const handleChangePassword = async ({ currentPassword, newPassword, confirmPassw
               <NavLink
                 key={item.label}
                 to={item.path}
+                onClick={onClose}
                 className={({ isActive }) => `flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition-colors ${
                   isActive
                     ? "bg-primary-light text-primary"

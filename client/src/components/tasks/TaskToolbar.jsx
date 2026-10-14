@@ -22,8 +22,8 @@ function TaskToolbar() {
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
 
         {/* Filters */}
-        <div className="flex w-full justify-between gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-surface pb-1 xl:pb-0">
-          <div className="relative min-w-50 flex-1">
+        <div className="flex w-full flex-col gap-2 xl:flex-row xl:justify-between">
+          <div className="relative w-full min-w-0 flex-1">
             <Search
               size={17}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary"
@@ -32,10 +32,10 @@ function TaskToolbar() {
             <input
               type="text"
               placeholder="Search tasks..."
-              className="h-10 w-full min-w-50 rounded-lg border border-border bg-card pl-10 pr-3 text-sm text-text-primary outline-none placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
+              className="h-10 w-full rounded-lg border border-border bg-card pl-10 pr-3 text-sm text-text-primary outline-none placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
           </div>
-          <div className="flex justify-center items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-surface xl:justify-center xl:pb-0">
             <FilterButton>All Projects</FilterButton>
             <FilterButton>All Status</FilterButton>
             <FilterButton>All Priority</FilterButton>
