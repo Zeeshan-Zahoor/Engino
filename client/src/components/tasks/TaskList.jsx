@@ -108,7 +108,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
     <div className="max-h-220 overflow-auto scrollbar-thin scrollbar-thumb-surface rounded-xl border border-border bg-card">
 
       {/* Header */}
-      <div className="hidden border-b border-border bg-surface px-5 py-3 lg:grid lg:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] lg:items-center lg:gap-3">
+      <div className="hidden border-b border-border bg-surface px-5 py-3 xl:grid xl:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] xl:items-center xl:gap-3">
         <div />
 
         <span className="text-xs font-medium text-text-secondary">
@@ -166,7 +166,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
           key={task._id}
           className="border-b border-border px-4 py-3 last:border-b-0 hover:bg-surface/40"
         >
-          <div className="hidden lg:grid lg:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] lg:items-center lg:gap-3">
+          <div className="hidden xl:grid xl:grid-cols-[28px_minmax(210px,1.65fr)_minmax(145px,1.15fr)_minmax(95px,.75fr)_minmax(85px,.75fr)_minmax(70px,.65fr)_minmax(110px,.85fr)_55px_90px_36px] xl:items-center xl:gap-3">
             {/* Checkbox */}
             <input
               type="checkbox"
@@ -181,18 +181,18 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
                 {task._id.slice(task._id.length-4).toUpperCase()}
               </p>
 
-              <h3 className="mt-0.5 truncate text-sm font-semibold text-text-primary">
+              <h3 className="mt-0.5 break-words text-sm font-semibold text-text-primary">
                 {task.title}
               </h3>
 
-              <p className="mt-0.5 truncate text-xs text-text-secondary">
+              <p className="mt-0.5 break-words text-xs text-text-secondary">
                 {task.description}
               </p>
             </div>
 
             {/* Project */}
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-text-primary">
+              <p className="break-words text-sm font-medium text-text-primary">
                 {projects.find(project => project._id === task.projectId)?.name}
               </p>
 
@@ -290,7 +290,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
           </div>
 
           {/* Mobile */}
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <div className="flex items-start gap-3">
               <CheckSquare
                 size={16}
@@ -302,7 +302,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
                   {task._id}
                 </p>
 
-                <h3 className="mt-1 text-sm font-semibold text-text-primary">
+              <h3 className="mt-1 break-words text-sm font-semibold text-text-primary">
                   {task.title}
                 </h3>
 
@@ -320,7 +320,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
                     <p className="text-xs text-text-secondary">
                       Project
                     </p>
-                    <p className="mt-1 text-xs font-medium">
+                    <p className="mt-1 break-words text-xs font-medium">
                       {projects.find(project => project._id === task.projectId)?.name}
                     </p>
                   </div>
@@ -329,7 +329,7 @@ function TaskList({ projects, requirements, tasks, selectedTask, setSelectedTask
                     <p className="text-xs text-text-secondary">
                       Assignee
                     </p>
-                    <p className="mt-1 text-xs font-medium">
+                    <p className="mt-1 break-words text-xs font-medium">
                       {task.assignee?.name || "Unassigned"}
                     </p>
                   </div>

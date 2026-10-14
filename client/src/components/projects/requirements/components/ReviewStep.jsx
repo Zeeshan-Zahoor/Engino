@@ -244,7 +244,7 @@ const ReviewStep = ({
           />
 
           {/* Approval Banner */}
-          <section className="relative overflow-hidden rounded-2xl border border-success/20 bg-gradient-to-br from-success/10 via-background to-primary/5 p-6">
+          <section className="relative overflow-hidden rounded-2xl border border-success/20 bg-gradient-to-br from-success/10 via-background to-primary/5 p-4 sm:p-6">
             {/* Decorative background */}
             <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-success/10 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
@@ -275,9 +275,9 @@ const ReviewStep = ({
           </section>
 
           {/* Plan Snapshot */}
-          <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
-            <div className="flex items-center justify-between gap-4">
-              <div>
+          <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                   Approved plan
                 </p>
@@ -345,7 +345,7 @@ const ReviewStep = ({
           <div className="grid gap-6 lg:grid-cols-2">
 
             {/* Objectives */}
-            <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+            <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Target size={18} />
@@ -387,7 +387,7 @@ const ReviewStep = ({
             </section>
 
             {/* Features */}
-            <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+            <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Layers3 size={18} />
@@ -410,9 +410,9 @@ const ReviewStep = ({
                     key={index}
                     className="rounded-xl border border-border bg-surface/40 p-4"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-sm font-semibold text-text-primary">
+                    <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-start sm:gap-3">
+                      <div className="min-w-0">
+                        <h3 className="break-words text-sm font-semibold text-text-primary">
                           {feature.name}
                         </h3>
 
@@ -451,13 +451,13 @@ const ReviewStep = ({
           </div>
 
           {/* Execution Readiness */}
-          <section className="rounded-2xl border border-primary/15 bg-primary/5 p-6">
+          <section className="rounded-2xl border border-primary/15 bg-primary/5 p-4 sm:p-6">
             <div className="flex items-start gap-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Sparkles size={18} />
               </div>
 
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
                 <h2 className="text-sm font-semibold text-text-primary">
                   Ready for task generation
                 </h2>
@@ -533,7 +533,7 @@ const ReviewStep = ({
 
         {/* Overview */}
 
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
           <SectionHeader
             icon={Sparkles}
             title="Plan Overview"
@@ -552,7 +552,7 @@ const ReviewStep = ({
 
         {/* Objectives  */}
 
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-4">
             <SectionHeader
               icon={Target}
@@ -614,7 +614,7 @@ const ReviewStep = ({
 
         {/* Features */}
 
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <SectionHeader
               icon={Wrench}
@@ -989,7 +989,7 @@ const ListSection = ({
   danger = false,
 }) => {
   return (
-    <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+    <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
       <SectionHeader
         icon={Icon}
         title={title}

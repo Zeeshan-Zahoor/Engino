@@ -293,11 +293,11 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-3 py-4 backdrop-blur-[2px] sm:px-4">
       <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
 
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-border px-6 py-5">
+        <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-4 sm:px-6 sm:py-5">
           <div>
             <h2 className="text-xl font-semibold text-text-primary">
               {isEditMode ? "Edit Project" : "Create New Project"}
@@ -321,7 +321,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
         </div>
 
         {/* Body */}
-        <div className="max-h-[70vh] overflow-y-auto px-6 py-6 scrollbar-thin">
+        <div className="max-h-[70vh] overflow-y-auto px-4 py-5 scrollbar-thin sm:px-6 sm:py-6">
 
           {/* Project Name + Code */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -486,7 +486,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
                       ? "e.g. React, Node.js, MongoDB..."
                       : "Add technology..."
                   }
-                  className="min-w-[180px] flex-1 bg-transparent py-1 text-sm text-text-primary placeholder:text-text-secondary !outline-none focus:!outline-none focus-visible:!outline-none"
+                  className="min-w-0 flex-1 bg-transparent py-1 text-sm text-text-primary placeholder:text-text-secondary !outline-none focus:!outline-none focus-visible:!outline-none"
                 />
               </div>
             </div>
@@ -643,11 +643,11 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
         {error && (
             <p className="text-danger text-center text-sm mb-2">{error}</p>
           )}
-        <div className="flex items-center justify-end gap-3 border-t border-border bg-card px-6 py-4">
+        <div className="flex flex-col-reverse gap-2 border-t border-border bg-card px-4 py-4 sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:px-6">
           <button
             type="button"
             onClick={onClose}
-            className="h-10 rounded-lg border border-border bg-card px-4 text-sm font-medium text-text-primary transition hover:bg-surface"
+            className="h-10 w-full rounded-lg border border-border bg-card px-4 text-sm font-medium text-text-primary transition hover:bg-surface sm:w-auto"
           >
             Cancel
           </button>
@@ -655,7 +655,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
           <button
             type="button"
             onClick={handleSubmit}
-            className="flex h-10 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+            className="flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-white transition hover:bg-primary-dark sm:w-auto"
           >
             <Plus size={16} strokeWidth={2.5} />
             {isLoading ? (

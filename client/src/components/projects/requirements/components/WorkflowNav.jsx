@@ -11,7 +11,7 @@ const WorkflowNav = ({
   onStepClick,
 }) => {
   return (
-    <aside className="w-full rounded-2xl border border-border bg-background p-5 shadow-sm lg:w-64">
+    <aside className="w-full rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-5 lg:w-64">
       <div className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-primary">
           Engino AI
@@ -22,7 +22,7 @@ const WorkflowNav = ({
         </h2>
       </div>
 
-      <div>
+      <div className="space-y-1">
         {steps.map((step, index) => {
           const status = getStepStatus(step.id);
           const isAccessible = canAccessStep(step.id);

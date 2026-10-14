@@ -73,7 +73,7 @@ const TasksStep = ({
 
 
         {/* Ready Banner */}
-        <section className="relative overflow-hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/10 via-background to-primary/5 p-6">
+        <section className="relative overflow-hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/10 via-background to-primary/5 p-4 sm:p-6">
 
           <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
 
@@ -83,7 +83,7 @@ const TasksStep = ({
               <Sparkles size={25} />
             </div>
 
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
 
               <div className="flex flex-wrap items-center gap-2">
 
@@ -111,17 +111,17 @@ const TasksStep = ({
 
 
         {/* Generation Card */}
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
 
-          <div className="flex items-start justify-between gap-6">
+          <div className="flex flex-col items-stretch justify-between gap-5 sm:flex-row sm:items-start sm:gap-6">
 
-            <div className="flex items-start gap-4">
+            <div className="flex min-w-0 items-start gap-4">
 
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <ListChecks size={20} />
               </div>
 
-              <div>
+              <div className="min-w-0">
 
                 <h2 className="text-sm font-semibold text-text-primary">
                   Generate engineering tasks
@@ -143,7 +143,7 @@ const TasksStep = ({
                 type="button"
                 onClick={onGenerate}
                 disabled={loading}
-                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               >
                 {loading ? (
                   <>
@@ -268,7 +268,7 @@ const TasksStep = ({
 
 
       {/* Success Banner */}
-      <section className="relative overflow-hidden rounded-2xl border border-success/20 bg-gradient-to-br from-success/10 via-background to-primary/5 p-6">
+      <section className="relative overflow-hidden rounded-2xl border border-success/20 bg-gradient-to-br from-success/10 via-background to-primary/5 p-4 sm:p-6">
 
         <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-success/10 blur-3xl" />
 
@@ -279,7 +279,7 @@ const TasksStep = ({
           </div>
 
 
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
 
             <div className="flex flex-wrap items-center gap-2">
 
@@ -308,7 +308,7 @@ const TasksStep = ({
 
 
       {/* Summary */}
-      <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
 
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-primary">
@@ -380,9 +380,9 @@ const TasksStep = ({
 
 
       {/* Task List */}
-      <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
 
           <div>
 
@@ -409,10 +409,10 @@ const TasksStep = ({
 
             <div
               key={task._id || task.id || index}
-              className="rounded-xl border border-border bg-surface/30 p-5 transition hover:bg-surface/60"
+              className="rounded-xl border border-border bg-surface/30 p-4 transition hover:bg-surface/60 sm:p-5"
             >
 
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-start sm:gap-4">
 
                 <div className="flex min-w-0 items-start gap-3">
 
@@ -420,7 +420,7 @@ const TasksStep = ({
                     {index + 1}
                   </div>
 
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
 
                     <h3 className="text-sm font-semibold text-text-primary">
                       {task.title}

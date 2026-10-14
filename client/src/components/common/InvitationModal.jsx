@@ -1,5 +1,6 @@
 import { UserPlus, X, Mail, Send } from "lucide-react"
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { sendInvitation } from "../../services/invitationService";
 import Loader from "./Loader";
 import useToastStore from "../../stores/toastStore";
@@ -44,9 +45,9 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
     if (!isOpen) return null;
 
     
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-    <div className="w-full max-w-md overflow-hidden rounded-2xl bg-card shadow-2xl">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/40 px-4 py-4 backdrop-blur-sm">
+    <div className="max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-card shadow-2xl">
 
       {/* Header */}
       <div className="border-b border-border px-6 py-5">
@@ -175,8 +176,9 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
     </div>
 
     <Toast />
-  </div>
-  )
+  </div>,
+        document.body,
+    )
 }
 
 export default InvitationModal

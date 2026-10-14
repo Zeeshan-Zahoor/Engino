@@ -279,7 +279,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
       {/* Panel */}
       <aside className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col border-l border-border bg-card shadow-xl scrollbar-thin scrollbar-thumb-text-secondary/30">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-4 sm:px-6">
           <div>
             <h2 className="text-base font-semibold text-text-primary">
               Member Details
@@ -303,28 +303,28 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
         <div className="flex-1 overflow-y-auto">
 
            {/* Profile  */}
-          <div className="border-b border-border px-6 py-6">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex justify-between items-center gap-3">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+          <div className="border-b border-border px-4 py-5 sm:px-6 sm:py-6">
+            <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex min-w-0 items-start gap-3">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
                   <Avatar user={user} />
                 </div>
 
                 <div className="min-w-0">
-                  <h3 className="truncate text-lg font-semibold text-text-primary">
+                  <h3 className="break-words text-lg font-semibold text-text-primary">
                     {user?.name || "Unknown User"}
                   </h3>
 
-                  <div className="mt-1 flex items-center gap-2 text-sm text-text-secondary">
+                  <div className="mt-1 flex min-w-0 items-start gap-2 text-sm text-text-secondary">
                     <Mail size={14} />
 
-                    <span className="truncate">
+                    <span className="break-words">
                       {isAdmin ? email : maskedEmail}
                     </span>
                   </div>
 
                   {!isChangingRole ? (
-                    <div className="mt-2 flex items-center gap-2">
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
                       <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
                         <Shield size={12} />
                         {currentRole}
@@ -356,7 +356,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                           value={selectedRole}
                           onChange={(e) => setSelectedRole(e.target.value)}
                           disabled={workspaceLoading}
-                          className="h-9 min-w-[120px] flex-1 rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none focus:border-primary"
+                          className="h-9 min-w-0 flex-1 rounded-lg border border-border bg-card px-3 text-sm text-text-primary outline-none focus:border-primary"
                         >
                           <option value="Member">Member</option>
                           <option value="Admin">Admin</option>
@@ -415,7 +415,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
           
 
           {/* Stats  */}
-          <div className="grid grid-cols-2 gap-3 border-b border-border p-6 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 border-b border-border p-4 sm:grid-cols-4 sm:p-6">
             <div className="rounded-lg border border-border bg-surface p-3">
               <div className="flex items-center gap-2 text-text-secondary">
                 <ListTodo size={15} />
@@ -474,7 +474,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
           </div>
 
           {/* Workload Summary  */}
-          <div className="border-b border-border px-6 py-5">
+          <div className="border-b border-border px-4 py-5 sm:px-6">
             <h3 className="text-sm font-semibold text-text-primary">
               Workload Summary
             </h3>
@@ -535,7 +535,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
           </div>
 
           {/* Assigned Tasks */}
-          <div className="px-6 py-5">
+          <div className="px-4 py-5 sm:px-6">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-text-primary">
                 Assigned Tasks
@@ -569,14 +569,14 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                     className="rounded-lg border border-border p-4 transition hover:bg-surface"
                   >
                     {/* Task title */}
-                    <div className="flex items-start justify-between gap-3">
+                    <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-start sm:gap-3">
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-text-primary">
+                        <p className="break-words text-sm font-semibold text-text-primary">
                           {task.title}
                         </p>
 
                         {task.requirementId?.name && (
-                          <p className="mt-1 truncate text-xs text-text-secondary">
+                          <p className="mt-1 break-words text-xs text-text-secondary">
                             Requirement:{" "}
                             {task.requirementId.name}
                           </p>
@@ -707,12 +707,12 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 border-t border-border px-5 py-4">
+            <div className="flex flex-col-reverse gap-3 border-t border-border px-4 py-4 sm:flex-row sm:justify-end sm:px-5">
               <button
                 type="button"
                 onClick={() => setShowRemoveConfirmation(false)}
                 disabled={workspaceLoading}
-                className="h-9 rounded-lg border border-border px-4 text-sm font-medium text-text-secondary transition hover:bg-surface disabled:opacity-50"
+                className="h-10 rounded-lg border border-border px-4 text-sm font-medium text-text-secondary transition hover:bg-surface disabled:opacity-50 sm:h-9"
               >
                 Cancel
               </button>
@@ -721,7 +721,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
                 type="button"
                 onClick={handleRemoveMember}
                 disabled={workspaceLoading}
-                className="flex h-9 items-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-10 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 sm:h-9"
               >
                 {workspaceLoading ? (
                   <>

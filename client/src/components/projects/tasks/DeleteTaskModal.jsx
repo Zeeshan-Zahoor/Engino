@@ -10,11 +10,11 @@ function DeleteTaskModal({
   if (!open || !task) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 px-4 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 px-3 py-4 backdrop-blur-[2px] sm:px-4">
       <div className="w-full max-w-md overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
 
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-border px-6 py-5">
+        <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-5 sm:px-6">
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-danger-surface text-danger">
               <Trash2 size={19} />
@@ -42,7 +42,7 @@ function DeleteTaskModal({
         </div>
 
         {/* Content */}
-        <div className="px-6 py-5">
+        <div className="px-4 py-5 sm:px-6">
           <div className="rounded-xl border border-red-100 bg-danger-surface/60 p-4">
             <div className="flex items-start gap-3">
               <AlertTriangle
@@ -69,12 +69,12 @@ function DeleteTaskModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2 border-t border-border bg-subtle/50 px-6 py-4">
+        <div className="flex flex-col-reverse gap-2 border-t border-border bg-subtle/50 px-4 py-4 sm:flex-row sm:items-center sm:justify-end sm:px-6">
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-lg bg-card px-4 py-2.5 text-sm font-medium text-text-primary transition hover:bg-subtle-strong disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-card px-4 py-2.5 text-sm font-medium text-text-primary transition hover:bg-subtle-strong disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             Cancel
           </button>
@@ -83,7 +83,7 @@ function DeleteTaskModal({
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-danger-surface0 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-danger-surface0 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-[120px]"
           >
             {loading ? (
               <>

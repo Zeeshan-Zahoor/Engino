@@ -151,13 +151,13 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-3 py-4 backdrop-blur-[2px] sm:px-4">
 
       {/* Modal */}
       <div className="flex max-h-[90vh] w-full max-w-2xl flex-col rounded-xl border border-border bg-background shadow-xl">
 
         {/* Header */}
-        <div className="flex shrink-0 items-start justify-between border-b border-border px-6 py-4">
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-border px-4 py-4 sm:px-6">
 
           <div>
             <h2 className="text-lg font-semibold text-text-primary">
@@ -181,7 +181,7 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto px-6 py-5">
+        <div className="overflow-y-auto px-4 py-5 sm:px-6">
 
           <div className="space-y-5">
 
@@ -411,12 +411,12 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
             <p className="text-xs text-center my-2 text-danger">{error}</p>
         )}
         {/* Footer */}
-        <div className="flex shrink-0 items-center justify-end gap-3 border-t border-border px-6 py-4">
+        <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:px-6">
 
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-surface"
+            className="w-full rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-surface sm:w-auto"
           >
             Cancel
           </button>

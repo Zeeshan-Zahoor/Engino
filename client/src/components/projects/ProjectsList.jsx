@@ -119,7 +119,7 @@ function ProjectsList({
 
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                              <p className="truncate text-sm font-semibold text-text-primary">
+                              <p className="break-words text-sm font-semibold text-text-primary">
                                 {project?.name}
                               </p>
                             </div>
@@ -282,7 +282,7 @@ function ProjectsList({
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-2">
                               <div>
-                                <p className="truncate text-sm font-semibold text-text-primary">
+                                <p className="break-words text-sm font-semibold text-text-primary">
                                   {project?.name}
                                 </p>
 

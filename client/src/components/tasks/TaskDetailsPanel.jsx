@@ -199,13 +199,13 @@ const projectMembers = currentProject?.team || [];
               {task._id.slice(task._id.length-4).toUpperCase()}
             </p>
 
-            <h2 className="mt-1 text-lg font-semibold leading-6 text-text-primary">
+            <h2 className="mt-1 break-words text-lg font-semibold leading-6 text-text-primary">
               {task.title}
             </h2>
 
-            <div className="mt-2 flex items-center gap-2 text-xs text-text-secondary">
+            <div className="mt-2 flex min-w-0 items-start gap-2 text-xs text-text-secondary">
               <span className="text-primary text-lg">▣</span>
-              <span>{requirements.find(requirement => requirement._id === task.requirementId)?.name || "No Linked Requirement"}</span>
+              <span className="break-words">{requirements.find(requirement => requirement._id === task.requirementId)?.name || "No Linked Requirement"}</span>
             </div>
           </div>
 
@@ -251,14 +251,14 @@ const projectMembers = currentProject?.team || [];
                   <button
                       type="button"
                       onClick={() => setIsAssigneeMenuOpen((prev) => !prev)}
-                      className="flex min-w-[170px] items-center justify-between gap-3 rounded-lg bg-card px-2.5 py-1.5 text-sm font-medium text-text-primary transition hover:bg-surface"
+                      className="flex min-w-0 w-full items-center justify-between gap-3 rounded-lg bg-card px-2.5 py-1.5 text-left text-sm font-medium text-text-primary transition hover:bg-surface"
                   >
                       <div className="flex min-w-0 items-center gap-2">
                           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
                               <Avatar user={task.assignee} />
                           </div>
 
-                          <span className="truncate">
+                          <span className="min-w-0 break-words">
                               {task.assignee?.name || "Unassigned"}
                           </span>
                       </div>
@@ -302,12 +302,12 @@ const projectMembers = currentProject?.team || [];
                                   </div>
 
                                   <div className="min-w-0">
-                                      <p className="truncate text-sm font-medium text-text-primary">
+                                      <p className="break-words text-sm font-medium text-text-primary">
                                           {member.userId.name}
                                       </p>
 
                                       {member.role && (
-                                          <p className="truncate text-xs text-text-secondary">
+                                          <p className="break-words text-xs text-text-secondary">
                                               {member.role}
                                           </p>
                                       )}

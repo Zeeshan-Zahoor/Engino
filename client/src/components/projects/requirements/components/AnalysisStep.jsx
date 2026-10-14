@@ -127,7 +127,7 @@ const AnalysisStep = ({
           badge={`Analysis Round ${analysisRound + 1}`}
         />
 
-        <div className="rounded-2xl border border-border bg-background p-10 shadow-sm">
+        <div className="rounded-2xl border border-border bg-background p-5 shadow-sm sm:p-10">
           <div className="flex flex-col items-center justify-center text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-light text-primary">
               <Loader2
@@ -165,7 +165,7 @@ const AnalysisStep = ({
         badge="Analyzing"
       />
 
-      <div className="rounded-2xl border border-border bg-background p-10 shadow-sm">
+      <div className="rounded-2xl border border-border bg-background p-5 shadow-sm sm:p-10">
         <div className="flex flex-col items-center justify-center text-center">
 
           {/* AI Icon */}
@@ -215,7 +215,7 @@ if (error) {
         badge="Analysis Failed"
       />
 
-      <div className="rounded-2xl border border-danger/20 bg-background p-10 shadow-sm">
+      <div className="rounded-2xl border border-danger/20 bg-background p-5 shadow-sm sm:p-10">
         <div className="flex flex-col items-center justify-center text-center">
 
           {/* Error Icon */}
@@ -269,13 +269,13 @@ if (error) {
 
         <div className="space-y-5">
           {/* Success */}
-          <section className="rounded-2xl border border-success/20 bg-success/10 p-6">
+          <section className="rounded-2xl border border-success/20 bg-success/10 p-4 sm:p-6">
             <div className="flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-success text-white">
                 <CheckCircle2 size={22} />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-wide text-success">
                   Analysis complete
                 </p>
@@ -294,7 +294,7 @@ if (error) {
           </section>
 
           {/* Clarity */}
-          <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+          <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-text-secondary">
@@ -358,13 +358,13 @@ if (error) {
 
       <div className="space-y-5">
         {/* Analysis result */}
-        <section className="rounded-2xl border border-warning/20 bg-warning/10 p-6">
+          <section className="rounded-2xl border border-warning/20 bg-warning/10 p-4 sm:p-6">
           <div className="flex items-start gap-4">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-warning/10 text-warning">
               <AlertCircle size={22} />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-wide text-warning">
                 Needs clarification
               </p>
@@ -383,7 +383,7 @@ if (error) {
         </section>
 
         {/* AI understanding */}
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
           <div className="mb-4 flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-light text-primary">
               <FileSearch size={18} />
@@ -414,8 +414,8 @@ if (error) {
         </section>
 
         {/* Questions */}
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
-          <div className="mb-6 flex items-center justify-between gap-4">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
+          <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center sm:gap-4">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-light text-primary">
                 <MessageSquare size={18} />

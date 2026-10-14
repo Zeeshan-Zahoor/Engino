@@ -1,12 +1,13 @@
 import { X, LogOut } from "lucide-react";
+import { createPortal } from "react-dom";
 import Loader from './Loader';
 
 function LogoutConfirmModal({ isOpen, onClose, onConfirm, isLoading, error }) {
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="w-full max-w-md rounded-2xl bg-background p-6 shadow-2xl border border-border">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+            <div className="w-full max-w-md rounded-2xl border border-border bg-background p-5 shadow-2xl sm:p-6">
 
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
@@ -36,7 +37,7 @@ function LogoutConfirmModal({ isOpen, onClose, onConfirm, isLoading, error }) {
                     <p className="text-sm text-danger text-center mt-2">{error}</p>
                 )}
 
-                <div className="mt-6 flex justify-end gap-3">
+                <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                     <button
                         onClick={onClose}
                         className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
@@ -54,7 +55,8 @@ function LogoutConfirmModal({ isOpen, onClose, onConfirm, isLoading, error }) {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body,
     );
 }
 

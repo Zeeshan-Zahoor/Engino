@@ -21,12 +21,12 @@ const StepHeader = ({
         )}
       </div>
 
-      <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
+      <h1 className="break-words text-2xl font-semibold tracking-tight text-text-primary">
         {title}
       </h1>
 
       {description && (
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-text-secondary">
+        <p className="mt-2 max-w-2xl break-words text-sm leading-6 text-text-secondary">
           {description}
         </p>
       )}

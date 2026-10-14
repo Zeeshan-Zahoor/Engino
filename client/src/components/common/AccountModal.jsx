@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
     X,
     UserRound,
@@ -106,9 +107,9 @@ function AccountModal({
     const labelClass =
         "mb-2 block text-sm font-medium text-text-primary";
 
-    return (
+    return createPortal(
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-[3px]"
+            className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/50 p-4 backdrop-blur-[3px] scrollbar-thin"
             onMouseDown={(event) => {
                 if (event.target === event.currentTarget) onClose();
             }}
@@ -117,7 +118,7 @@ function AccountModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="account-modal-title"
-            className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+            className="flex max-h-[calc(100vh-2rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
         >
             {/* Header */}
             <header className="flex items-start justify-between border-b border-border px-6 py-5 sm:px-8">
@@ -145,7 +146,7 @@ function AccountModal({
             </header>
 
             {/* Modal body */}
-            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto sm:flex-row">
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto sm:flex-row scrollbar-thin scrollbar-thumb-surface">
             {/* Left navigation */}
             <nav
                 aria-label="Account settings"
@@ -195,7 +196,7 @@ function AccountModal({
             </nav>
 
             {/* Right content */}
-            <div className="min-w-0 flex-1 overflow-y-auto px-6 py-6 sm:px-8">
+            <div className="min-w-0 flex-1 overflow-y-auto px-6 py-6 sm:px-8 scrollbar-thin scrollbar-thumb-surface">
                 {activeTab === "profile" ? (
                 <form
                     id="account-profile-form"
@@ -541,7 +542,8 @@ function AccountModal({
             </button>
             </footer>
         </section>
-        </div>
+        </div>,
+        document.body,
     );
 }
 

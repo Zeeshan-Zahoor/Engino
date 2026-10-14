@@ -230,7 +230,7 @@ function Team() {
           </div>
 
           {/* Desktop Header */}
-          <div className="hidden grid-cols-[2fr_1fr_1fr_1fr] gap-4 border-b border-border bg-surface px-5 py-3 text-xs font-semibold uppercase tracking-wide text-text-secondary md:grid">
+          <div className="hidden grid-cols-[2fr_1fr_1fr_1fr] gap-4 border-b border-border bg-surface px-5 py-3 text-xs font-semibold uppercase tracking-wide text-text-secondary lg:grid">
             <span>Member</span>
             <span>Role</span>
             <span>Tasks</span>
@@ -264,20 +264,20 @@ function Team() {
                   <div
                     key={user?._id}
                     onClick={() => setSelectedMember(membership)}
-                    className="grid grid-cols-1 gap-4 px-5 py-4 transition hover:bg-surface md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center"
+                    className="grid grid-cols-1 gap-3 px-4 py-3 transition hover:bg-surface sm:px-5 sm:py-4 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:items-center lg:gap-4"
                   >
                     {/* Member */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex min-w-0 items-start gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
                         <Avatar user={user}/>
                       </div>
 
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-text-primary">
+                        <p className="break-words text-sm font-semibold text-text-primary">
                           {user?.name || "Unknown User"}
                         </p>
 
-                        <p className="truncate text-xs text-text-secondary">
+                        <p className="break-words text-xs text-text-secondary">
                           {isAdmin ? (
                             user?.email || "—"
                           ) : (
@@ -290,19 +290,40 @@ function Team() {
                     </div>
 
                     {/* Role */}
-                    <div>
+                    <div className="flex items-center justify-between gap-2 lg:block">
                       <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
                         {membership.role || "Member"}
                       </span>
                     </div>
 
+                    {/* Mobile workload summary */}
+                    <div className="grid grid-cols-2 gap-2 lg:hidden">
+                      <div className="rounded-lg border border-border bg-surface/60 px-3 py-2">
+                        <p className="text-[11px] text-text-secondary">
+                          Tasks
+                        </p>
+                        <p className="mt-0.5 text-sm font-semibold text-text-primary">
+                          {memberTasks.length}
+                        </p>
+                      </div>
+
+                      <div className="rounded-lg border border-border bg-surface/60 px-3 py-2">
+                        <p className="text-[11px] text-text-secondary">
+                          Active Tasks
+                        </p>
+                        <p className="mt-0.5 text-sm font-semibold text-text-primary">
+                          {activeTasks.length}
+                        </p>
+                      </div>
+                    </div>
+
                     {/* Tasks */}
-                    <div className="text-sm text-text-primary">
+                    <div className="hidden text-sm text-text-primary lg:block">
                       {memberTasks.length}
                     </div>
 
                     {/* Active */}
-                    <div className="text-sm text-text-primary">
+                    <div className="hidden text-sm text-text-primary lg:block">
                       {activeTasks.length}
                     </div>
                   </div>

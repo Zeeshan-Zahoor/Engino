@@ -347,7 +347,7 @@ const ProjectRequirementDetails = () => {
                 {currentRequirement?.projectId?.name}
               </p>
 
-              <h1 className="mt-0.5 truncate text-lg font-semibold text-text-primary">
+              <h1 className="mt-0.5 break-words text-lg font-semibold text-text-primary">
                 {currentRequirement?.name}
               </h1>
             </div>
@@ -368,10 +368,10 @@ const ProjectRequirementDetails = () => {
 
       {/* Main Layout */}
       <div className="px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex gap-8">
+        <div className="flex min-w-0 flex-col gap-6 lg:flex-row lg:gap-8">
           
           {/* Workflow Navigation */}
-          <div>
+          <div className="w-full shrink-0 lg:w-64">
             <WorkflowNav
               steps={workflowSteps}
               currentStep={currentStep}
@@ -383,7 +383,7 @@ const ProjectRequirementDetails = () => {
 
 
           {/* Active Step */}
-          <main className="flex-1">
+          <main className="min-w-0 flex-1">
             {renderCurrentStep()}
           </main>
 

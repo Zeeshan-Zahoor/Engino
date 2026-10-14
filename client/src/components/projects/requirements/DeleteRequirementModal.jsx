@@ -31,9 +31,9 @@ function DeleteRequirementModal({ isOpen, onClose, projectId, requirement, navig
         }
     }
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-3 py-4 sm:px-4">
                 <div className="w-full max-w-md rounded-2xl bg-card shadow-xl">
-                    <div className="border-b border-border px-6 py-5">
+                    <div className="border-b border-border px-4 py-5 sm:px-6">
                         <h2 className="text-lg font-semibold text-text-primary">
                             Delete Requirement
                         </h2>
@@ -47,11 +47,11 @@ function DeleteRequirementModal({ isOpen, onClose, projectId, requirement, navig
                         </p>
                     </div>
 
-                    <div className="flex justify-end gap-3 px-6 py-4">
+                    <div className="flex flex-col-reverse gap-2 px-4 py-4 sm:flex-row sm:justify-end sm:gap-3 sm:px-6">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-text-primary transition hover:bg-surface"
+                            className="w-full rounded-lg border border-border px-4 py-2 text-sm font-semibold text-text-primary transition hover:bg-surface sm:w-auto"
                         >
                             Cancel
                         </button>
@@ -60,7 +60,7 @@ function DeleteRequirementModal({ isOpen, onClose, projectId, requirement, navig
                             type="button"
                             onClick={handleDeleteRequirement}
                             disabled={isLoading}
-                            className="rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                         >
                             {isLoading ? "Deleting..." : "Delete Requirement"}
                         </button>

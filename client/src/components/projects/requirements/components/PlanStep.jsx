@@ -36,7 +36,7 @@ const PlanStep = ({
           badge="Generating"
         />
 
-        <div className="rounded-2xl border border-border bg-background p-10 shadow-sm">
+        <div className="rounded-2xl border border-border bg-background p-5 shadow-sm sm:p-10">
           <div className="flex flex-col items-center justify-center text-center">
             <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-primary-light text-primary">
               <div className="absolute inset-0 animate-ping rounded-2xl bg-primary/10" />
@@ -82,7 +82,7 @@ const PlanStep = ({
           badge="Generation Failed"
         />
 
-        <div className="rounded-2xl border border-danger/20 bg-background p-10 shadow-sm">
+        <div className="rounded-2xl border border-danger/20 bg-background p-5 shadow-sm sm:p-10">
           <div className="flex flex-col items-center justify-center text-center">
             <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-danger/10 text-danger">
               <AlertCircle size={34} />
@@ -157,13 +157,13 @@ const PlanStep = ({
       <div className="space-y-5">
 
         {/* AI Plan Status */}
-        <section className="rounded-2xl border border-primary/20 bg-primary-light p-6">
+        <section className="rounded-2xl border border-primary/20 bg-primary-light p-4 sm:p-6">
           <div className="flex items-start gap-4">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-background text-primary shadow-sm">
               <Sparkles size={21} />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                 Engino AI
               </p>
@@ -181,7 +181,7 @@ const PlanStep = ({
         </section>
 
         {/* Overview */}
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
           <SectionHeader
             icon={ClipboardIcon}
             title="Overview"
@@ -196,7 +196,7 @@ const PlanStep = ({
         </section>
 
         {/* Objectives */}
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
           <SectionHeader
             icon={Target}
             title="Objectives"
@@ -223,8 +223,8 @@ const PlanStep = ({
         </section>
 
         {/* Features */}
-        <section className="rounded-2xl border border-border bg-background p-6 shadow-sm">
-          <div className="mb-5 flex items-center justify-between gap-4">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
+          <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <SectionHeader
               icon={Layers3}
               title="Planned Features"
@@ -273,7 +273,7 @@ const PlanStep = ({
         />
 
         {/* Review Notice */}
-        <section className="rounded-2xl border border-border bg-background p-5 shadow-sm">
+        <section className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-5">
           <div className="flex items-start gap-3">
             <CheckCircle2
               size={19}
@@ -295,12 +295,12 @@ const PlanStep = ({
         </section>
 
         {/* Footer */}
-        <div className="flex items-center justify-end border-t border-border pt-5">
+        <div className="flex flex-col items-stretch justify-end gap-3 border-t border-border pt-5 sm:flex-row sm:items-center">
           {isAdmin && (
             <button
               type="button"
               onClick={onContinue}
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-dark"
             >
               Continue to Admin Review
               <ArrowRight size={17} />

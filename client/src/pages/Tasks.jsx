@@ -214,7 +214,7 @@ function Tasks() {
         user={user}
       />    
 
-      <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 w-fit">
+      <div className="flex max-w-full flex-wrap items-center gap-1 rounded-lg border border-border bg-card p-1 w-fit">
         <button
           type="button"
           onClick={() => setTaskScope("all")}
@@ -254,8 +254,8 @@ function Tasks() {
 
       <TaskStats tasks={scopedTasks}/>
 
-      <div className={`grid gap-4 ${selectedTask === null ? "xl:grid-cols-[minmax(1,1fr)_480px]" : "xl:grid-cols-[minmax(0,1fr)_480px]"}`}>
-        <div className="min-w-0">
+      <div className={`grid min-w-0 gap-4 ${selectedTask === null ? "xl:grid-cols-[minmax(1,1fr)_480px]" : "xl:grid-cols-[minmax(0,1fr)_480px]"}`}>
+        <div className={`${selectedTask ? "hidden xl:block" : "block"} min-w-0`}>
             <TaskToolbar />
             <TaskList
               projects={projects || []}
@@ -277,7 +277,7 @@ function Tasks() {
             />
         </div>
 
-        <div>
+        <div className={`${selectedTask ? "block" : "hidden xl:block"} min-w-0`}>
             <TaskDetailsPanel 
               task={selectedTask}
               projects={projects || []}

@@ -37,7 +37,7 @@ function ProjectTasks({ project,onViewAll }) {
         projectTasks.slice(0, 5).map((task) => (
           <div
             key={task._id}
-            className="grid grid-cols-[auto_minmax(0,1fr)] gap-5 px-5 py-3.5 sm:grid-cols-[auto_minmax(0,1fr)_90px_75px_90px] sm:items-center"
+            className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 px-5 py-3.5 sm:gap-5 sm:items-center xl:grid-cols-[auto_minmax(0,1fr)_90px_75px_90px]"
           >
             {/* Completion */}
             <div
@@ -55,13 +55,13 @@ function ProjectTasks({ project,onViewAll }) {
             </div>
 
             {/* Task name */}
-            <p className="min-w-0 truncate text-sm font-medium text-text-primary">
+            <p className="min-w-0 break-words text-sm font-medium text-text-primary">
               {task?.title}
             </p>
 
             {/* Assignee */}
             {task?.assignee && (
-              <div className="hidden items-center gap-2 sm:flex">
+              <div className="hidden items-center gap-2 xl:flex">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-primary">
                   <Avatar user={task?.assignee}/>
                 </div>
@@ -74,7 +74,7 @@ function ProjectTasks({ project,onViewAll }) {
 
             {/* Priority */}
             <span
-              className={`hidden w-fit rounded-md px-2 py-1 text-xs font-medium sm:inline-flex ${
+              className={`hidden w-fit rounded-md px-2 py-1 text-xs font-medium xl:inline-flex ${
                 priorityStyles[task?.priority]
               }`}
             >
@@ -82,12 +82,12 @@ function ProjectTasks({ project,onViewAll }) {
             </span>
 
             {/* Due date */}
-            <span className="hidden text-right text-xs text-text-secondary sm:block">
+            <span className="hidden text-right text-xs text-text-secondary xl:block">
               {task?.dueDate ? new Date(task.dueDate).toLocaleDateString() : ""}
             </span>
 
             {/* Mobile metadata */}
-            <div className="col-start-2 flex items-center gap-3 sm:hidden">
+            <div className="col-start-2 flex flex-wrap items-center gap-3 xl:hidden">
               <span className="text-xs text-text-secondary">
                 {task?.assignee?.name}
               </span>

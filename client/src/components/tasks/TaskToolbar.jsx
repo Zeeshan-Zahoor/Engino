@@ -18,7 +18,7 @@ function FilterButton({ children }) {
 
 function TaskToolbar() {
   return (
-    <div className="rounded-xl border border-border bg-card p-3 mb-3">
+    <div className="mb-3 min-w-0 rounded-xl border border-border bg-card p-3">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
 
         {/* Filters */}
@@ -35,7 +35,7 @@ function TaskToolbar() {
               className="h-10 w-full rounded-lg border border-border bg-card pl-10 pr-3 text-sm text-text-primary outline-none placeholder:text-text-secondary focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
           </div>
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-surface xl:justify-center xl:pb-0">
+          <div className="flex min-w-0 items-center gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-surface xl:justify-center xl:pb-0">
             <FilterButton>All Projects</FilterButton>
             <FilterButton>All Status</FilterButton>
             <FilterButton>All Priority</FilterButton>
