@@ -254,7 +254,7 @@ function Tasks() {
 
       <TaskStats tasks={scopedTasks}/>
 
-      <div className={`grid min-w-0 gap-4 ${selectedTask === null ? "xl:grid-cols-[minmax(1,1fr)_480px]" : "xl:grid-cols-[minmax(0,1fr)_480px]"}`}>
+      <div className={`grid min-w-0 gap-4 ${selectedTask === null ? "xl:grid-cols-1" : "xl:grid-cols-[minmax(0,1fr)_480px]"}`}>
         <div className={`${selectedTask ? "hidden xl:block" : "block"} min-w-0`}>
             <TaskToolbar />
             <TaskList

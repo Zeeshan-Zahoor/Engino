@@ -436,16 +436,16 @@ Live application: **[engino.vercel.app](https://engino.vercel.app)**
 
 ### Production checklist
 
--   [ ] Secrets are configured in hosting environment settings.
--   [ ] `VITE_API_URL` points to the deployed API.
--   [ ] Backend CORS allows the exact production frontend origin with
+-   [*] Secrets are configured in hosting environment settings.
+-   [*] `VITE_API_URL` points to the deployed API.
+-   [*] Backend CORS allows the exact production frontend origin with
     credentials enabled.
--   [ ] Authentication cookies use compatible production attributes.
--   [ ] MongoDB Atlas accepts connections from the backend.
--   [ ] Nested frontend routes work on direct navigation and refresh.
--   [ ] Login, logout, workspace access, AI workflow, tasks,
+-   [*] Authentication cookies use compatible production attributes.
+-   [*] MongoDB Atlas accepts connections from the backend.
+-   [*] Nested frontend routes work on direct navigation and refresh.
+-   [*] Login, logout, workspace access, AI workflow, tasks,
     notifications, and uploads have been tested in production.
--   [ ] No credentials or tokens appear in screenshots, logs, or
+-   [*] No credentials or tokens appear in screenshots, logs, or
     repository history.
 
 ## API overview
