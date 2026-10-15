@@ -118,7 +118,7 @@ function AccountModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="account-modal-title"
-            className="flex max-h-[calc(100vh-2rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+            className="flex max-h-[calc(100dvh-2rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
         >
             {/* Header */}
             <header className="flex items-start justify-between border-b border-border px-6 py-5 sm:px-8">
