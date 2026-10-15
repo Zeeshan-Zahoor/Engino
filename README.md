@@ -141,31 +141,29 @@ them.
 
 ## Screenshots
 
-Screenshots will be added here. Save optimized images in
-`docs/screenshots/`, then replace the placeholders below with the actual
-filenames.
+The following screenshots show the main product workflows and interface:
 
-  ---------------------------------------------------------------------------------
-  Dashboard                           AI requirement workflow
-  ----------------------------------- ---------------------------------------------
-  `docs/screenshots/dashboard.png`    `docs/screenshots/requirement-workflow.png`
+### Dashboard
 
-  *Add dashboard screenshot here*     *Add requirement workflow screenshot here*
-  ---------------------------------------------------------------------------------
-
-  Task management                Team management
-  ------------------------------ -----------------------------
-  `docs/screenshots/tasks.png`   `docs/screenshots/team.png`
-  *Add task screenshot here*     *Add team screenshot here*
-
-Once a screenshot exists, embed it with Markdown, for example:
-
-``` markdown
 ![Engino dashboard](docs/screenshots/dashboard.png)
-```
 
-Use realistic sample data and ensure screenshots do not expose personal
-information, access tokens, email addresses, or other secrets.
+### Projects
+
+![Engino projects](docs/screenshots/projects.png)
+
+### Requirements and AI analysis
+
+![Engino requirements](docs/screenshots/requirements.png)
+
+![Engino AI requirement analysis](docs/screenshots/ai-analysis.png)
+
+### Tasks
+
+![Engino task management](docs/screenshots/tasks.png)
+
+### Team management
+
+![Engino team management](docs/screenshots/team.png)
 
 ## Technology stack
 
@@ -542,6 +540,4 @@ large implementation.
 
 ## License
 
-No license is specified in this README. If you want others to reuse,
-modify, or distribute this project, add a `LICENSE` file and update this
-section to reflect the license you choose.
+This project is licensed under the [MIT License](LICENSE).
