@@ -28,7 +28,7 @@ function AppLayout() {
   }, [isSidebarOpen]);
 
   return (
-    <div className="flex h-screen w-screen min-w-0 overflow-hidden bg-background">
+    <div className="flex h-dvh w-screen min-w-0 overflow-hidden bg-background lg:h-screen">
         <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
         {isSidebarOpen && (

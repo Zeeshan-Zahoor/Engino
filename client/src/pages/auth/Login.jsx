@@ -57,8 +57,8 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background p-4 md:p-6">
-            <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-7xl overflow-hidden rounded-2xl bg-card shadow-xl md:min-h-[calc(100vh-3rem)]">
+        <div className="min-h-dvh bg-background p-4 md:p-6">
+            <div className="mx-auto flex min-h-[calc(100dvh-2rem)] max-w-7xl overflow-hidden rounded-2xl bg-card shadow-xl md:min-h-[calc(100dvh-3rem)]">
 
                 {/* left panel */}
                 <div className="relative hidden w-[46%] overflow-hidden bg-gradient-to-br from-[#302080] via-[#39248f] to-[#241760] px-10 py-10 text-white lg:flex lg:flex-col">

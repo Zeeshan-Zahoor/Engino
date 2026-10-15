@@ -47,7 +47,7 @@ function InvitationModal({ isOpen, onClose, workspaceId }) {
     
     return createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/40 px-4 py-4 backdrop-blur-sm">
-    <div className="max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-card shadow-2xl">
+    <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-card shadow-2xl">
 
       {/* Header */}
       <div className="border-b border-border px-6 py-5">

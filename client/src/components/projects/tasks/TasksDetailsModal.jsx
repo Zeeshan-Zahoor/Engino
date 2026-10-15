@@ -103,7 +103,7 @@ const TaskDetailsModal = ({ task, open, editMode, cancelEditMode, onEdit, onClos
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-3 sm:p-6">
       {/* Modal */}
-      <div className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
+      <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
 
         {/* ================= HEADER ================= */}
         <div className="flex shrink-0 items-start justify-between gap-3 border-b border-border px-4 py-4 sm:px-6 sm:py-5">

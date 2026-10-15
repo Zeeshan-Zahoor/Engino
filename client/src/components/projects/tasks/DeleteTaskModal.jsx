@@ -11,7 +11,7 @@ function DeleteTaskModal({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 px-3 py-4 backdrop-blur-[2px] sm:px-4">
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-card shadow-2xl">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-5 sm:px-6">

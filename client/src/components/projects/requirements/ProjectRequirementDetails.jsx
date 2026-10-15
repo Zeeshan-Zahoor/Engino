@@ -319,7 +319,7 @@ const ProjectRequirementDetails = () => {
 
   if (error && !currentRequirement) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-dvh items-center justify-center bg-background">
         <div className="rounded-2xl border border-danger/20 bg-danger/10 px-6 py-5 text-sm text-danger">
           {error}
         </div>
@@ -329,7 +329,7 @@ const ProjectRequirementDetails = () => {
   if (!currentRequirement) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       {/* Page Header */}
       <div className="border-b border-border bg-background">
         <div className="flex items-center justify-between px-4 py-5 sm:px-6 lg:px-8">

@@ -6,7 +6,7 @@ function PublicRoute() {
 
     if(loading) {
         return (
-            <div className="h-screen w-screen flex items-center justify-center">
+            <div className="h-dvh w-screen flex items-center justify-center">
                 Loading...
             </div>
         );

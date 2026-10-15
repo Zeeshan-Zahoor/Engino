@@ -10,7 +10,7 @@ function SelectProjectModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-            <div className="w-full max-w-lg overflow-hidden rounded-2xl bg-card shadow-xl">
+            <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-card shadow-xl">
 
                 {/* Header */}
                 <div className="flex items-start justify-between border-b border-border px-6 py-5">
@@ -34,7 +34,7 @@ function SelectProjectModal({
                 </div>
 
                 {/* Body */}
-                <div className="max-h-[60vh] overflow-y-auto px-6 py-5">
+                <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
                     <div className="space-y-2">
                         {projects.map((project) => (
                             <button

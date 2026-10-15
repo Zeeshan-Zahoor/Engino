@@ -116,7 +116,7 @@ return (
             )}
           </div>
 
-          <div className="max-h-[calc(100dvh-10rem)] overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-surface lg:max-h-[calc(100vh-8rem)]">
+          <div className="max-h-[calc(100dvh-10rem)] overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-surface lg:max-h-[calc(100dvh-8rem)]">
             {isLoading ? (
               <p className="p-6 text-center text-sm text-text-secondary">
                 Loading notifications...

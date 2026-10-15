@@ -7,7 +7,7 @@ function LogoutConfirmModal({ isOpen, onClose, onConfirm, isLoading, error }) {
 
     return createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-md rounded-2xl border border-border bg-background p-5 shadow-2xl sm:p-6">
+            <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-background p-5 shadow-2xl sm:p-6">
 
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">

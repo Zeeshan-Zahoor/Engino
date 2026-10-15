@@ -294,7 +294,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-3 py-4 backdrop-blur-[2px] sm:px-4">
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
+      <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-4 sm:px-6 sm:py-5">
@@ -321,7 +321,7 @@ function CreateProjectModal({ isOpen, onClose, project, AIWorkspace = false, AIW
         </div>
 
         {/* Body */}
-        <div className="max-h-[70vh] overflow-y-auto px-4 py-5 scrollbar-thin sm:px-6 sm:py-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 scrollbar-thin sm:px-6 sm:py-6">
 
           {/* Project Name + Code */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">

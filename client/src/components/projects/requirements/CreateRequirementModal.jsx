@@ -154,7 +154,7 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-3 py-4 backdrop-blur-[2px] sm:px-4">
 
       {/* Modal */}
-      <div className="flex max-h-[90vh] w-full max-w-2xl flex-col rounded-xl border border-border bg-background shadow-xl">
+      <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col rounded-xl border border-border bg-background shadow-xl">
 
         {/* Header */}
         <div className="flex shrink-0 items-start justify-between gap-3 border-b border-border px-4 py-4 sm:px-6">
@@ -181,7 +181,7 @@ function CreateRequirementModal({ open, onClose, workspaceId, projectId, project
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto px-4 py-5 sm:px-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
 
           <div className="space-y-5">
 

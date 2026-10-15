@@ -272,12 +272,12 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/20 w-full h-full"
+        className="fixed inset-0 z-40 bg-black/20"
         onClick={onClose}
       />
 
       {/* Panel */}
-      <aside className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col border-l border-border bg-card shadow-xl scrollbar-thin scrollbar-thumb-text-secondary/30">
+      <aside className="fixed right-0 top-0 z-50 flex h-dvh max-h-dvh w-full max-w-xl flex-col border-l border-border bg-card shadow-xl scrollbar-thin scrollbar-thumb-text-secondary/30">
         {/* Header */}
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-4 sm:px-6">
           <div>
@@ -681,7 +681,7 @@ function TeamMemberDetailsPanel({ member, tasks = [], isAdmin, currentUserId, on
       {/* Confirmation dialog */}
       {showRemoveConfirmation && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-border bg-card shadow-xl">
+          <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-xl">
             <div className="p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-danger-surface text-danger">
                 <UserMinus size={18} />

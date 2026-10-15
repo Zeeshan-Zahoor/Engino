@@ -32,7 +32,7 @@ function DeleteProjectModal({ isOpen, onClose, selectedProject, navigateBack = n
     }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-3 py-4 sm:px-4">
-                <div className="w-full max-w-md rounded-2xl bg-card shadow-xl">
+                <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-card shadow-xl">
                     <div className="border-b border-border px-4 py-5 sm:px-6">
                         <h2 className="text-lg font-semibold text-text-primary">
                             Delete Project

@@ -6,7 +6,7 @@ function DeclineInvitationModal({ isOpen, onClose, onConfirm, isLoading = false,
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-sm px-4">
-      <div className="w-full max-w-md rounded-2xl bg-card shadow-2xl border border-border">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-card shadow-2xl border border-border">
         
         {/* Header */}
         <div className="flex items-start justify-between px-6 pt-6">

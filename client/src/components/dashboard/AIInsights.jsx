@@ -212,7 +212,7 @@ const handleInsightClick = (insight) => {
           onClick={() => setShowAllInsights(false)}
         >
           <div
-            className="w-full max-w-2xl overflow-hidden rounded-2xl bg-card shadow-xl"
+            className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-card shadow-xl"
             onClick={(event) => event.stopPropagation()}
           >
             {/* Header */}
@@ -244,7 +244,7 @@ const handleInsightClick = (insight) => {
             </div>
 
             {/* Insights */}
-            <div className="max-h-[65vh] overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto">
                   {insightsError ? (
                     <EmptyState icon={AlertCircle} title="Insights are unavailable" description={insightsError} actionLabel="Try again" onAction={() => fetchInsights(currentWorkspaceId)} />
                   ) : insights.length === 0 ? (

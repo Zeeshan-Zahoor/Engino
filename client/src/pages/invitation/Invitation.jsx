@@ -91,7 +91,7 @@ function InvitationPage() {
     }
 
      return (
-        <div className="min-h-screen bg-subtle flex items-center justify-center px-4 py-5">
+        <div className="min-h-dvh bg-subtle flex items-center justify-center px-4 py-5">
         <div className="w-full max-w-[1000px] bg-card rounded-2xl border border-border shadow-xl overflow-hidden">
             <div className="grid md:grid-cols-[42%_58%]">
 
