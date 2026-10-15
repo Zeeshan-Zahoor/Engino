@@ -211,7 +211,7 @@ const handleChangePassword = async ({ currentPassword, newPassword, confirmPassw
     <aside
       id="authenticated-navigation"
       aria-label="Primary navigation"
-      className={`fixed inset-y-0 left-0 z-50 flex h-screen max-h-screen w-64 max-w-[85vw] flex-col overflow-y-auto border-r border-border bg-sidebar transition-transform duration-200 ease-out lg:static lg:h-screen lg:max-w-none lg:shrink-0 lg:translate-x-0 lg:transition-none ${
+      className={`fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh w-64 max-w-[85vw] flex-col overflow-y-auto border-r border-border bg-sidebar transition-transform duration-200 ease-out lg:static lg:h-screen lg:max-w-none lg:shrink-0 lg:translate-x-0 lg:transition-none ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
