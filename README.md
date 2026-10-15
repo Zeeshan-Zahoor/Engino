@@ -1,4 +1,4 @@
-::: {align="center"}
+<div align="center">
 # Engino
 
 ### Turn ambiguous product requirements into executable engineering work.
@@ -15,7 +15,7 @@ Demo](https://img.shields.io/badge/Live%20Demo-engino.vercel.app-2563EB?style=fo
 
 [Live Application](https://engino.vercel.app) · [GitHub
 Repository](https://github.com/zeeshan-zahoor/engino)
-:::
+</div>
 
 ------------------------------------------------------------------------
 
